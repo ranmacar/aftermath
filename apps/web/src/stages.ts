@@ -29,7 +29,7 @@ export const STAGE_HEX_RADIUS = 36;
 const STAGE_DEFS: { id: StageId; label: string }[] = [
   { id: "solar-flat", label: "1 · Solar flat" },
   { id: "solar-pitched", label: "2 · Solar pitched" },
-  { id: "excavate", label: "3 · Excavate" },
+  { id: "excavate", label: "3 · Gantry build" },
   { id: "rise-1", label: "4 · Rise 1 floor" },
   { id: "rise-3", label: "5 · Rise 3 floors" },
   { id: "tower-full", label: "6 · Full tower (7 fl)" },
@@ -622,36 +622,256 @@ export function buildBerm(
 const EXCAVATE_COLUMN_TOP = POD.tubeHeightAboveGrade + 1.2;
 
 /**
- * Shared excavation base: hole under roof, vertical container, berm, beam,
- * column from container top up to `columnTopY`.
+ * Excavate stage plays the build: a gantry pivots to dig, pours the column,
+ * then climbs it to pour each slab and ring of walls.
  */
-function buildExcavationBase(
-  scene: Scene,
-  bab: Bab,
-  parent: TransformNode,
-  m: ReturnType<typeof mats>,
-  columnTopY: number,
-): void {
-  const shaftR = OUTER_R;
-  const floorY = -EXCAVATE_DEPTH;
-  buildVerticalContainer(scene, bab, parent, m, floorY, "pit-container");
-  const containerTop = floorY + POD.length;
-  buildColumnWithConsole(scene, bab, parent, m, containerTop, columnTopY);
-  buildBeamToColumn(scene, bab, parent, m, shaftR, POD.tubeDiameter * 0.6);
-  buildBerm(scene, bab, parent, m, shaftR);
-}
+const GANTRY_FLOORS = 3;
+const GANTRY_LOOP_S = 44;
 
-/**
- * Excavate stage: hole + vertical container + column holding pitched roof above grade.
- */
 function buildExcavateStage(
   scene: Scene,
   bab: Bab,
   parent: TransformNode,
   m: ReturnType<typeof mats>,
 ): void {
-  buildExcavationBase(scene, bab, parent, m, EXCAVATE_COLUMN_TOP);
-  mountPitchedSolarOnColumn(scene, bab, parent, m, EXCAVATE_COLUMN_TOP);
+  const { MeshBuilder, TransformNode, StandardMaterial, Color3 } = bab;
+  const steel = new StandardMaterial("gantry-steel", scene);
+  steel.diffuseColor = new Color3(0.82, 0.62, 0.12);
+  steel.specularColor = new Color3(0.08, 0.08, 0.08);
+
+  const pitBottom = -EXCAVATE_DEPTH;
+  const columnMeshH = EXCAVATE_DEPTH + GANTRY_FLOORS * FH;
+  const column = MeshBuilder.CreateCylinder(
+    "build-column",
+    { height: columnMeshH, diameter: POD.tubeDiameter, tessellation: 24 },
+    scene,
+  );
+  column.material = m.column;
+  column.parent = parent;
+  column.isVisible = false;
+
+  const berm = MeshBuilder.CreateTorus(
+    "build-berm",
+    {
+      diameter: (OUTER_R + 2.4) * 2,
+      thickness: 2.2,
+      tessellation: 40,
+    },
+    scene,
+  );
+  berm.material = m.dirt;
+  berm.parent = parent;
+  berm.position.y = 0.7;
+  berm.scaling.y = 0.65;
+  berm.isVisible = false;
+
+  const slabH = 0.28;
+  const wallH = FH - slabH;
+  const floors: { slab: import("@babylonjs/core").Mesh; wall: import("@babylonjs/core").Mesh }[] = [];
+  for (let i = 0; i < GANTRY_FLOORS; i++) {
+    const slabY = i * FH + slabH / 2;
+    const disc = MeshBuilder.CreateCylinder(
+      `build-slab-src-${i}`,
+      { height: slabH, diameter: OUTER_R * 2, tessellation: 48 },
+      scene,
+    );
+    disc.isVisible = false;
+    const hole = MeshBuilder.CreateCylinder(
+      `build-slab-hole-${i}`,
+      { height: slabH + 0.2, diameter: POD.tubeDiameter + 0.35, tessellation: 24 },
+      scene,
+    );
+    hole.isVisible = false;
+    const slab = CSG.FromMesh(disc).subtract(CSG.FromMesh(hole)).toMesh(
+      `build-slab-${i}`,
+      m.floor,
+      scene,
+    );
+    disc.dispose();
+    hole.dispose();
+    slab.parent = parent;
+    slab.position.y = slabY;
+    slab.isVisible = false;
+
+    const outer = MeshBuilder.CreateCylinder(
+      `build-wall-out-${i}`,
+      { height: wallH, diameter: OUTER_R * 2, tessellation: 48 },
+      scene,
+    );
+    const inner = MeshBuilder.CreateCylinder(
+      `build-wall-in-${i}`,
+      { height: wallH + 0.3, diameter: INNER_R * 2, tessellation: 40 },
+      scene,
+    );
+    outer.isVisible = false;
+    inner.isVisible = false;
+    const wall = CSG.FromMesh(outer).subtract(CSG.FromMesh(inner)).toMesh(
+      `build-wall-${i}`,
+      m.facade,
+      scene,
+    );
+    outer.dispose();
+    inner.dispose();
+    wall.parent = parent;
+    wall.isVisible = false;
+    floors.push({ slab, wall });
+  }
+
+  const gantry = new TransformNode("gantry", scene);
+  gantry.parent = parent;
+  const sleeve = MeshBuilder.CreateCylinder(
+    "gantry-sleeve",
+    { height: 1.5, diameter: POD.tubeDiameter + 0.45, tessellation: 20 },
+    scene,
+  );
+  sleeve.material = steel;
+  sleeve.parent = gantry;
+  const boomLen = OUTER_R + 2;
+  const boom = MeshBuilder.CreateBox(
+    "gantry-boom",
+    { width: boomLen, height: 0.32, depth: 0.42 },
+    scene,
+  );
+  boom.material = steel;
+  boom.parent = gantry;
+  boom.position.x = boomLen / 2;
+  const counter = MeshBuilder.CreateBox(
+    "gantry-counter",
+    { width: 1.6, height: 0.7, depth: 0.7 },
+    scene,
+  );
+  counter.material = m.column;
+  counter.parent = gantry;
+  counter.position.x = -1.5;
+  const tool = new TransformNode("gantry-tool", scene);
+  tool.parent = gantry;
+  tool.position.x = boomLen;
+  const hopper = MeshBuilder.CreateBox(
+    "gantry-hopper",
+    { width: 0.9, height: 0.7, depth: 0.9 },
+    scene,
+  );
+  hopper.material = steel;
+  hopper.parent = tool;
+  const bucket = MeshBuilder.CreateBox(
+    "gantry-bucket",
+    { width: 0.7, height: 0.45, depth: 1.1 },
+    scene,
+  );
+  bucket.material = m.corten;
+  bucket.parent = tool;
+  bucket.position.y = -0.7;
+
+  const setGrowY = (
+    mesh: import("@babylonjs/core").Mesh,
+    bottom: number,
+    fullH: number,
+    t: number,
+  ): void => {
+    const shown = t > 0.02;
+    mesh.isVisible = shown;
+    if (!shown) return;
+    const h = fullH * t;
+    mesh.scaling.y = t;
+    mesh.position.y = bottom + h / 2;
+  };
+
+  const apply = (t: number): void => {
+    const digEnd = 10;
+    const colEnd = 18;
+    const floorSpan = 8;
+    let carriageY = 2.2;
+    let spin = t * 0.7;
+    let dip = 0.15;
+    let bermT = 0;
+    let columnTop = pitBottom;
+
+    const hideUpper = (): void => {
+      for (const floor of floors) {
+        floor.slab.isVisible = false;
+        floor.wall.isVisible = false;
+      }
+    };
+
+    if (t < digEnd) {
+      hideUpper();
+      const u = t / digEnd;
+      bermT = u;
+      dip = 0.35 + Math.sin(t * 4) * 0.25;
+      spin = t * 1.3;
+      carriageY = 1.6;
+    } else if (t < colEnd) {
+      hideUpper();
+      const u = (t - digEnd) / (colEnd - digEnd);
+      bermT = 1;
+      columnTop = pitBottom + (0 - pitBottom) * u;
+      carriageY = Math.max(1.6, columnTop + 1.2);
+      dip = 0.05;
+      spin = t * 0.45;
+    } else {
+      bermT = 1;
+      columnTop = 0;
+      const after = t - colEnd;
+      for (let i = 0; i < GANTRY_FLOORS; i++) {
+        const local = after - i * floorSpan;
+        const slabY = i * FH;
+        const topY = (i + 1) * FH;
+        if (local < 0) {
+          floors[i]!.slab.isVisible = false;
+          floors[i]!.wall.isVisible = false;
+          continue;
+        }
+        if (local < 2) {
+          carriageY = slabY + 1.4;
+          columnTop = Math.max(columnTop, slabY + 0.4);
+        } else if (local < 4.5) {
+          const u = (local - 2) / 2.5;
+          floors[i]!.slab.isVisible = u > 0.02;
+          floors[i]!.slab.scaling.x = u;
+          floors[i]!.slab.scaling.z = u;
+          carriageY = slabY + 1.6;
+          columnTop = Math.max(columnTop, slabY + slabH);
+          spin = t * 1.1;
+        } else if (local < floorSpan) {
+          floors[i]!.slab.isVisible = true;
+          floors[i]!.slab.scaling.x = 1;
+          floors[i]!.slab.scaling.z = 1;
+          const u = (local - 4.5) / (floorSpan - 4.5);
+          setGrowY(floors[i]!.wall, slabY + slabH, wallH, u);
+          carriageY = slabY + slabH + wallH * u + 0.8;
+          columnTop = Math.max(columnTop, carriageY - 0.4);
+          spin = t * 0.55;
+        } else {
+          floors[i]!.slab.isVisible = true;
+          floors[i]!.slab.scaling.x = 1;
+          floors[i]!.slab.scaling.z = 1;
+          setGrowY(floors[i]!.wall, slabY + slabH, wallH, 1);
+          carriageY = topY + 0.8;
+          columnTop = Math.max(columnTop, topY);
+        }
+      }
+    }
+
+    berm.isVisible = bermT > 0.02;
+    berm.scaling.x = bermT;
+    berm.scaling.z = bermT;
+    const colT = Math.max(0, (columnTop - pitBottom) / columnMeshH);
+    setGrowY(column, pitBottom, columnMeshH, colT);
+    gantry.position.y = carriageY;
+    gantry.rotation.y = spin;
+    tool.rotation.z = dip;
+  };
+
+  apply(0);
+  let elapsed = 0;
+  const obs = scene.onBeforeRenderObservable.add(() => {
+    const dt = Math.min(0.05, scene.getEngine().getDeltaTime() / 1000);
+    elapsed = (elapsed + dt) % GANTRY_LOOP_S;
+    apply(elapsed);
+  });
+  parent.onDisposeObservable.add(() => {
+    scene.onBeforeRenderObservable.remove(obs);
+  });
 }
 
 
