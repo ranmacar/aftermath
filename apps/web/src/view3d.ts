@@ -9,10 +9,11 @@ import { lngLatToEnu } from "./geo";
 import { H3_RES } from "./h3-overlay";
 import { stageFootprints } from "./stages";
 import { loadTerrainPatch, samplePatch } from "./terrain";
+import { GOOGLE_PHOTOREALISTIC_ASSET, ionToken } from "./cesium-ion";
 import { getTilesKey } from "./tiles-key";
 
 const CESIUM_BASE =
-  "https://ajax.googleapis.com/ajax/libs/cesiumjs/1.105/Build/Cesium";
+  "https://cdn.jsdelivr.net/npm/cesium@1.121.1/Build/Cesium";
 const HEX_SOURCE = "hex-focus";
 const HEX_FILL = "hex-focus-fill";
 const HEX_LINE = "hex-focus-line";
@@ -41,7 +42,17 @@ type CesiumViewer = {
 
 type CesiumNS = {
   Viewer: new (container: HTMLElement, options: Record<string, unknown>) => CesiumViewer;
-  Cesium3DTileset: new (options: Record<string, unknown>) => unknown;
+  Ion: { defaultAccessToken: string };
+  Cesium3DTileset: (new (options: Record<string, unknown>) => unknown) & {
+    fromUrl: (
+      url: string,
+      options?: Record<string, unknown>,
+    ) => Promise<unknown>;
+    fromIonAssetId: (
+      assetId: number,
+      options?: Record<string, unknown>,
+    ) => Promise<unknown>;
+  };
   Cartesian3: {
     new (x: number, y: number, z: number): unknown;
     fromDegrees: (lng: number, lat: number, height?: number) => unknown;
@@ -92,6 +103,8 @@ function loadScript(src: string): Promise<void> {
 
 function loadCesium(): Promise<CesiumNS> {
   if (window.Cesium) return Promise.resolve(window.Cesium);
+  (window as Window & { CESIUM_BASE_URL?: string }).CESIUM_BASE_URL =
+    `${CESIUM_BASE}/`;
   if (!document.querySelector(`link[href="${CESIUM_BASE}/Widgets/widgets.css"]`)) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -404,6 +417,50 @@ export function attachView3d(handlers: {
     });
   }
 
+  async function ensureViewer(): Promise<CesiumNS> {
+    cesium = await loadCesium();
+    if (!viewer) {
+      viewer = new cesium.Viewer(canvas, {
+        animation: false,
+        baseLayerPicker: false,
+        baseLayer: false,
+        fullscreenButton: false,
+        geocoder: false,
+        homeButton: false,
+        infoBox: false,
+        sceneModePicker: false,
+        selectionIndicator: false,
+        timeline: false,
+        navigationHelpButton: false,
+        requestRenderMode: true,
+        creditContainer: document.getElementById("view3d-credits") ?? undefined,
+      });
+      viewer.scene.globe.show = false;
+    }
+    return cesium;
+  }
+
+  async function ensureIon(cell: string): Promise<void> {
+    const token = ionToken();
+    if (!token) throw new Error("missing Cesium ion token");
+    setError(null);
+    label.textContent = "Loading photorealistic tiles…";
+    const C = await ensureViewer();
+    C.Ion.defaultAccessToken = token;
+    if (!tilesetAdded && viewer) {
+      viewer.scene.primitives.add(
+        await C.Cesium3DTileset.fromIonAssetId(GOOGLE_PHOTOREALISTIC_ASSET, {
+          showCreditsOnScreen: true,
+        }),
+      );
+      tilesetAdded = true;
+    }
+    if (!viewer) throw new Error("Cesium viewer missing");
+    viewer.useDefaultRenderLoop = true;
+    viewer.resize();
+    await lookAtHex(cell);
+  }
+
   async function ensureGoogle(cell: string): Promise<void> {
     const key = apiKey();
     if (!key) throw new Error("missing key");
@@ -415,34 +472,17 @@ export function attachView3d(handlers: {
     }
     setError(null);
     label.textContent = "Loading photorealistic tiles…";
-    cesium = await loadCesium();
-    if (!viewer) {
-      viewer = new cesium.Viewer(canvas, {
-        animation: false,
-        baseLayerPicker: false,
-        fullscreenButton: false,
-        geocoder: false,
-        homeButton: false,
-        infoBox: false,
-        sceneModePicker: false,
-        selectionIndicator: false,
-        timeline: false,
-        navigationHelpButton: false,
-        imageryProvider: false,
-        requestRenderMode: true,
-        creditContainer: document.getElementById("view3d-credits") ?? undefined,
-      });
-      viewer.scene.globe.show = false;
-    }
-    if (!tilesetAdded) {
+    const C = await ensureViewer();
+    if (!tilesetAdded && viewer) {
       viewer.scene.primitives.add(
-        new cesium.Cesium3DTileset({
-          url: `https://tile.googleapis.com/v1/3dtiles/root.json?key=${encodeURIComponent(key)}`,
-          showCreditsOnScreen: true,
-        }),
+        await C.Cesium3DTileset.fromUrl(
+          `https://tile.googleapis.com/v1/3dtiles/root.json?key=${encodeURIComponent(key)}`,
+          { showCreditsOnScreen: true },
+        ),
       );
       tilesetAdded = true;
     }
+    if (!viewer) throw new Error("Cesium viewer missing");
     viewer.useDefaultRenderLoop = true;
     viewer.resize();
     await lookAtHex(cell);
@@ -469,7 +509,9 @@ export function attachView3d(handlers: {
     label.textContent = `H3 r${H3_RES} · ${cell}`;
     setError(null);
     try {
-      if (apiKey() && !mlMap) {
+      if (!mlMap && ionToken()) {
+        await ensureIon(cell);
+      } else if (apiKey() && !mlMap) {
         await ensureGoogle(cell);
       } else {
         ensureMapLibre(cell);

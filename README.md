@@ -18,22 +18,19 @@ Open **http://127.0.0.1:5173** (use localhost so geolocation works on HTTP).
 3. **Walk** — first-person Babylon on the cell (quests: solar → dig → rise)
 4. **Habitat** — finished tower + Agrokruh beds, crowd patrols, fly mode (hold Space)
 
-### Google 3D tiles (optional)
+### Photorealistic Look
 
 Startup popup:
 
-1. Unlock a sealed demo key with the site password (decrypt in-browser only),
-2. Paste your own Map Tiles API key (session only), or
-3. Continue with free maps
+1. Enter the site password to decrypt the sealed Cesium ion token in the browser, or
+2. Continue with free maps
 
-Seal a key for Pages:
+The password is not in the repo. Reseal with:
 
 ```sh
-TILES_KEY='AIza…' UNLOCK_PASSWORD='…' npm run encrypt-tiles-key
-# paste into apps/web/src/tiles-key.ts as SEALED_TILES_KEY
+TILES_KEY='…ion token…' UNLOCK_PASSWORD='…' npm run encrypt-tiles-key
+# paste the blob into apps/web/src/cesium-ion.ts as SEALED_ION_TOKEN
 ```
-
-Restrict demo keys in Google Cloud to `https://ranmacar.github.io/aftermath/*` and `http://localhost:5173/*`.
 
 ### GitHub Pages
 

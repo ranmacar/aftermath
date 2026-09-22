@@ -1,17 +1,12 @@
 /**
- * Startup unlock: password → decrypt sealed Google Tiles key,
- * or paste your own key, or continue on free maps only.
+ * Startup unlock: password decrypts the sealed Cesium ion token in this
+ * browser, or the visitor continues on free maps.
  */
-import {
-  SEALED_TILES_KEY,
-  getTilesKey,
-  preferFreeMaps,
-  setTilesKey,
-  unlockSealedKey,
-} from "./tiles-key";
+import { ionToken, setIonToken, unlockIonToken } from "./cesium-ion";
+import { preferFreeMaps, setTilesKey } from "./tiles-key";
 
 export type UnlockResult =
-  | { mode: "google"; source: "sealed" | "pasted" | "env" }
+  | { mode: "ion"; source: "sealed" | "session" }
   | { mode: "free" };
 
 function el<K extends keyof HTMLElementTagNameMap>(
@@ -33,8 +28,8 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
   if (preferFreeMaps()) {
     return Promise.resolve({ mode: "free" });
   }
-  if (getTilesKey()) {
-    return Promise.resolve({ mode: "google", source: "env" });
+  if (ionToken()) {
+    return Promise.resolve({ mode: "ion", source: "session" });
   }
 
   return new Promise((resolve) => {
@@ -49,7 +44,7 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     const blurb = el(
       "p",
       "unlock-blurb",
-      "Photorealistic Look mode needs a Google Map Tiles API key. Unlock the shared demo key with the site password, paste your own, or continue on free OpenFreeMap / satellite terrain.",
+      "Photorealistic Look is locked. Enter the site password, or continue on free satellite terrain.",
     );
 
     const pwdLabel = el("label", "unlock-label", "Site password");
@@ -58,16 +53,7 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     pwd.id = "unlock-password";
     pwd.type = "password";
     pwd.autocomplete = "current-password";
-    pwd.placeholder = SEALED_TILES_KEY ? "Password" : "No sealed key in this build";
-    pwd.disabled = !SEALED_TILES_KEY;
-
-    const ownLabel = el("label", "unlock-label", "Or your own API key");
-    ownLabel.htmlFor = "unlock-own";
-    const own = el("input", "unlock-input") as HTMLInputElement;
-    own.id = "unlock-own";
-    own.type = "password";
-    own.autocomplete = "off";
-    own.placeholder = "AIza… (optional)";
+    pwd.placeholder = "Password";
 
     const err = el("p", "unlock-error");
     err.hidden = true;
@@ -75,29 +61,22 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     const row = el("div", "unlock-actions");
     const unlockBtn = el("button", "unlock-btn unlock-btn-primary", "Unlock") as HTMLButtonElement;
     unlockBtn.type = "button";
-    unlockBtn.disabled = !SEALED_TILES_KEY;
-    const ownBtn = el("button", "unlock-btn", "Use my key") as HTMLButtonElement;
-    ownBtn.type = "button";
     const freeBtn = el("button", "unlock-btn unlock-btn-ghost", "Free maps only") as HTMLButtonElement;
     freeBtn.type = "button";
 
     const note = el(
       "p",
       "unlock-note",
-      "Password is used only in this browser to decrypt a sealed key. Nothing is sent to our servers. Restrict demo keys by HTTP referrer in Google Cloud.",
+      "The password only decrypts a sealed token in this browser. It is not sent anywhere.",
     );
 
-    function finishGoogle(source: "sealed" | "pasted"): void {
-      try {
-        sessionStorage.removeItem("aftermath:tiles-free");
-      } catch {
-        /* ignore */
-      }
+    function finishIon(): void {
       root.remove();
-      resolve({ mode: "google", source });
+      resolve({ mode: "ion", source: "sealed" });
     }
 
     function finishFree(): void {
+      setIonToken(null);
       setTilesKey(null);
       try {
         sessionStorage.setItem("aftermath:tiles-free", "1");
@@ -116,10 +95,6 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     unlockBtn.addEventListener("click", () => {
       void (async () => {
         err.hidden = true;
-        if (!SEALED_TILES_KEY) {
-          showErr("No sealed demo key in this build — paste your own or use free maps.");
-          return;
-        }
         const password = pwd.value;
         if (!password) {
           showErr("Enter the site password.");
@@ -127,26 +102,13 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
         }
         unlockBtn.disabled = true;
         try {
-          const key = await unlockSealedKey(password);
-          if (!key) throw new Error("empty key");
-          setTilesKey(key);
-          finishGoogle("sealed");
+          await unlockIonToken(password);
+          finishIon();
         } catch {
-          showErr("Wrong password or corrupt sealed key.");
+          showErr("Wrong password.");
           unlockBtn.disabled = false;
         }
       })();
-    });
-
-    ownBtn.addEventListener("click", () => {
-      err.hidden = true;
-      const key = own.value.trim();
-      if (!key) {
-        showErr("Paste your Google Map Tiles API key, or choose free maps.");
-        return;
-      }
-      setTilesKey(key);
-      finishGoogle("pasted");
     });
 
     freeBtn.addEventListener("click", () => finishFree());
@@ -154,14 +116,10 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     pwd.addEventListener("keydown", (e) => {
       if (e.key === "Enter") unlockBtn.click();
     });
-    own.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") ownBtn.click();
-    });
-
-    row.append(unlockBtn, ownBtn, freeBtn);
-    card.append(title, blurb, pwdLabel, pwd, ownLabel, own, err, row, note);
+    row.append(unlockBtn, freeBtn);
+    card.append(title, blurb, pwdLabel, pwd, err, row, note);
     root.append(card);
     document.body.append(root);
-    (SEALED_TILES_KEY ? pwd : own).focus();
+    pwd.focus();
   });
 }
