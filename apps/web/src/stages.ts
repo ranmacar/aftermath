@@ -645,7 +645,6 @@ function buildExcavateStage(
  */
 const GANTRY_FLOORS = 3;
 const GANTRY_LOOP_S = 52;
-const GANTRY_SEGS = 12;
 
 function buildGantryStage(
   scene: Scene,
@@ -725,29 +724,32 @@ function buildGantryStage(
   const wallBottom = slabH;
   const wallFullH = GANTRY_FLOORS * FH - slabH;
   const slabs: import("@babylonjs/core").Mesh[][] = [];
+  const spiralTurns = 4;
+  const spiralCount = spiralTurns * 12;
+  const spiralR0 = POD.tubeDiameter * 0.5 + 0.6;
+  const spiralR1 = OUTER_R - 0.4;
   for (let i = 0; i < GANTRY_FLOORS; i++) {
-    const wedges: import("@babylonjs/core").Mesh[] = [];
-    const radial = OUTER_R - 0.8;
-    for (let s = 0; s < GANTRY_SEGS; s++) {
-      const ang = (s / GANTRY_SEGS) * Math.PI * 2;
-      const chord = 2 * (radial * 0.72) * Math.sin(Math.PI / GANTRY_SEGS);
-      const wedge = MeshBuilder.CreateBox(
+    const pads: import("@babylonjs/core").Mesh[] = [];
+    for (let s = 0; s < spiralCount; s++) {
+      const u = s / (spiralCount - 1);
+      const ang = u * spiralTurns * Math.PI * 2;
+      const r = spiralR0 + (spiralR1 - spiralR0) * u;
+      const dAng = (spiralTurns * Math.PI * 2) / spiralCount;
+      const chord = Math.max(0.55, r * dAng * 1.35);
+      const depth = ((spiralR1 - spiralR0) / spiralTurns) * 1.35;
+      const pad = MeshBuilder.CreateBox(
         `slab-${i}-${s}`,
-        { width: chord * 0.94, height: slabH, depth: radial * 0.85 },
+        { width: chord, height: slabH, depth },
         scene,
       );
-      wedge.material = m.floor;
-      wedge.parent = parent;
-      wedge.position.set(
-        Math.cos(ang) * radial * 0.48,
-        i * FH + slabH / 2,
-        Math.sin(ang) * radial * 0.48,
-      );
-      wedge.rotation.y = -ang;
-      wedge.isVisible = false;
-      wedges.push(wedge);
+      pad.material = m.floor;
+      pad.parent = parent;
+      pad.position.set(Math.cos(ang) * r, i * FH + slabH / 2, Math.sin(ang) * r);
+      pad.rotation.y = -ang;
+      pad.isVisible = false;
+      pads.push(pad);
     }
-    slabs.push(wedges);
+    slabs.push(pads);
   }
 
   const wallOuter = MeshBuilder.CreateCylinder(
@@ -904,9 +906,8 @@ function buildGantryStage(
       }
     };
     const showSlabs = (floor: number, count: number): void => {
-      slabs[floor]!.forEach((wedge, i) => {
-        wedge.isVisible = i < count;
-      });
+      const pads = slabs[floor]!;
+      for (let i = 0; i < pads.length; i++) pads[i]!.isVisible = i < count;
     };
 
     if (t < digEnd) {
@@ -941,40 +942,55 @@ function buildGantryStage(
       container.position.y = pitBottom + POD.length / 2;
       columnTop = 2.4;
       const after = t - colEnd;
-      const slabSpan = 4;
-      const slipStart = GANTRY_FLOORS * slabSpan;
-      if (after < slipStart) {
+      const slabSpan = 5;
+      const wallSpan = 4;
+      const step = slabSpan + wallSpan;
+      const spiralN = slabs[0]?.length ?? 1;
+      let wallStoreys = 0;
+      let wallU = 0;
+      for (let i = 0; i < GANTRY_FLOORS; i++) {
+        const local = after - i * step;
+        if (local < 0) {
+          showSlabs(i, 0);
+          continue;
+        }
+        if (local < slabSpan) {
+          const u = local / slabSpan;
+          showSlabs(i, Math.ceil(u * spiralN));
+          const r = spiralR0 + (spiralR1 - spiralR0) * u;
+          carriageY = i * FH + 1.65;
+          columnTop = Math.max(columnTop, i * FH + slabH);
+          spin = u * spiralTurns * Math.PI * 2;
+          trolleyX = r;
+          pour = true;
+          dip = 0.08;
+          wallStoreys = i;
+          wallU = 0;
+        } else {
+          showSlabs(i, spiralN);
+          const u = Math.min(1, (local - slabSpan) / wallSpan);
+          carriageY = 0;
+          wallStoreys = i;
+          wallU = u;
+          pour = u < 0.995;
+          dip = 0.05;
+          spin = t * 0.5;
+          trolleyX = boomLen * 0.88;
+        }
+      }
+      const startTop = wallStoreys === 0 ? wallBottom : wallStoreys * FH;
+      const endTop = (wallStoreys + 1) * FH;
+      const wallTop = startTop + (endTop - startTop) * wallU;
+      if (wallTop <= wallBottom + 0.02) {
         setGrowY(slipWall, wallBottom, wallFullH, 0);
         slipForm.isVisible = false;
-        for (let i = 0; i < GANTRY_FLOORS; i++) {
-          const local = after - i * slabSpan;
-          if (local < 0.4) showSlabs(i, 0);
-          else if (local < slabSpan) {
-            const u = (local - 0.4) / (slabSpan - 0.4);
-            showSlabs(i, Math.ceil(u * GANTRY_SEGS));
-            carriageY = i * FH + 1.7;
-            columnTop = Math.max(columnTop, i * FH + slabH);
-            spin = i * Math.PI * 2 + u * Math.PI * 2;
-            trolleyX = 2 + u * (boomLen - 2.4);
-            pour = true;
-            dip = 0.1;
-          } else showSlabs(i, GANTRY_SEGS);
-        }
       } else {
-        for (let i = 0; i < GANTRY_FLOORS; i++) showSlabs(i, GANTRY_SEGS);
-        const slipEnd = GANTRY_LOOP_S - colEnd - 2;
-        const u = Math.min(1, (after - slipStart) / Math.max(0.1, slipEnd - slipStart));
-        setGrowY(slipWall, wallBottom, wallFullH, u);
-        const wallTop = wallBottom + wallFullH * u;
-        slipForm.isVisible = u > 0.02;
-        slipForm.position.y = wallTop + formH / 2 - 0.12;
-        carriageY = wallTop + formH + 0.35;
-        columnTop = Math.max(columnTop, wallTop);
-        spin = t * 0.45;
-        trolleyX = boomLen * 0.9;
-        pour = u < 0.995;
-        dip = 0.05;
+        setGrowY(slipWall, wallBottom, wallFullH, (wallTop - wallBottom) / wallFullH);
+        slipForm.isVisible = true;
+        slipForm.position.y = wallTop + formH / 2 - 0.1;
+        if (wallU > 0) carriageY = wallTop + formH + 0.35;
       }
+      if (wallU > 0) columnTop = Math.max(columnTop, wallTop);
     }
 
     berm.isVisible = bermT > 0.02;
