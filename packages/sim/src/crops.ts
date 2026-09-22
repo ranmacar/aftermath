@@ -1,0 +1,728 @@
+/**
+ * Crop catalog for Agrokruh / habitat sim.
+ *
+ * Source: Sophia agrokruh-crops-v1 (2026-09-21).
+ * Climate: temperate–continental outdoor, Czech-like (cold winters, warm summers, frost risk)
+ * Nutrient scale: see NUTRIENT_QUALITY_SCALE.
+ */
+
+export type CropKind =
+  | "staple"
+  | "vegetable"
+  | "legume"
+  | "fruit"
+  | "herb"
+  | "cover"
+  | "oilseed";
+
+/** How it sits in an Agrokruh layout. */
+export type AgroRole = "bed" | "interrow" | "shrub" | "tree";
+
+export type CropStatus = "draft" | "reviewed";
+
+export type NutrientQuality = {
+  /** kcal per 100 g edible portion (raw, typical). */
+  kcalPer100g: number;
+  /** Protein grams per 100 g edible. */
+  proteinGPer100g: number;
+  /** Short micronutrient / phytonutrient notes. */
+  micronutrientNotes?: string;
+  /**
+   * Game-facing 1–5 composite (energy + protein + micro richness).
+   * See NUTRIENT_QUALITY_SCALE.
+   */
+  score: 1 | 2 | 3 | 4 | 5;
+};
+
+export type Crop = {
+  id: string;
+  name: string;
+  latin?: string;
+  kind: CropKind;
+  agroRole: AgroRole;
+  /** Days from sow/transplant to primary harvest (typical temperate). */
+  growthCycleDays: number;
+  growthCycleNote?: string;
+  /** Fresh (or dry) biomass kg / m² / cycle — see biomassBasis. */
+  biomassKgPerM2: number;
+  biomassBasis: "fresh-aboveground" | "fresh-total" | "dry-aboveground";
+  biomassNote?: string;
+  /** Fraction of biomass that is human-edible (same moisture basis). */
+  edibleRatio: number;
+  nutrient: NutrientQuality;
+  /** Rough water demand: 0.5 low, 1 medium, 1.5 high, 2 very high. */
+  waterNeed: 0.5 | 1 | 1.5 | 2;
+  season?: string;
+  climateNotes?: string;
+  yieldVariability?: string;
+  status: CropStatus;
+  /** Still uncertain metrics — keep for Sophia follow-up. */
+  provisional?: boolean;
+  notes?: string;
+  sources?: string[];
+};
+
+/** Sophia v1 definition of nutrient.score. */
+export const NUTRIENT_QUALITY_SCALE = "nutrientQuality.score1to5 is a game-facing composite (1–5) of the edible portion: (1) energy density (kcal/100g), (2) protein density (g/100g), and (3) micronutrient/phytonutrient richness. Anchors: 1 = watery fruiting veg with low cal/protein and thin micro profile; 3 = typical root, allium, or moderate berry/fruit; 5 = calorie-dense nuts/seeds or legumes/greens with high protein and exceptional vitamin/mineral density. kcalPer100g and proteinGPer100g are USDA FoodData Central (or SR Legacy) raw edible portion values where available; score is not a linear transform of kcal alone." as const;
+
+/** Edible yield kg/m²/cycle (same moisture as biomass). */
+export function edibleKgPerM2(c: Crop): number {
+  return c.biomassKgPerM2 * c.edibleRatio;
+}
+
+/** Non-edible residue kg/m²/cycle (haulm, vines, etc.). */
+export function residueKgPerM2(c: Crop): number {
+  return c.biomassKgPerM2 * (1 - c.edibleRatio);
+}
+
+export const CROPS: readonly Crop[] = [
+  {
+    id: "potato",
+    name: "Potato",
+    latin: "Solanum tuberosum",
+    kind: "staple",
+    agroRole: "bed",
+    growthCycleDays: 105,
+    growthCycleNote: "plant to maincrop harvest (early cvs ~80–90 d)",
+    biomassKgPerM2: 5.5,
+    biomassBasis: "fresh-total",
+    biomassNote: "total plant fresh (tubers+haulm); edible tubers typically 3–4 kg/m² intensive (Fryd 3–5; French microfarm ~2.4)",
+    edibleRatio: 0.65,
+    nutrient: {
+      kcalPer100g: 77,
+      proteinGPer100g: 2.0,
+      micronutrientNotes: "Good K, vitamin C, B6; staple energy crop",
+      score: 4,
+    },
+    waterNeed: 1,
+    season: "April plant, July–Sep harvest",
+    climateNotes: "Excellent CZ fit; haulm frost-killed by autumn frost; plant after soil >8°C; earlies after mid-April lowlands",
+    yieldVariability: "Moderate; drought at tuber set cuts yield; late blight risk wet summers",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables (DE self-sufficiency)",
+      "Morel et al. 2017 French microfarm MERLIN (Agric. Syst.)",
+      "USDA FDC: Potatoes, flesh and skin, raw",
+      "pestik.cz / cozasadit.cz CZ planting calendar",
+    ],
+  },
+  {
+    id: "carrot",
+    name: "Carrot",
+    latin: "Daucus carota subsp. sativus",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 90,
+    growthCycleNote: "sow to harvest (early ~70 d, storage ~110–120 d)",
+    biomassKgPerM2: 7.0,
+    biomassBasis: "fresh-total",
+    biomassNote: "whole plant fresh; edible roots mid ~4 kg/m² (Fryd 3–5; MERLIN ~3.6)",
+    edibleRatio: 0.55,
+    nutrient: {
+      kcalPer100g: 41,
+      proteinGPer100g: 0.9,
+      micronutrientNotes: "Exceptional beta-carotene / vitamin A; fiber, K",
+      score: 3,
+    },
+    waterNeed: 1,
+    season: "Mar–Jun sow, summer–autumn harvest",
+    climateNotes: "Fully hardy CZ outdoor; prefers cool germination; storage types overwinter in ground or clamp",
+    yieldVariability: "High with soil compaction/carrot fly; irrigation improves uniformity",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Carrots, raw",
+      "MZe ČR seasonal calendar",
+    ],
+  },
+  {
+    id: "beet",
+    name: "Beetroot",
+    latin: "Beta vulgaris",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 65,
+    growthCycleNote: "sow to root harvest",
+    biomassKgPerM2: 7.5,
+    biomassBasis: "fresh-total",
+    biomassNote: "roots+leaves fresh; edible roots mid ~4 kg/m² (Fryd 3–6); leaves also edible",
+    edibleRatio: 0.55,
+    nutrient: {
+      kcalPer100g: 43,
+      proteinGPer100g: 1.6,
+      micronutrientNotes: "Folate, Mn, nitrates; betalain pigments; greens add Fe/vit A",
+      score: 3,
+    },
+    waterNeed: 1,
+    season: "Apr–Jul sow, Jun–Oct harvest",
+    climateNotes: "Very good CZ fit; light frost tolerant; bolt risk if sown too early then hot",
+    yieldVariability: "Moderate; crowding and drought reduce root size",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "USDA FDC: Beets, raw",
+      "CZ extension / pestik.cz sowing guides",
+    ],
+  },
+  {
+    id: "onion",
+    name: "Onion",
+    latin: "Allium cepa",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 110,
+    growthCycleNote: "sets to bulb harvest (~140–160 d from seed)",
+    biomassKgPerM2: 5.5,
+    biomassBasis: "fresh-total",
+    biomassNote: "bulbs+tops at lift; edible bulbs mid ~4 kg/m² (Fryd 3–6; MERLIN storage ~2.6)",
+    edibleRatio: 0.7,
+    nutrient: {
+      kcalPer100g: 40,
+      proteinGPer100g: 1.1,
+      micronutrientNotes: "Vitamin C, B6, folate; sulfur compounds (flavor/health)",
+      score: 3,
+    },
+    waterNeed: 1,
+    season: "Mar–Apr plant sets, Jul–Aug harvest",
+    climateNotes: "Core CZ storage crop; frost-hardy; long-day bulbing suits Central Europe",
+    yieldVariability: "Downy mildew and wet harvest years hurt storage quality",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Onions, raw",
+      "MZe ČR seasonal calendar",
+    ],
+  },
+  {
+    id: "cabbage",
+    name: "Head cabbage",
+    latin: "Brassica oleracea var. capitata",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 95,
+    growthCycleNote: "transplant to head harvest (early ~70 d, storage ~120 d)",
+    biomassKgPerM2: 7.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "aboveground at harvest; edible head mid ~5.5 kg/m² (Fryd head cabbage 5–8)",
+    edibleRatio: 0.75,
+    nutrient: {
+      kcalPer100g: 25,
+      proteinGPer100g: 1.3,
+      micronutrientNotes: "Vitamin C, K, fiber; glucosinolates",
+      score: 3,
+    },
+    waterNeed: 1.5,
+    season: "spring or summer transplant, summer–autumn harvest",
+    climateNotes: "Excellent CZ fit; light frost improves sweetness; classic sauerkraut crop",
+    yieldVariability: "Cabbage white / clubroot; water stress splits heads",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "USDA FDC: Cabbage, raw",
+      "Austrian Marktgärtnerei EIP (outdoor 2–5 kg/m² mixed veg context)",
+    ],
+  },
+  {
+    id: "kale",
+    name: "Kale / leaf cabbage",
+    latin: "Brassica oleracea var. sabellica",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 60,
+    growthCycleNote: "transplant to first meaningful cut; productive season ~120–150 d cut-and-come-again",
+    biomassKgPerM2: 3.5,
+    biomassBasis: "fresh-total",
+    biomassNote: "seasonal leaf harvest total mid ~2 kg/m² (Fryd green cabbage 1.5–2); range 1.5–3 provisional for intensive multi-cut",
+    edibleRatio: 0.6,
+    nutrient: {
+      kcalPer100g: 49,
+      proteinGPer100g: 4.3,
+      micronutrientNotes: "Exceptional vitamins A, C, K; Ca, lutein; high protein for a green",
+      score: 4,
+    },
+    waterNeed: 1,
+    season: "spring–summer plant, autumn–winter harvest",
+    climateNotes: "Outstanding CZ winter crop; sweetens after frost; hardy to hard freezes",
+    yieldVariability: "Aphids/cabbage whites; summer heat reduces leaf quality",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Fryd yield tables",
+      "USDA FDC: Kale, raw",
+      "CZ frost-hardy brassica practice (pestik.cz)",
+    ],
+  },
+  {
+    id: "tomato-outdoor",
+    name: "Tomato (outdoor / short-season)",
+    latin: "Solanum lycopersicum",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 85,
+    growthCycleNote: "transplant to first ripe fruit (~120–140 d from sow); outdoor harvest window short",
+    biomassKgPerM2: 9.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "aboveground vine+fruit; outdoor edible fruit mid ~5 kg/m² (Fryd outdoor lower end of 4–25; greenhouse MERLIN classic ~12 — do not use for outdoor)",
+    edibleRatio: 0.55,
+    nutrient: {
+      kcalPer100g: 18,
+      proteinGPer100g: 0.9,
+      micronutrientNotes: "Lycopene, vitamin C, K; low energy density",
+      score: 2,
+    },
+    waterNeed: 1.5,
+    season: "May 15+ plant out, Jul–Sep harvest",
+    climateNotes: "Outdoor OK in CZ lowlands/South Moravia with early cvs; frost-kill <0°C; Ice Saints risk; polytunnel strongly preferred north/upland",
+    yieldVariability: "High — late blight, cool summers, early frost truncate season",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN (greenhouse contrast)",
+      "USDA FDC: Tomatoes, red, ripe, raw",
+      "cozasadit.cz Ice Saints / outdoor tomato guidance",
+    ],
+  },
+  {
+    id: "zucchini",
+    name: "Zucchini / summer squash",
+    latin: "Cucurbita pepo",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 55,
+    growthCycleNote: "transplant to first harvest; continuous fruiting ~60–80 d",
+    biomassKgPerM2: 10.0,
+    biomassBasis: "fresh-total",
+    biomassNote: "vine+fruit season total; edible fruit mid ~5 kg/m² (Fryd courgette 4–6; MERLIN squash ~3.4)",
+    edibleRatio: 0.5,
+    nutrient: {
+      kcalPer100g: 17,
+      proteinGPer100g: 1.2,
+      micronutrientNotes: "Vitamin C, Mn, modest carotenoids; very watery",
+      score: 2,
+    },
+    waterNeed: 1.5,
+    season: "May plant, Jun–Sep harvest",
+    climateNotes: "Good CZ summer crop after frosts; frost-sensitive; productive in warm summers",
+    yieldVariability: "Powdery mildew late season; pollination weather affects fruit set",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Squash, summer, zucchini, raw",
+    ],
+  },
+  {
+    id: "cucumber",
+    name: "Cucumber",
+    latin: "Cucumis sativus",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 60,
+    growthCycleNote: "sow/transplant to first harvest; outdoor season ~50–70 d fruiting",
+    biomassKgPerM2: 7.5,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "vine+fruit; outdoor edible mid ~4 kg/m² (Fryd 4–25 greenhouse-heavy — outdoor nearer low end)",
+    edibleRatio: 0.55,
+    nutrient: {
+      kcalPer100g: 15,
+      proteinGPer100g: 0.7,
+      micronutrientNotes: "Mostly water; small vitamin K/C; low nutrient density",
+      score: 1,
+    },
+    waterNeed: 1.5,
+    season: "May–Jun sow/plant, Jul–Aug harvest",
+    climateNotes: "Outdoor possible CZ but prefers warm nights; downy mildew common; cold frame helps",
+    yieldVariability: "Very high with weather and mildew; greenhouse/tunnel much more stable",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Fryd yield tables",
+      "USDA FDC: Cucumber, with peel, raw",
+      "CZ outdoor cucurbit practice",
+    ],
+  },
+  {
+    id: "pepper-sweet",
+    name: "Sweet pepper",
+    latin: "Capsicum annuum",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 90,
+    growthCycleNote: "transplant to first colored fruit; outdoor often truncated",
+    biomassKgPerM2: 4.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "plant+fruit; outdoor edible mid ~2 kg/m² (marginal vs Fryd greenhouse 5–15; MERLIN sweet pepper ~3.6 often protected)",
+    edibleRatio: 0.5,
+    nutrient: {
+      kcalPer100g: 20,
+      proteinGPer100g: 0.9,
+      micronutrientNotes: "Outstanding vitamin C (esp. ripe); carotenoids when colored",
+      score: 3,
+    },
+    waterNeed: 1.5,
+    season: "May 15+ plant, Aug–Sep harvest outdoors",
+    climateNotes: "MARGINAL outdoor CZ except warmest lowlands/south walls; needs long heat; tunnel strongly recommended; frost-kill",
+    yieldVariability: "Very high outdoors — cool summers yield poorly; fruit often harvested green",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Fryd yield tables (greenhouse-skewed)",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Peppers, sweet, raw",
+      "cozasadit.cz heat-crop guidance",
+    ],
+  },
+  {
+    id: "lettuce",
+    name: "Lettuce",
+    latin: "Lactuca sativa",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 50,
+    growthCycleNote: "sow/transplant to head or full leaf harvest (cut types shorter)",
+    biomassKgPerM2: 3.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "one succession aboveground; edible mid ~2.5 kg/m² (Fryd ~3; MERLIN ~2.6); multiple successions/year possible",
+    edibleRatio: 0.85,
+    nutrient: {
+      kcalPer100g: 15,
+      proteinGPer100g: 1.4,
+      micronutrientNotes: "Vitamin K, A (darker leaves), folate; low energy",
+      score: 2,
+    },
+    waterNeed: 1.5,
+    season: "Mar–Sep sow successions, spring–autumn harvest",
+    climateNotes: "Excellent cool-season CZ crop; bolts in midsummer heat; light frost OK for many cvs",
+    yieldVariability: "High between successions; tipburn, aphids, heat bolting",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Lettuce, butterhead / green leaf approx.",
+      "Austrian Marktgärtnerei (leaf crops high variance)",
+    ],
+  },
+  {
+    id: "spinach",
+    name: "Spinach",
+    latin: "Spinacia oleracea",
+    kind: "vegetable",
+    agroRole: "bed",
+    growthCycleDays: 40,
+    growthCycleNote: "sow to first cut; spring or autumn crop",
+    biomassKgPerM2: 2.5,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "leaf harvest one flush mid ~2 kg/m² (Fryd 2–3; MERLIN ~1.0 — use mid-intensive ~2)",
+    edibleRatio: 0.8,
+    nutrient: {
+      kcalPer100g: 23,
+      proteinGPer100g: 2.9,
+      micronutrientNotes: "Exceptional folate, vitamin A/K, Fe, Mg; high protein for leaves",
+      score: 4,
+    },
+    waterNeed: 1,
+    season: "Mar–Apr or Aug–Sep sow, spring/autumn harvest",
+    climateNotes: "Classic CZ cool crop; overwinter possible mild years; bolts rapidly in long warm days",
+    yieldVariability: "High — bolting, leaf miners, drought at germination",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Spinach, raw",
+    ],
+  },
+  {
+    id: "pea",
+    name: "Garden pea",
+    latin: "Pisum sativum",
+    kind: "legume",
+    agroRole: "bed",
+    growthCycleDays: 70,
+    growthCycleNote: "sow to green pod/pea harvest",
+    biomassKgPerM2: 3.5,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "vines+pods; edible shelled peas or whole pods mid ~1.5 kg/m² peas-in-pod (Fryd peas 2–4; MERLIN pea ~1.1)",
+    edibleRatio: 0.4,
+    nutrient: {
+      kcalPer100g: 81,
+      proteinGPer100g: 5.4,
+      micronutrientNotes: "Good plant protein, fiber, folate, vitamin C, K; N-fixer",
+      score: 4,
+    },
+    waterNeed: 1,
+    season: "Mar–Apr sow, Jun–Jul harvest",
+    climateNotes: "Excellent early CZ crop; frost-tolerant seedlings; heat ends season",
+    yieldVariability: "Birds, powdery mildew, uneven flowering in drought",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Peas, green, raw",
+    ],
+  },
+  {
+    id: "bush-bean",
+    name: "Bush bean (snap)",
+    latin: "Phaseolus vulgaris",
+    kind: "legume",
+    agroRole: "bed",
+    growthCycleDays: 55,
+    growthCycleNote: "sow to first snap-pod harvest; successive picks ~30–40 d",
+    biomassKgPerM2: 3.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "plants+pods; edible snap pods mid ~1.5 kg/m² (Fryd bush beans 1–2)",
+    edibleRatio: 0.45,
+    nutrient: {
+      kcalPer100g: 31,
+      proteinGPer100g: 1.8,
+      micronutrientNotes: "Vitamin C, K, folate; modest protein fresh; N-fixer",
+      score: 3,
+    },
+    waterNeed: 1,
+    season: "May–Jun sow after frost, Jul–Aug harvest",
+    climateNotes: "Frost-sensitive; sow after Ice Saints; reliable CZ summer legume",
+    yieldVariability: "Moderate; cold wet soils rot seed; aphids/anthracnose",
+    status: "reviewed",
+    sources: [
+      "Fryd yield tables",
+      "USDA FDC: Beans, snap, green, raw",
+      "CZ May planting guides",
+    ],
+  },
+  {
+    id: "fava-bean",
+    name: "Fava / broad bean",
+    latin: "Vicia faba",
+    kind: "legume",
+    agroRole: "bed",
+    growthCycleDays: 110,
+    growthCycleNote: "spring sow to shelled harvest (~180–220 d autumn-sown overwinter)",
+    biomassKgPerM2: 4.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "haulm+pods; edible shelled beans mid ~1.0–1.2 kg/m² fresh (range uncertain — provisional)",
+    edibleRatio: 0.28,
+    nutrient: {
+      kcalPer100g: 88,
+      proteinGPer100g: 7.6,
+      micronutrientNotes: "High protein/folate for a fresh legume; Fe, Mn; N-fixer; favism caution (G6PD)",
+      score: 5,
+    },
+    waterNeed: 1,
+    season: "Feb–Apr sow (or autumn), Jun–Jul harvest",
+    climateNotes: "Excellent cool CZ legume; more frost-tolerant than Phaseolus; chocolate spot in wet years",
+    yieldVariability: "Aphids (black bean), chocolate spot; heat reduces set",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "USDA FDC: Broadbeans (fava), immature seeds, raw (approx.)",
+      "Central European fava agronomy notes",
+      "N-fixing legume literature (FAO pulses)",
+    ],
+  },
+  {
+    id: "strawberry",
+    name: "Strawberry",
+    latin: "Fragaria × ananassa",
+    kind: "fruit",
+    agroRole: "bed",
+    growthCycleDays: 365,
+    growthCycleNote: "perennial: days ≈ annual productive cycle; first meaningful harvest typically year 2 (~400–500 d from plant); June-bearer peak ~20–35 d",
+    biomassKgPerM2: 2.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual fruit+runner biomass framing; edible fruit mid ~1.5 kg/m² (MERLIN strawberry ~1.5); not standing crown biomass",
+    edibleRatio: 0.75,
+    nutrient: {
+      kcalPer100g: 32,
+      proteinGPer100g: 0.7,
+      micronutrientNotes: "High vitamin C, Mn, polyphenols; low calorie",
+      score: 3,
+    },
+    waterNeed: 1.5,
+    season: "Aug–Sep plant, May–Jun main harvest (everbearers longer)",
+    climateNotes: "Excellent CZ fit; blossom frost risk in late April–May; mulch and fleece help",
+    yieldVariability: "Botrytis in wet blossom; frost on open flowers; bed age declines after year 3–4",
+    status: "reviewed",
+    sources: [
+      "Morel et al. 2017 MERLIN",
+      "USDA FDC: Strawberries, raw",
+      "MZe ČR fruit calendar; pestik.cz strawberry care",
+    ],
+  },
+  {
+    id: "blackcurrant",
+    name: "Blackcurrant",
+    latin: "Ribes nigrum",
+    kind: "fruit",
+    agroRole: "shrub",
+    growthCycleDays: 730,
+    growthCycleNote: "perennial shrub: days to first meaningful harvest ~2 years; thereafter annual pick window ~14–21 d",
+    biomassKgPerM2: 1.1,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual fruit yield under canopy mid ~1.0–1.2 kg/m² (~10–12 t/ha; Russian cvs trials ~11 t/ha); not woody standing biomass",
+    edibleRatio: 0.95,
+    nutrient: {
+      kcalPer100g: 63,
+      proteinGPer100g: 1.4,
+      micronutrientNotes: "Exceptional vitamin C; anthocyanins, K; strong food-forest micronutrient crop",
+      score: 4,
+    },
+    waterNeed: 1,
+    season: "dormant plant, Jul harvest",
+    climateNotes: "Native-fit to cool CZ/Central Europe; chilling requirement met; late spring frost can hit flowers",
+    yieldVariability: "Moderate; gall mite / reversion virus; bird predation",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Sazonov et al. ISHS Rubus/Ribes (Russian cvs ~11 t/ha)",
+      "Estonian Polli blackcurrant evaluations",
+      "USDA / FINELI-style Ribes nigrum nutrition",
+      "MZe ČR rybíz season",
+    ],
+  },
+  {
+    id: "apple",
+    name: "Apple",
+    latin: "Malus domestica",
+    kind: "fruit",
+    agroRole: "tree",
+    growthCycleDays: 1100,
+    growthCycleNote: "perennial tree: days to first meaningful harvest ~3 years on dwarfing rootstock (range 2–5); thereafter annual crop",
+    biomassKgPerM2: 4.0,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual fruit yield intensive orchard mid ~4 kg/m² (40 t/ha; high-density often 40–55 t/ha); NOT standing woody biomass",
+    edibleRatio: 0.9,
+    nutrient: {
+      kcalPer100g: 52,
+      proteinGPer100g: 0.3,
+      micronutrientNotes: "Fiber, vitamin C (skin), polyphenols; low protein; staple fruit calories",
+      score: 2,
+    },
+    waterNeed: 1,
+    season: "dormant plant, Aug–Oct harvest by cv",
+    climateNotes: "Core CZ orchard species; cultivars for zones 5–6 abundant; blossom frost risk; fire blight / scab management",
+    yieldVariability: "Biennial bearing common; frost at bloom, hail, scab years",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Intensive apple orchard yield literature (~40–50 t/ha)",
+      "USDA FDC: Apples, raw, with skin",
+      "MZe ČR jablka season",
+      "Bulgarian/EU fruit stats context (lower extensive yields)",
+    ],
+  },
+  {
+    id: "pear",
+    name: "Pear",
+    latin: "Pyrus communis",
+    kind: "fruit",
+    agroRole: "tree",
+    growthCycleDays: 1200,
+    growthCycleNote: "perennial tree: days to first meaningful harvest ~3–5 years; thereafter annual",
+    biomassKgPerM2: 2.5,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual fruit mid ~2.5 kg/m² (25 t/ha good commercial; often lower than apple); not standing wood",
+    edibleRatio: 0.9,
+    nutrient: {
+      kcalPer100g: 57,
+      proteinGPer100g: 0.4,
+      micronutrientNotes: "Fiber, vitamin C, copper; similar energy profile to apple",
+      score: 2,
+    },
+    waterNeed: 1,
+    season: "dormant plant, Aug–Oct harvest",
+    climateNotes: "Good CZ fit; often blooms earlier than apple → higher spring frost risk; fire blight sensitive",
+    yieldVariability: "High frost sensitivity at bloom; biennial tendency; psylla/fire blight",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "EU temperate pear yield ranges",
+      "USDA FDC: Pears, raw",
+      "MZe ČR hrušky season",
+    ],
+  },
+  {
+    id: "hazelnut",
+    name: "Hazelnut / cobnut",
+    latin: "Corylus avellana",
+    kind: "fruit",
+    agroRole: "shrub",
+    growthCycleDays: 1500,
+    growthCycleNote: "perennial multi-stem shrub/small tree: days to first meaningful harvest ~4–5 years (range 4–7); thereafter annual",
+    biomassKgPerM2: 0.25,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual in-shell nut yield mature planting mid ~0.2–0.3 kg/m² (~2–3 t/ha good; high-density trials ~2–3 t/ha); kernel edible fraction of in-shell ~0.4 — biomass is in-shell",
+    edibleRatio: 0.42,
+    nutrient: {
+      kcalPer100g: 628,
+      proteinGPer100g: 15.0,
+      micronutrientNotes: "Very high energy + plant protein; vitamin E, Mg, Mn, healthy fats — top score staple",
+      score: 5,
+    },
+    waterNeed: 0.5,
+    season: "dormant plant, Sep–Oct nut harvest",
+    climateNotes: "Native European species; excellent CZ food-forest fit; wind pollination — plant compatible pollinisers; late spring frost rarely an issue vs fruit trees",
+    yieldVariability: "High until canopy mature; biennial; squirrels; incomplete pollination",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "High-density hazelnut yield trials (e.g. ~2–3 t/ha)",
+      "USDA FDC: Nuts, hazelnuts or filberts, raw",
+      "FAO tree-nut yield context",
+      "European Corylus avellana agronomy",
+    ],
+  },
+  {
+    id: "raspberry",
+    name: "Raspberry",
+    latin: "Rubus idaeus",
+    kind: "fruit",
+    agroRole: "shrub",
+    growthCycleDays: 400,
+    growthCycleNote: "perennial cane: primocane cvs first harvest same year (~120–150 d); floricane meaningful year 2; annual productive pick ~30–50 d",
+    biomassKgPerM2: 1.2,
+    biomassBasis: "fresh-aboveground",
+    biomassNote: "annual fruit mid ~1.0–1.5 kg/m² in good temperate plantings (wide range 0.3–2+; Estonian/Central European trials variable)",
+    edibleRatio: 0.95,
+    nutrient: {
+      kcalPer100g: 52,
+      proteinGPer100g: 1.2,
+      micronutrientNotes: "Vitamin C, Mn, fiber, ellagitannins; moderate energy for a berry",
+      score: 3,
+    },
+    waterNeed: 1.5,
+    season: "spring plant, Jun–Jul (floricane) or Aug–Oct (primocane)",
+    climateNotes: "Excellent CZ fit; prefers cool summers; winter cane damage in exposed sites; virus/phytophthora in wet soils",
+    yieldVariability: "High — cane disease, rain at harvest softens fruit, bird pressure",
+    status: "draft",
+    provisional: true,
+    sources: [
+      "Estonian Polli primocane raspberry trials",
+      "USDA FDC: Raspberries, raw",
+      "MZe ČR maliny season",
+      "EU raspberry yield statistics (variable)",
+    ],
+  },
+] as const;
+
+export type CropId = (typeof CROPS)[number]["id"];
+
+const BY_ID: ReadonlyMap<string, Crop> = new Map(CROPS.map((c) => [c.id, c]));
+
+export function getCrop(id: string): Crop | undefined {
+  return BY_ID.get(id);
+}
+
+export function cropsByRole(role: AgroRole): Crop[] {
+  return CROPS.filter((c) => c.agroRole === role);
+}
+
+export function draftCrops(): Crop[] {
+  return CROPS.filter((c) => c.status === "draft" || c.provisional);
+}
+
+export function reviewedCrops(): Crop[] {
+  return CROPS.filter((c) => c.status === "reviewed" && !c.provisional);
+}
+

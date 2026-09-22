@@ -1,0 +1,21 @@
+{
+  "name": "@aftermath/root",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Aftermath \u2014 regenerative Habitat map game (H3, Walk, Agrokruh)",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @aftermath/web",
+    "build": "npm run build -w @aftermath/web",
+    "preview": "npm run preview -w @aftermath/web",
+    "test": "npm run test -w @aftermath/sim",
+    "encrypt-tiles-key": "node scripts/encrypt-tiles-key.mjs"
+  },
+  "overrides": {
+    "rollup": "npm:@rollup/wasm-node"
+  }
+}

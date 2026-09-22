@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#12160f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Aftermath</title>
+  </head>
+  <body>
+    <div id="digout" class="digout" aria-hidden="true">
+      <canvas id="digout-canvas" class="digout-canvas"></canvas>
+      <p id="digout-title" class="digout-title">Basement</p>
+      <p id="digout-hint" class="digout-hint"></p>
+      <p id="digout-signal" class="digout-signal">…</p>
+      <button type="button" id="digout-fwd" class="digout-fwd">Hold to dig</button>
+      <button type="button" id="digout-skip" class="digout-skip">Skip</button>
+    </div>
+    <div id="map"></div>
+    <header class="chrome">
+      <span class="wordmark">Arbolis</span>
+      <nav class="modes" aria-label="Map modes">
+        <button type="button" id="mode-map" class="mode is-on">Map</button>
+        <button type="button" id="mode-look" class="mode" disabled>Look</button>
+        <button type="button" id="mode-walk" class="mode" disabled>Walk</button>
+        <button type="button" id="mode-habitat" class="mode" disabled>Habitat</button>
+      </nav>
+      <p id="status" class="status" hidden></p>
+      <p id="cell" class="cell">H3 r10</p>
+    </header>
+    <div id="view3d" class="view3d" aria-hidden="true">
+      <div id="view3d-canvas" class="view3d-canvas"></div>
+      <button type="button" id="view3d-close" class="view3d-close">Map</button>
+      <button type="button" id="view3d-walk" class="view3d-walk">Walk</button>
+      <button type="button" id="view3d-habitat" class="view3d-habitat">Habitat</button>
+      <p id="view3d-label" class="view3d-label"></p>
+      <p id="view3d-error" class="view3d-error" hidden></p>
+      <div id="view3d-credits" class="view3d-credits"></div>
+    </div>
+    <div id="walk" class="walk" aria-hidden="true">
+      <canvas id="walk-canvas" class="walk-canvas"></canvas>
+      <p id="walk-label" class="walk-label"></p>
+      <aside id="walk-quest" class="walk-quest">
+        <p id="walk-quest-now" class="walk-quest-now"></p>
+        <ol id="walk-quest-list" class="walk-quest-list"></ol>
+      </aside>
+      <button type="button" id="walk-look" class="walk-look">Look</button>
+      <button type="button" id="walk-map" class="walk-map">Map</button>
+      <button type="button" id="walk-act" class="walk-act" hidden>
+        <span id="walk-act-label">Hold</span>
+        <span class="walk-act-fill" id="walk-act-fill"></span>
+      </button>
+      <button type="button" id="walk-fwd" class="walk-fwd">Hold to walk</button>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
