@@ -21,7 +21,7 @@ export const QUEST_DEFS: readonly QuestDef[] = [
   {
     id: "solar",
     title: "Solar roof",
-    hint: "At the hatch console — assemble the solar roof flat, then it pitches up.",
+    hint: "Assemble the solar roof flat, then it pitches up.",
     prompt: "Hold to install solar",
   },
   {

@@ -1,3 +1,5 @@
+import { primeGeolocation } from "./locate";
+
 const FLAG = "arbolis:beat1-done";
 
 export function beat1Done(): boolean {
@@ -104,6 +106,7 @@ export function attachDigout(handlers: {
   }
 
   function finish(): void {
+    primeGeolocation();
     if (!running) return;
     running = false;
     markDone();

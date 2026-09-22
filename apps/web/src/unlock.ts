@@ -3,6 +3,7 @@
  * browser, or the visitor continues on free maps.
  */
 import { ionToken, setIonToken, unlockIonToken } from "./cesium-ion";
+import { primeGeolocation } from "./locate";
 import { preferFreeMaps, setTilesKey } from "./tiles-key";
 
 export type UnlockResult =
@@ -93,6 +94,7 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
     }
 
     unlockBtn.addEventListener("click", () => {
+      primeGeolocation();
       void (async () => {
         err.hidden = true;
         const password = pwd.value;
@@ -111,7 +113,10 @@ export function ensureTilesUnlock(): Promise<UnlockResult> {
       })();
     });
 
-    freeBtn.addEventListener("click", () => finishFree());
+    freeBtn.addEventListener("click", () => {
+      primeGeolocation();
+      finishFree();
+    });
 
     pwd.addEventListener("keydown", (e) => {
       if (e.key === "Enter") unlockBtn.click();

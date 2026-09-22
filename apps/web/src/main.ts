@@ -5,6 +5,7 @@ import { attachView3d } from "./view3d";
 import { attachWalk } from "./walk";
 import { attachDigout } from "./digout";
 import "./style.css";
+import { networkLocation, takeBrowserPosition, type LngLat } from "./locate";
 import { ensureTilesUnlock } from "./unlock";
 
 type Mode = "map" | "look" | "walk" | "habitat";
@@ -55,8 +56,6 @@ function writeUi(next: Mode, cell: string | null): void {
 
 const LAST_KEY = "aftermath:last-loc";
 const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
-
-type LngLat = { lng: number; lat: number };
 
 const statusNode = document.getElementById("status");
 if (!(statusNode instanceof HTMLElement)) {
@@ -148,7 +147,7 @@ map.addControl(
 );
 
 const geolocate = new maplibregl.GeolocateControl({
-  positionOptions: { enableHighAccuracy: true, timeout: 12_000 },
+  positionOptions: { enableHighAccuracy: false, timeout: 20_000, maximumAge: 60_000 },
   fitBoundsOptions: { maxZoom: 16 },
   trackUserLocation: true,
   showUserLocation: true,
@@ -289,6 +288,11 @@ async function fallbackLocation(): Promise<void> {
     applyPosition(cached, "Using last location — tap the locate control to refresh");
     return;
   }
+  const network = await networkLocation();
+  if (network) {
+    applyPosition(network, "Approximate location — tap locate to use GPS");
+    return;
+  }
   setStatus("Location unavailable — pan the map or tap locate", "err");
 }
 
@@ -300,30 +304,14 @@ async function locateUser(reason: "start" | "after-digout"): Promise<void> {
   setStatus("Finding your location…");
   map.resize();
 
-  const fromBrowser = (): Promise<LngLat | null> =>
-    new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        resolve(null);
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            lng: position.coords.longitude,
-            lat: position.coords.latitude,
-          });
-        },
-        () => resolve(null),
-        { enableHighAccuracy: true, timeout: 12_000, maximumAge: 0 },
-      );
-    });
-
   try {
     // Let layout settle after digout overlay closes.
     await new Promise<void>((r) => requestAnimationFrame(() => r()));
     map.resize();
 
-    const coord = await fromBrowser();
+    // Started from the unlock click when possible. A later call is not a
+    // user gesture, and GitHub Pages browsers drop those.
+    const coord = await takeBrowserPosition();
     if (coord) {
       applyPosition(
         coord,
@@ -331,19 +319,10 @@ async function locateUser(reason: "start" | "after-digout"): Promise<void> {
           ? "You're here — follow the pod signal, pick a hex"
           : "You're here",
       );
-      try {
-        geolocate.trigger();
-      } catch {
-        /* control may already be tracking */
-      }
       return;
     }
 
-    try {
-      geolocate.trigger();
-    } catch {
-      await fallbackLocation();
-    }
+    await fallbackLocation();
   } finally {
     locateInFlight = false;
   }
