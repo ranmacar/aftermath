@@ -285,6 +285,8 @@ export function attachDigout(handlers: {
 
     const keys = new Set<string>();
     const onKeyDown = (e: KeyboardEvent): void => {
+      if (!running) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       keys.add(e.code);
       if (
         e.code === "KeyW" ||
@@ -306,17 +308,26 @@ export function attachDigout(handlers: {
     };
     const onKeyUp = (e: KeyboardEvent): void => {
       keys.delete(e.code);
+      // Clear strafe aliases if code is missing/odd
+      if (e.key.toLowerCase() === "d") keys.delete("KeyD");
       if (e.code === "KeyE" || e.code === "Space") fwdHeld = false;
+    };
+    const onBlurKeys = (): void => {
+      keys.clear();
+      fwdHeld = false;
     };
     const onResize = (): void => eng.resize();
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("blur", onBlurKeys);
     window.addEventListener("resize", onResize);
 
     sceneDispose = () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", onBlurKeys);
       window.removeEventListener("resize", onResize);
+      keys.clear();
       sc.dispose();
     };
 

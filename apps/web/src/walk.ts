@@ -283,6 +283,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       VertexData,
       TransformNode,
       DynamicTexture,
+      KeyboardEventTypes,
     } = await import("@babylonjs/core");
 
     if (!open || cellId !== cell) return;
@@ -571,7 +572,9 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     camera.setTarget(new Vector3(0, originY + 1.1, 0));
     canvas.tabIndex = 0;
     canvas.style.outline = "none";
+    // Mouse look only — we own WASD ourselves (Babylon keyboard fight KeyD).
     camera.attachControl(canvas, true);
+    camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
     camera.fov = 0.9; // ~52° vFOV, closer to human; wide FOV shrinks scale
     camera.speed = 0;
     camera.inertia = 0.5;
@@ -588,9 +591,17 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     camera.checkCollisions = false;
     camera.applyGravity = false;
     camera.minZ = 0.08;
-    // Strip built-in keyboard move entirely (camera.keys* alone does not always clear the input).
-    camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
-    canvas.focus();
+    canvas.addEventListener(
+      "pointerdown",
+      () => {
+        try {
+          canvas.focus({ preventScroll: true });
+        } catch {
+          canvas.focus();
+        }
+      },
+      { passive: true },
+    );
 
     const pose = readCam(cell, layout);
     if (pose) applyCam(camera, pose);
@@ -608,7 +619,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     syncHud();
 
 
-    const moveKeys = new Set<string>();
     let vy = 0;
     let grounded = true;
     let spaceDown = false;
@@ -624,67 +634,65 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     const STEP_HEIGHT = 1.35; // berm / small ledges
     const FLY_HOLD_S = 0.45; // hold Space this long to enter fly
 
-    const press = (e: KeyboardEvent, down: boolean): void => {
-      if (!open) return;
-      const codes: string[] = [];
-      if (e.code) codes.push(e.code);
-      // Fallbacks — some layouts/extensions make code flaky for unmodified letters.
-      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key.toLowerCase();
-      if (k === "w" || e.keyCode === 87) codes.push("KeyW");
-      if (k === "a" || e.keyCode === 65) codes.push("KeyA");
-      if (k === "s" || e.keyCode === 83) codes.push("KeyS");
-      if (k === "d" || e.keyCode === 68) codes.push("KeyD");
-      if (k === "l" || e.keyCode === 76) codes.push("KeyL"); // backup strafe right
-      if (k === "j" || e.keyCode === 74) codes.push("KeyJ"); // backup strafe left
-      if (k === "c" || e.keyCode === 67) codes.push("KeyC"); // fly descend
-      if (k === " " || e.code === "Space") codes.push("Space");
-      if (k === "shift" || e.code === "ShiftLeft" || e.code === "ShiftRight") {
-        codes.push(e.code === "ShiftRight" ? "ShiftRight" : "ShiftLeft");
-      }
-      if (e.code === "ControlLeft" || e.code === "ControlRight") {
-        codes.push(e.code);
-      }
-      if (
-        e.code === "ArrowUp" ||
-        e.code === "ArrowDown" ||
-        e.code === "ArrowLeft" ||
-        e.code === "ArrowRight"
-      ) {
-        codes.push(e.code);
-      }
+    const moveDown = new Set<string>();
 
-      const interesting = codes.some((c) =>
-        [
-          "KeyW",
-          "KeyA",
-          "KeyS",
-          "KeyD",
-          "KeyL",
-          "KeyJ",
-          "KeyC",
-          "ArrowUp",
-          "ArrowDown",
-          "ArrowLeft",
-          "ArrowRight",
-          "ShiftLeft",
-          "ShiftRight",
-          "ControlLeft",
-          "ControlRight",
-          "Space",
-        ].includes(c),
-      );
-      if (!interesting) return;
-      e.preventDefault();
-      if (down) canvas.focus();
+    const clearMoveKeys = (): void => {
+      moveDown.clear();
+      spaceDown = false;
+      spaceArmedJump = false;
+      spaceHoldAcc = 0;
+    };
 
-      for (const c of codes) {
+    const noteKey = (code: string, key: string, down: boolean): void => {
+      const k = key.length === 1 ? key.toLowerCase() : key.toLowerCase();
+      const aliases: string[] = [];
+      if (code) aliases.push(code);
+      const map: Record<string, string> = {
+        w: "KeyW",
+        a: "KeyA",
+        s: "KeyS",
+        d: "KeyD",
+        l: "KeyL",
+        j: "KeyJ",
+        c: "KeyC",
+        " ": "Space",
+        arrowup: "ArrowUp",
+        arrowdown: "ArrowDown",
+        arrowleft: "ArrowLeft",
+        arrowright: "ArrowRight",
+      };
+      if (k in map) aliases.push(map[k]!);
+      if (k === "shift") aliases.push("ShiftLeft");
+
+      const wanted = new Set([
+        "KeyW",
+        "KeyA",
+        "KeyS",
+        "KeyD",
+        "KeyL",
+        "KeyJ",
+        "KeyC",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ShiftLeft",
+        "ShiftRight",
+        "ControlLeft",
+        "ControlRight",
+        "Space",
+      ]);
+
+      for (const c of aliases) {
+        if (!wanted.has(c)) continue;
         if (c === "Space") {
-          if (down && !e.repeat) {
-            spaceDown = true;
-            spaceHoldAcc = 0;
-            spaceArmedJump = true;
-          }
-          if (!down) {
+          if (down) {
+            if (!spaceDown) {
+              spaceDown = true;
+              spaceHoldAcc = 0;
+              spaceArmedJump = true;
+            }
+          } else {
             if (spaceArmedJump && spaceHoldAcc < FLY_HOLD_S) {
               if (flying) {
                 flying = false;
@@ -700,16 +708,36 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
           }
           continue;
         }
-        if (down) moveKeys.add(c);
-        else moveKeys.delete(c);
+        if (down) moveDown.add(c);
+        else moveDown.delete(c);
       }
     };
-    const onMoveKeyDown = (e: KeyboardEvent): void => press(e, true);
-    const onMoveKeyUp = (e: KeyboardEvent): void => press(e, false);
-    window.addEventListener("keydown", onMoveKeyDown, true);
-    window.addEventListener("keyup", onMoveKeyUp, true);
-    canvas.addEventListener("keydown", onMoveKeyDown);
-    canvas.addEventListener("keyup", onMoveKeyUp);
+
+    const kbObs = scene.onKeyboardObservable.add((info) => {
+      if (!open) return;
+      const e = info.event;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const down = info.type === KeyboardEventTypes.KEYDOWN;
+      noteKey(e.code || "", e.key || "", down);
+      // Prevent page scroll / browser bind for movement keys only
+      if (
+        e.code === "KeyW" ||
+        e.code === "KeyA" ||
+        e.code === "KeyS" ||
+        e.code === "KeyD" ||
+        e.code === "Space" ||
+        e.code.startsWith("Arrow")
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    const onWindowBlur = (): void => clearMoveKeys();
+    const onVisibility = (): void => {
+      if (document.visibilityState !== "visible") clearMoveKeys();
+    };
+    window.addEventListener("blur", onWindowBlur);
+    document.addEventListener("visibilitychange", onVisibility);
 
     function nearCurrent(): ReturnType<typeof currentQuest> {
       if (!settlement) return null;
@@ -746,21 +774,22 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       }
 
       const running =
-        moveKeys.has("ShiftLeft") || moveKeys.has("ShiftRight");
+        moveDown.has("ShiftLeft") || moveDown.has("ShiftRight");
       let mx = 0;
       let mz = 0;
-      if (fwdHeld || moveKeys.has("KeyW") || moveKeys.has("ArrowUp")) mz += 1;
-      if (moveKeys.has("KeyS") || moveKeys.has("ArrowDown")) mz -= 1;
-      if (moveKeys.has("KeyA") || moveKeys.has("KeyJ") || moveKeys.has("ArrowLeft"))
+      if (fwdHeld || moveDown.has("KeyW") || moveDown.has("ArrowUp")) mz += 1;
+      if (moveDown.has("KeyS") || moveDown.has("ArrowDown")) mz -= 1;
+      if (moveDown.has("KeyA") || moveDown.has("KeyJ") || moveDown.has("ArrowLeft"))
         mx -= 1;
-      if (moveKeys.has("KeyD") || moveKeys.has("KeyL") || moveKeys.has("ArrowRight"))
+      if (moveDown.has("KeyD") || moveDown.has("KeyL") || moveDown.has("ArrowRight"))
         mx += 1;
 
       if (flying) {
         const speed = (running ? FLY_FAST : FLY_SPEED) * dt;
-        // Full look-direction flight (includes pitch).
         if (mx !== 0 || mz !== 0) {
-          const world = camera.getDirection(new Vector3(mx, 0, mz));
+          const forward = camera.getDirection(Vector3.Forward());
+          const right = camera.getDirection(Vector3.Right());
+          const world = forward.scale(mz).addInPlace(right.scale(mx));
           if (world.lengthSquared() >= 1e-6) {
             world.normalize();
             camera.position.addInPlace(world.scale(speed));
@@ -769,9 +798,9 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         let my = 0;
         if (spaceDown) my += 1;
         if (
-          moveKeys.has("KeyC") ||
-          moveKeys.has("ControlLeft") ||
-          moveKeys.has("ControlRight")
+          moveDown.has("KeyC") ||
+          moveDown.has("ControlLeft") ||
+          moveDown.has("ControlRight")
         ) {
           my -= 1;
         }
@@ -779,25 +808,27 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       } else {
         const speed = (running ? RUN_SPEED : WALK_SPEED) * dt;
         if (mx !== 0 || mz !== 0) {
-          // Local camera space: +X right, +Z forward (Babylon). One call avoids Right()/Cross bugs.
-          const world = camera.getDirection(new Vector3(mx, 0, mz));
-          world.y = 0;
+          const forward = camera.getDirection(Vector3.Forward());
+          const right = camera.getDirection(Vector3.Right());
+          forward.y = 0;
+          right.y = 0;
+          const world = forward.scale(mz).addInPlace(right.scale(mx));
           if (world.lengthSquared() >= 1e-6) {
             world.normalize();
             const before = camera.position.clone();
-            const diff = world.scale(speed);
-            diff.y = 0;
-            camera.position.x = before.x + diff.x;
-            camera.position.z = before.z + diff.z;
-            const sole = camera.position.y - eyeH;
-            const gNext = floorAt(camera.position.x, camera.position.z, sole);
+            const next = before.add(world.scale(speed));
+            const sole = before.y - eyeH;
+            const gNext = floorAt(next.x, next.z, sole);
             const rise = gNext - sole;
-            if (rise > 0 && rise <= STEP_HEIGHT) {
-              camera.position.y = gNext + eyeH;
-              vy = 0;
-              grounded = true;
-            } else {
-              camera.position.y = before.y;
+            // Block only steep climbs; allow flat / downhill (gravity settles Y).
+            if (rise <= STEP_HEIGHT) {
+              camera.position.x = next.x;
+              camera.position.z = next.z;
+              if (rise > 0) {
+                camera.position.y = gNext + eyeH;
+                vy = 0;
+                grounded = true;
+              }
             }
           }
         }
@@ -852,11 +883,10 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       writeCam(cell, layout, camera);
       if (activeWalk?.cell === cell) activeWalk = null;
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("keydown", onMoveKeyDown, true);
-      window.removeEventListener("keyup", onMoveKeyUp, true);
-      canvas.removeEventListener("keydown", onMoveKeyDown);
-      canvas.removeEventListener("keyup", onMoveKeyUp);
-      moveKeys.clear();
+      scene.onKeyboardObservable.remove(kbObs);
+      window.removeEventListener("blur", onWindowBlur);
+      document.removeEventListener("visibilitychange", onVisibility);
+      clearMoveKeys();
       scene.dispose();
     };
   }

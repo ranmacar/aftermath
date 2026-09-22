@@ -120,12 +120,14 @@ export function buildPatrolPaths(
   agroYaw: number,
 ): Pt[][] {
   const g0 = groundAt(0, 0);
+  const lift = 0.05;
+  const gyAt = (x: number, z: number): number => groundAt(x, z) - g0 + lift;
   const paths: Pt[][] = [];
 
-  // 0–2: ground rings around tower
-  paths.push(ringPts(OUTER_R + 2.2, g0, 16, 0).map((p) => ({ ...p, y: groundAt(p.x, p.z) })));
-  paths.push(ringPts(OUTER_R + 4.5, g0, 14, 0.2).map((p) => ({ ...p, y: groundAt(p.x, p.z) })));
-  paths.push(ringPts(OUTER_R + 7.0, g0, 12, 0.4).map((p) => ({ ...p, y: groundAt(p.x, p.z) })));
+  // 0–2: ground rings around tower (Y relative to habitat root)
+  paths.push(ringPts(OUTER_R + 2.2, 0, 16, 0).map((p) => ({ ...p, y: gyAt(p.x, p.z) })));
+  paths.push(ringPts(OUTER_R + 4.5, 0, 14, 0.2).map((p) => ({ ...p, y: gyAt(p.x, p.z) })));
+  paths.push(ringPts(OUTER_R + 7.0, 0, 12, 0.4).map((p) => ({ ...p, y: gyAt(p.x, p.z) })));
 
   // 3–5: climb stairs floors 0→1, 1→2, 2→3 (up then down)
   for (let f = 0; f < 3; f++) {
@@ -170,9 +172,9 @@ export function buildPatrolPaths(
   for (const idx of [0, 2, 4, 7, 10]) {
     const b = bedSites[idx]!;
     paths.push(
-      farmBedLoop(b.cx, b.cz, AGRO_BED_R, g0).map((p) => ({
+      farmBedLoop(b.cx, b.cz, AGRO_BED_R, 0).map((p) => ({
         ...p,
-        y: groundAt(p.x, p.z) + 0.02,
+        y: gyAt(p.x, p.z),
       })),
     );
   }

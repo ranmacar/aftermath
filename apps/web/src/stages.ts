@@ -2733,7 +2733,7 @@ export function buildConstructionStrip(
     const gy = groundAt(stage.x, stage.z);
     const root = new TransformNode(stage.id, scene);
     root.parent = strip;
-    root.position.set(stage.x, gy, stage.z);
+    root.position.set(stage.x, gy + 0.04, stage.z);
 
     if (stage.id === "solar-flat") {
       buildSolarPanel(scene, bab, root, m, false, 0, undefined, true);
@@ -2898,6 +2898,30 @@ function agroTreeSites(
   return sites;
 }
 
+
+/** Sample ground under a footprint; use max so large discs/trees are not buried in slopes. */
+function groundClearanceAt(
+  groundAt: (x: number, z: number) => number,
+  x: number,
+  z: number,
+  radius = 0,
+  lift = 0.06,
+): number {
+  let h = groundAt(x, z);
+  if (radius > 0.05) {
+    const rings = radius > 4 ? [0.35, 0.7, 1] : [0.6, 1];
+    const n = radius > 4 ? 12 : 8;
+    for (const f of rings) {
+      const r = radius * f;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2;
+        h = Math.max(h, groundAt(x + Math.cos(a) * r, z + Math.sin(a) * r));
+      }
+    }
+  }
+  return h + lift;
+}
+
 function buildAgrokruh(
   scene: Scene,
   bab: Bab,
@@ -2949,7 +2973,11 @@ function buildAgrokruh(
   for (const [i, bed] of beds.entries()) {
     const node = new TransformNode(`agro-bed-${i}`, scene);
     node.parent = farm;
-    node.position.set(bed.x, groundAt(bed.x, bed.z) - originGy, bed.z);
+    node.position.set(
+      bed.x,
+      groundClearanceAt(groundAt, bed.x, bed.z, bed.r) - originGy,
+      bed.z,
+    );
     bedNodes.push(node);
 
     const soil = MeshBuilder.CreateCylinder(
@@ -3107,7 +3135,7 @@ function buildAgrokruh(
   plants.parent = farm;
 
   const placeTree = (tx: number, tz: number, i: number): void => {
-    const gy = groundAt(tx, tz) - originGy;
+    const gy = groundClearanceAt(groundAt, tx, tz, 0.45) - originGy;
     const scale = 0.75 + rand() * 0.45;
     const trunkH = 1.6 * scale;
     const canopyR = 1.25 * scale;
@@ -3215,7 +3243,7 @@ function buildAgrokruh(
   }
 
   for (const [i, s] of shrubPts.entries()) {
-    const gy = groundAt(s.x, s.z) - originGy;
+    const gy = groundClearanceAt(groundAt, s.x, s.z, 0.35) - originGy;
     const scale = 0.55 + rand() * 0.7;
     const node = new TransformNode(`agro-shrub-${i}`, scene);
     node.parent = plants;
@@ -3267,7 +3295,7 @@ export function buildHabitatStrip(
     const root = new TransformNode(`habitat-${hub.cell}`, scene);
     root.parent = strip;
     const gy = groundAt(hub.x, hub.z);
-    root.position.set(hub.x, gy, hub.z);
+    root.position.set(hub.x, gy + 0.04, hub.z);
     const localGround = (lx: number, lz: number): number =>
       groundAt(hub.x + lx, hub.z + lz);
     const isFocus = hub.cell === cell;
