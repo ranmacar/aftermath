@@ -846,6 +846,10 @@ function buildGantryStage(
   stream.position.y = -1.5;
   stream.isVisible = false;
 
+  const roof = new TransformNode("build-roof", scene);
+  roof.parent = parent;
+  buildSolarPanel(scene, bab, roof, m, true, 0, pitchedDiscCenterY(0));
+
   const setGrowY = (
     mesh: import("@babylonjs/core").Mesh,
     bottom: number,
@@ -973,12 +977,15 @@ function buildGantryStage(
     berm.scaling.z = bermT;
     const colT = Math.max(0, (columnTop - containerTop) / columnMeshH);
     setGrowY(column, containerTop, columnMeshH, colT);
-    gantry.position.y = carriageY;
+    gantry.position.y = Math.min(carriageY, columnTop + 0.85);
     gantry.rotation.y = spin;
     tool.rotation.z = dip;
     trolley.position.x = trolleyX;
     stream.isVisible = pour;
     bucket.isVisible = !pour;
+    const roofUp = t >= digEnd && columnTop > containerTop + 0.4;
+    roof.setEnabled(roofUp);
+    roof.position.y = columnTop;
   };
 
   apply(0);
