@@ -18,6 +18,7 @@ import {
   type WalkLayout,
 } from "./stages";
 import { carveTerrainPit } from "./carve";
+import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 type WalkHandle = {
   open(cell: string, layout?: WalkLayout): void;
@@ -47,6 +48,7 @@ type ActiveWalkSession = {
   scene: unknown;
   bab: unknown;
   groundAt: (x: number, z: number) => number;
+  ground: Mesh | null;
   strip: { dispose: (doNotRecurse?: boolean, disposeMaterialAndTextures?: boolean) => void };
   camera: {
     position: { x: number; y: number; z: number; set: (x: number, y: number, z: number) => void };
@@ -121,7 +123,12 @@ async function rebuildWalkStrip(
     session.strip =
       session.layout === "habitat"
         ? stages.buildHabitatStrip(scene, bab, session.groundAt, session.cell)
-        : stages.buildConstructionStrip(scene, bab, session.groundAt);
+        : stages.buildConstructionStrip(
+            scene,
+            bab,
+            session.groundAt,
+            session.ground,
+          );
     const pose = readCam(session.cell, session.layout);
     if (pose) applyCam(session.camera, pose);
     console.info(`[walk] ${session.layout} strip hot-reloaded`);
@@ -212,7 +219,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     cell: string,
     layout: WalkLayout = "stages",
   ): Promise<void> {
-    const modeLabel = layout === "habitat" ? "Habitat" : "Walk";
+    const modeLabel = layout === "habitat" ? "Farm" : "Build";
     // Same cell + same layout: rebuild strip in place (HMR / refresh).
     // Layout change (Walk ↔ Habitat) needs a full remount — terrain size differs.
     if (
@@ -336,9 +343,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     markMat.emissiveColor = new Color3(0.18, 0.24, 0.08);
     const dirtMat = new StandardMaterial("dirt", scene);
     dirtMat.diffuseColor = new Color3(0.38, 0.32, 0.22);
-    const solarMat = new StandardMaterial("solar", scene);
-    solarMat.diffuseColor = new Color3(0.08, 0.12, 0.22);
-    solarMat.emissiveColor = new Color3(0.05, 0.12, 0.08);
 
     function groundAt(x: number, z: number): number {
       return samplePatch(patch, x, z);
@@ -475,12 +479,8 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         return;
       }
       interior.intensity = s.power > 0 ? 1.05 : 0.45;
-      solarPreview.isVisible = s.power > 0;
-      if (s.power > 0) {
-        solarPreview.material = solarMat;
-        const ang = (POD.solarPitchDeg * Math.PI) / 180;
-        solarPreview.rotation.x = -ang;
-      }
+      // Construction stages carry their own roofs. The live disc stays buried in the slope.
+      solarPreview.isVisible = false;
       digBerm.isVisible = s.water > 0;
       digBeam.isVisible = s.water > 0;
       if (s.water > 0) applyLiveDigCarve();
@@ -512,13 +512,13 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     const strip =
       layout === "habitat"
         ? buildHabitatStrip(scene, bab, groundAt, cell)
-        : buildConstructionStrip(scene, bab, groundAt);
+        : buildConstructionStrip(scene, bab, groundAt, ground);
 
-    // Punch reference excavate stage (and live dig when already done) through terrain
+    // Punch reference pits. The gantry stage lowers its own ground during the loop.
     if (layout === "stages") {
       const pitIds = new Set(stagesWithPit());
       for (const stage of STAGES) {
-        if (!pitIds.has(stage.id)) continue;
+        if (!pitIds.has(stage.id) || stage.id === "gantry") continue;
         const gy = groundAt(stage.x, stage.z);
         carveTerrainPit(
           ground,
@@ -586,6 +586,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       scene,
       bab,
       groundAt,
+      ground,
       strip,
       camera,
     };

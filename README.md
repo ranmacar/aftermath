@@ -1,6 +1,6 @@
 # Aftermath
 
-Regenerative Habitat game on a real map: pick an H3 cell, Look / Walk / Habitat, grow an Agrokruh around a midrise tower.
+Regenerative habitat game on a real map: pick an H3 cell, Look / Build / Farm, grow an Agrokruh around a midrise tower.
 
 ## Run locally
 
@@ -15,8 +15,8 @@ Open **http://127.0.0.1:5173** (use localhost so geolocation works on HTTP).
 
 1. **Map** — MapLibre (OpenFreeMap), H3 res-10 cells
 2. **Look** — Google Photorealistic 3D Tiles if a key is unlocked, else free Esri + Terrarium
-3. **Walk** — first-person Babylon on the cell (quests: solar → dig → rise)
-4. **Habitat** — finished tower + Agrokruh beds, crowd patrols, fly mode (hold Space)
+3. **Build** — first-person Babylon on the cell (quests: solar → dig → rise)
+4. **Farm** — finished tower + Agrokruh beds, crowd patrols, fly mode (hold Space)
 
 ### Photorealistic Look
 

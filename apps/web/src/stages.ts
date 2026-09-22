@@ -3,6 +3,7 @@
  * Live vertical container is built in walk.ts; these six stages show the path.
  */
 import type { Scene } from "@babylonjs/core/scene";
+import { setTerrainPitFraction } from "./carve";
 import type { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { CSG } from "@babylonjs/core/Meshes/csg";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
@@ -156,96 +157,6 @@ function addLabel(
   plane.material = mat;
 }
 
-/** Simple scale figures — adult ~1.75 m, child ~1.2 m. */
-function buildPerson(
-  scene: Scene,
-  bab: Bab,
-  parent: TransformNode,
-  name: string,
-  height: number,
-  x: number,
-  z: number,
-  yaw: number,
-  color: { r: number; g: number; b: number },
-): void {
-  const { MeshBuilder, StandardMaterial, Color3, TransformNode } = bab;
-  const mat = new StandardMaterial(`${name}-mat`, scene);
-  mat.diffuseColor = new Color3(color.r, color.g, color.b);
-  mat.specularColor = new Color3(0.05, 0.05, 0.05);
-  mat.emissiveColor = new Color3(color.r * 0.12, color.g * 0.12, color.b * 0.12);
-
-  const headR = height * 0.08;
-  const bodyH = height - headR * 2.15;
-  const bodyR = height * 0.11;
-
-  const root = new TransformNode(name, scene);
-  root.parent = parent;
-  root.position.set(x, 0, z);
-  root.rotation.y = yaw;
-
-  // Capsule if available; else cylinder + hemispheres feel.
-  const body = MeshBuilder.CreateCylinder(
-    `${name}-body`,
-    { height: bodyH * 0.72, diameter: bodyR * 2, tessellation: 10 },
-    scene,
-  );
-  body.material = mat;
-  body.parent = root;
-  body.position.y = bodyH * 0.45;
-
-  const hips = MeshBuilder.CreateSphere(
-    `${name}-hips`,
-    { diameter: bodyR * 2.05, segments: 8 },
-    scene,
-  );
-  hips.material = mat;
-  hips.parent = root;
-  hips.position.y = bodyR * 0.9;
-  hips.scaling.y = 0.7;
-
-  const shoulders = MeshBuilder.CreateSphere(
-    `${name}-shoulders`,
-    { diameter: bodyR * 2.1, segments: 8 },
-    scene,
-  );
-  shoulders.material = mat;
-  shoulders.parent = root;
-  shoulders.position.y = bodyH * 0.78;
-  shoulders.scaling.y = 0.55;
-  shoulders.scaling.x = 1.25;
-
-  const head = MeshBuilder.CreateSphere(
-    `${name}-head`,
-    { diameter: headR * 2, segments: 8 },
-    scene,
-  );
-  head.material = mat;
-  head.parent = root;
-  head.position.y = bodyH + headR * 0.85;
-}
-
-/** Two adults + two kids beside a stage for human scale. */
-function addScaleFigures(
-  scene: Scene,
-  bab: Bab,
-  root: TransformNode,
-  stageIndex: number,
-): void {
-  const baseR = OUTER_R + 2.4;
-  const adult = { r: 0.42, g: 0.38, b: 0.34 };
-  const adult2 = { r: 0.35, g: 0.4, b: 0.45 };
-  const child = { r: 0.55, g: 0.45, b: 0.35 };
-  const child2 = { r: 0.5, g: 0.4, b: 0.48 };
-  const yaw = Math.PI; // face stage center
-  void stageIndex;
-
-  buildPerson(scene, bab, root, `fig-adult-a-${stageIndex}`, 1.75, -1.15, baseR, yaw, adult);
-  buildPerson(scene, bab, root, `fig-adult-b-${stageIndex}`, 1.68, 0.4, baseR + 0.5, yaw + 0.2, adult2);
-  buildPerson(scene, bab, root, `fig-child-a-${stageIndex}`, 1.2, -0.4, baseR + 0.95, yaw - 0.12, child);
-  buildPerson(scene, bab, root, `fig-child-b-${stageIndex}`, 1.05, 1.2, baseR + 0.6, yaw + 0.35, child2);
-}
-
-
 function buildSolarPanel(
   scene: Scene,
   bab: Bab,
@@ -256,6 +167,7 @@ function buildSolarPanel(
   offsetY?: number,
   /** Flat stage: console sits in the middle of the disc. */
   withConsole = false,
+  withRim = true,
 ): void {
   const { MeshBuilder } = bab;
   const panel = MeshBuilder.CreateCylinder(
@@ -274,6 +186,19 @@ function buildSolarPanel(
   panel.rotation.x = pitched ? -ang : 0;
   panel.position.set(offsetX, y, 0);
 
+  if (withConsole && !pitched) {
+    const consoleBox = MeshBuilder.CreateBox(
+      "roof-console",
+      { width: POD.consoleW, height: POD.consoleH, depth: POD.consoleD },
+      scene,
+    );
+    consoleBox.material = m.console;
+    consoleBox.parent = panel;
+    consoleBox.position.set(0, 0.07 + POD.consoleH / 2, 0);
+    markWall(consoleBox);
+  }
+
+  if (!withRim) return;
   // Rim as child of the disc so it stays coplanar (was rotating upright in world space).
   const rim = MeshBuilder.CreateTorus(
     "solar-rim",
@@ -289,19 +214,6 @@ function buildSolarPanel(
   // CreateTorus is already in XZ (Y up). Extra π/2 made a vertical hoop.
   rim.rotation.set(0, 0, 0);
   rim.position.set(0, 0.08, 0);
-
-  if (withConsole && !pitched) {
-    const consoleBox = MeshBuilder.CreateBox(
-      "roof-console",
-      { width: POD.consoleW, height: POD.consoleH, depth: POD.consoleD },
-      scene,
-    );
-    consoleBox.material = m.console;
-    consoleBox.parent = panel;
-    // Center of the flat roof, standing on the disc
-    consoleBox.position.set(0, 0.07 + POD.consoleH / 2, 0);
-    markWall(consoleBox);
-  }
 }
 
 function woodMat(m: ReturnType<typeof mats>): ReturnType<typeof mats>["solarFrame"] {
@@ -644,13 +556,19 @@ function buildExcavateStage(
  * then climbs it to pour slab wedges and wall panels.
  */
 const GANTRY_FLOORS = 3;
-const GANTRY_LOOP_S = 52;
+const GANTRY_LOOP_S = 78;
+/** Outer shell thickness. The 2.5 m balcony zone is not solid wall. */
+const OUTER_WALL_T = 0.4;
 
 function buildGantryStage(
   scene: Scene,
   bab: Bab,
   parent: TransformNode,
   m: ReturnType<typeof mats>,
+  ground: Mesh | null,
+  pitX: number,
+  pitZ: number,
+  gradeY: number,
 ): void {
   const { MeshBuilder, TransformNode, StandardMaterial, Color3 } = bab;
   const steel = new StandardMaterial("gantry-steel", scene);
@@ -673,7 +591,8 @@ function buildGantryStage(
   const berm = MeshBuilder.CreateTorus(
     "build-berm",
     {
-      diameter: (OUTER_R + 2.4) * 2,
+      // Outside the carved bank so the ring is on uncut ground.
+      diameter: (OUTER_R + 3.6) * 2,
       thickness: 2.2,
       tessellation: 40,
     },
@@ -684,16 +603,6 @@ function buildGantryStage(
   berm.scaling.x = 1;
   berm.scaling.z = 1;
   berm.isVisible = false;
-
-  // Unexcavated fill. It shrinks from the top so the buried container is uncovered.
-  const spoil = MeshBuilder.CreateCylinder(
-    "build-spoil",
-    { height: EXCAVATE_DEPTH, diameter: OUTER_R * 2 - 0.5, tessellation: 40 },
-    scene,
-  );
-  spoil.material = m.soil;
-  spoil.parent = parent;
-  spoil.isVisible = false;
 
   const container = buildVerticalContainer(
     scene,
@@ -733,43 +642,89 @@ function buildGantryStage(
   const slabH = 0.28;
   const wallBottom = slabH;
   const wallFullH = GANTRY_FLOORS * FH - slabH;
-  const slabs: import("@babylonjs/core").Mesh[][] = [];
-  const spiralTurns = 4;
-  const spiralCount = spiralTurns * 12;
-  const spiralR0 = POD.tubeDiameter * 0.5 + 0.6;
-  const spiralR1 = OUTER_R - 0.4;
+  const beamCount = 8;
+  const ringCount = 5;
+  const beamR0 = POD.tubeDiameter * 0.5 + 0.35;
+  const beamR1 = OUTER_R - 0.35;
+  const beamLen = beamR1 - beamR0;
+  type FloorDeck = {
+    beams: import("@babylonjs/core").Mesh[];
+    rings: import("@babylonjs/core").Mesh[];
+    ringR: number[];
+    slab: import("@babylonjs/core").Mesh;
+  };
+  const decks: FloorDeck[] = [];
   for (let i = 0; i < GANTRY_FLOORS; i++) {
-    const pads: import("@babylonjs/core").Mesh[] = [];
-    for (let s = 0; s < spiralCount; s++) {
-      const u = s / (spiralCount - 1);
-      const ang = u * spiralTurns * Math.PI * 2;
-      const r = spiralR0 + (spiralR1 - spiralR0) * u;
-      const dAng = (spiralTurns * Math.PI * 2) / spiralCount;
-      const chord = Math.max(0.55, r * dAng * 1.35);
-      const depth = ((spiralR1 - spiralR0) / spiralTurns) * 1.35;
-      const pad = MeshBuilder.CreateBox(
-        `slab-${i}-${s}`,
-        { width: chord, height: slabH, depth },
+    const y = i * FH + slabH / 2;
+    const beams: import("@babylonjs/core").Mesh[] = [];
+    for (let b = 0; b < beamCount; b++) {
+      const spoke = new TransformNode(`spoke-${i}-${b}`, scene);
+      spoke.parent = parent;
+      spoke.position.y = y;
+      spoke.rotation.y = (b / beamCount) * Math.PI * 2;
+      const beam = MeshBuilder.CreateCylinder(
+        `beam-${i}-${b}`,
+        { height: beamLen, diameter: 0.34, tessellation: 10 },
         scene,
       );
-      pad.material = m.floor;
-      pad.parent = parent;
-      pad.position.set(Math.cos(ang) * r, i * FH + slabH / 2, Math.sin(ang) * r);
-      pad.rotation.y = -ang;
-      pad.isVisible = false;
-      pads.push(pad);
+      beam.material = m.floor;
+      beam.parent = spoke;
+      beam.rotation.z = Math.PI / 2;
+      beam.position.x = beamR0 + beamLen / 2;
+      beam.isVisible = false;
+      beams.push(beam);
     }
-    slabs.push(pads);
+    const rings: import("@babylonjs/core").Mesh[] = [];
+    const ringR: number[] = [];
+    for (let r = 0; r < ringCount; r++) {
+      const radius = beamR0 + ((r + 1) / ringCount) * beamLen;
+      const ring = MeshBuilder.CreateTorus(
+        `ring-${i}-${r}`,
+        { diameter: radius * 2, thickness: 0.36, tessellation: 36 },
+        scene,
+      );
+      ring.material = m.floor;
+      ring.parent = parent;
+      ring.position.y = y;
+      ring.isVisible = false;
+      rings.push(ring);
+      ringR.push(radius);
+    }
+    const disc = MeshBuilder.CreateCylinder(
+      `full-slab-src-${i}`,
+      { height: slabH, diameter: OUTER_R * 2, tessellation: 48 },
+      scene,
+    );
+    disc.isVisible = false;
+    const hole = MeshBuilder.CreateCylinder(
+      `full-slab-hole-${i}`,
+      { height: slabH + 0.2, diameter: POD.tubeDiameter + 0.4, tessellation: 24 },
+      scene,
+    );
+    hole.isVisible = false;
+    const slab = CSG.FromMesh(disc).subtract(CSG.FromMesh(hole)).toMesh(
+      `full-slab-${i}`,
+      m.floor,
+      scene,
+    );
+    disc.dispose();
+    hole.dispose();
+    slab.parent = parent;
+    slab.position.y = y;
+    slab.isVisible = false;
+    decks.push({ beams, rings, ringR, slab });
   }
 
+  const shellOuterD = OUTER_R * 2;
+  const shellInnerD = shellOuterD - OUTER_WALL_T * 2;
   const wallOuter = MeshBuilder.CreateCylinder(
     "slip-wall-out",
-    { height: wallFullH, diameter: OUTER_R * 2, tessellation: 48 },
+    { height: wallFullH, diameter: shellOuterD, tessellation: 48 },
     scene,
   );
   const wallInner = MeshBuilder.CreateCylinder(
     "slip-wall-in",
-    { height: wallFullH + 0.4, diameter: INNER_R * 2, tessellation: 40 },
+    { height: wallFullH + 0.4, diameter: shellInnerD, tessellation: 40 },
     scene,
   );
   wallOuter.isVisible = false;
@@ -785,12 +740,12 @@ function buildGantryStage(
   const formH = 1.15;
   const formOuter = MeshBuilder.CreateCylinder(
     "slip-form-out",
-    { height: formH, diameter: OUTER_R * 2 + 0.28, tessellation: 48 },
+    { height: formH, diameter: shellOuterD + 0.16, tessellation: 48 },
     scene,
   );
   const formInner = MeshBuilder.CreateCylinder(
     "slip-form-in",
-    { height: formH + 0.3, diameter: INNER_R * 2 - 0.18, tessellation: 40 },
+    { height: formH + 0.3, diameter: shellInnerD - 0.12, tessellation: 40 },
     scene,
   );
   formOuter.isVisible = false;
@@ -802,6 +757,46 @@ function buildGantryStage(
   formInner.dispose();
   slipForm.parent = parent;
   slipForm.isVisible = false;
+
+  const baseH = EXCAVATE_DEPTH;
+  const baseOut = MeshBuilder.CreateCylinder(
+    "base-wall-out",
+    { height: baseH, diameter: shellOuterD, tessellation: 48 },
+    scene,
+  );
+  const baseIn = MeshBuilder.CreateCylinder(
+    "base-wall-in",
+    { height: baseH + 0.4, diameter: shellInnerD, tessellation: 40 },
+    scene,
+  );
+  baseOut.isVisible = false;
+  baseIn.isVisible = false;
+  const baseWall = CSG.FromMesh(baseOut)
+    .subtract(CSG.FromMesh(baseIn))
+    .toMesh("base-wall", m.facade, scene);
+  baseOut.dispose();
+  baseIn.dispose();
+  baseWall.parent = parent;
+  baseWall.isVisible = false;
+  const baseFormOut = MeshBuilder.CreateCylinder(
+    "base-form-out",
+    { height: formH, diameter: shellOuterD + 0.16, tessellation: 48 },
+    scene,
+  );
+  const baseFormIn = MeshBuilder.CreateCylinder(
+    "base-form-in",
+    { height: formH + 0.3, diameter: shellInnerD - 0.12, tessellation: 40 },
+    scene,
+  );
+  baseFormOut.isVisible = false;
+  baseFormIn.isVisible = false;
+  const baseForm = CSG.FromMesh(baseFormOut)
+    .subtract(CSG.FromMesh(baseFormIn))
+    .toMesh("base-form", steel, scene);
+  baseFormOut.dispose();
+  baseFormIn.dispose();
+  baseForm.parent = parent;
+  baseForm.isVisible = false;
 
   const gantry = new TransformNode("gantry", scene);
   gantry.parent = parent;
@@ -883,7 +878,14 @@ function buildGantryStage(
 
   const roof = new TransformNode("build-roof", scene);
   roof.parent = parent;
-  buildSolarPanel(scene, bab, roof, m, true, 0, pitchedDiscCenterY(0));
+  const roofR = TOWER_SPEC.outerDiameter / 2;
+  const roofDisc = MeshBuilder.CreateCylinder(
+    "gantry-roof",
+    { height: 0.12, diameter: TOWER_SPEC.outerDiameter, tessellation: 48 },
+    scene,
+  );
+  roofDisc.material = m.solar;
+  roofDisc.parent = roof;
 
   const setGrowY = (
     mesh: import("@babylonjs/core").Mesh,
@@ -900,8 +902,8 @@ function buildGantryStage(
   };
 
   const apply = (t: number): void => {
-    const digEnd = 10;
-    const colEnd = 18;
+    const digEnd = 16;
+    const colEnd = 26;
     let carriageY = 2.2;
     let spin = t * 0.7;
     let dip = 0.15;
@@ -910,37 +912,103 @@ function buildGantryStage(
     let pour = false;
     let trolleyX = boomLen * 0.55;
 
-    const hideSlabs = (): void => {
-      for (const wedges of slabs) {
-        for (const wedge of wedges) wedge.isVisible = false;
-      }
+    const hideFloor = (floor: number): void => {
+      const deck = decks[floor]!;
+      for (const beam of deck.beams) beam.isVisible = false;
+      for (const ring of deck.rings) ring.isVisible = false;
+      deck.slab.isVisible = false;
     };
-    const showSlabs = (floor: number, count: number): void => {
-      const pads = slabs[floor]!;
-      for (let i = 0; i < pads.length; i++) pads[i]!.isVisible = i < count;
+    const setSlab = (floor: number, u: number): void => {
+      const slab = decks[floor]!.slab;
+      const shown = u > 0.02;
+      slab.isVisible = shown;
+      slab.scaling.x = shown ? u : 1;
+      slab.scaling.z = shown ? u : 1;
+    };
+    const setBeams = (floor: number, shown: number): void => {
+      decks[floor]!.beams.forEach((beam, b) => {
+        const su = Math.min(1, Math.max(0, shown - b));
+        beam.isVisible = su > 0.02;
+        beam.scaling.y = su;
+        beam.position.x = beamR0 + (beamLen * su) / 2;
+      });
+    };
+    const setRings = (floor: number, shown: number): void => {
+      const deck = decks[floor]!;
+      const tubeR = 0.18;
+      const base = floor * FH + 0.02;
+      deck.rings.forEach((ring, r) => {
+        const su = Math.min(1, Math.max(0, shown - r));
+        ring.isVisible = su > 0.02;
+        ring.scaling.y = Math.max(su, 0.001);
+        ring.position.y = base + tubeR * su;
+      });
     };
 
     if (t < digEnd) {
-      hideSlabs();
+      for (let i = 0; i < GANTRY_FLOORS; i++) hideFloor(i);
       setGrowY(slipWall, wallBottom, wallFullH, 0);
       slipForm.isVisible = false;
-      const u = t / digEnd;
-      bermT = u;
       container.isVisible = true;
       container.position.y = pitBottom + POD.length / 2;
-      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 1 - u);
-      const soilTop = pitBottom + EXCAVATE_DEPTH * (1 - u);
-      dip = 0.55 + Math.sin(t * 5) * 0.35;
-      spin = t * 1.15;
-      carriageY = Math.max(1.4, soilTop + 1.5);
-      trolleyX = boomLen * 0.85;
+      const pitchEnd = digEnd * 0.45;
+      const pitch = (POD.solarPitchDeg * Math.PI) / 180;
+      if (t < pitchEnd) {
+        const u = t / pitchEnd;
+        const a = pitch * u;
+        // Hinge on the low rim so the disc pitches up off the ground.
+        roofDisc.rotation.x = -a;
+        roofDisc.position.y = roofR * Math.sin(a) + 0.08;
+        roofDisc.position.z = -roofR * (1 - Math.cos(a));
+        roof.position.y = 0;
+        bermT = 0;
+        setGrowY(baseWall, pitBottom, baseH, 0);
+        baseForm.isVisible = false;
+        if (ground) {
+          setTerrainPitFraction(ground, pitX, pitZ, OUTER_R, gradeY, EXCAVATE_DEPTH, 0);
+        }
+        gantry.setEnabled(u > 0.55);
+        carriageY = 0.4;
+        trolleyX = boomLen;
+        dip = 0.2;
+        spin = 0.4;
+      } else {
+        const u = (t - pitchEnd) / (digEnd - pitchEnd);
+        roofDisc.rotation.x = -pitch;
+        roofDisc.position.y = roofR * Math.sin(pitch) + 0.08;
+        roofDisc.position.z = -roofR * (1 - Math.cos(pitch));
+        roof.position.y = u * 6;
+        bermT = u;
+        setGrowY(baseWall, pitBottom, baseH, 0);
+        baseForm.isVisible = false;
+        if (ground) {
+          setTerrainPitFraction(
+            ground,
+            pitX,
+            pitZ,
+            OUTER_R,
+            gradeY,
+            EXCAVATE_DEPTH,
+            u,
+          );
+        }
+        gantry.setEnabled(true);
+        carriageY = 1.6 + u * 1.2;
+        trolleyX = boomLen * 0.9;
+        dip = 0.45;
+        spin = t * 0.8;
+      }
     } else if (t < colEnd) {
-      hideSlabs();
+      for (let i = 0; i < GANTRY_FLOORS; i++) hideFloor(i);
       setGrowY(slipWall, wallBottom, wallFullH, 0);
       slipForm.isVisible = false;
+      setGrowY(baseWall, pitBottom, baseH, 0);
+      baseForm.isVisible = false;
       container.isVisible = true;
       container.position.y = pitBottom + POD.length / 2;
-      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 0);
+      if (ground) {
+        setTerrainPitFraction(ground, pitX, pitZ, OUTER_R, gradeY, EXCAVATE_DEPTH, 1);
+      }
       const u = (t - digEnd) / (colEnd - digEnd);
       bermT = 1;
       pour = true;
@@ -949,48 +1017,129 @@ function buildGantryStage(
       dip = 0.08;
       spin = t * 0.5;
       trolleyX = 1.4;
+    } else if (t < colEnd + 8) {
+      for (let i = 0; i < GANTRY_FLOORS; i++) hideFloor(i);
+      setGrowY(slipWall, wallBottom, wallFullH, 0);
+      slipForm.isVisible = false;
+      container.isVisible = true;
+      container.position.y = pitBottom + POD.length / 2;
+      if (ground) {
+        setTerrainPitFraction(ground, pitX, pitZ, OUTER_R, gradeY, EXCAVATE_DEPTH, 1);
+      }
+      bermT = 1;
+      const u = (t - colEnd) / 8;
+      setGrowY(baseWall, pitBottom, baseH, u);
+      const top = pitBottom + baseH * u;
+      baseForm.isVisible = u > 0.02 && u < 0.995;
+      baseForm.position.y = top + formH / 2 - 0.08;
+      carriageY = Math.max(1.8, top + formH + 0.3);
+      spin = t * 0.55;
+      trolleyX = boomLen * 0.92;
+      pour = u < 0.995;
+      dip = 0.08;
+      columnTop = Math.max(columnTop, 2.4);
     } else {
       bermT = 1;
       container.isVisible = true;
       container.position.y = pitBottom + POD.length / 2;
-      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 0);
+      setGrowY(baseWall, pitBottom, baseH, 1);
+      baseForm.isVisible = false;
       columnTop = 2.4;
-      const after = t - colEnd;
-      const slabSpan = 5;
+      const after = t - (colEnd + 8);
+      if (ground) {
+        // First slab starts now — put the spoil back so the basement is buried.
+        const filled = Math.min(1, after / 1.6);
+        setTerrainPitFraction(
+          ground,
+          pitX,
+          pitZ,
+          OUTER_R,
+          gradeY,
+          EXCAVATE_DEPTH,
+          1 - filled,
+        );
+      }
+      const beamSpan = 3;
+      const ringSpan = 3;
+      const slabSpan = 2.5;
       const wallSpan = 4;
-      const step = slabSpan + wallSpan;
-      const spiralN = slabs[0]?.length ?? 1;
+      const meshSpan = beamSpan + ringSpan;
+      const step = meshSpan + slabSpan + wallSpan;
       let wallStoreys = 0;
       let wallU = 0;
+      let posed = false;
       for (let i = 0; i < GANTRY_FLOORS; i++) {
         const local = after - i * step;
         if (local < 0) {
-          showSlabs(i, 0);
+          hideFloor(i);
           continue;
         }
-        if (local < slabSpan) {
-          const u = local / slabSpan;
-          showSlabs(i, Math.ceil(u * spiralN));
-          const r = spiralR0 + (spiralR1 - spiralR0) * u;
-          carriageY = i * FH + 1.65;
-          columnTop = Math.max(columnTop, i * FH + slabH);
-          spin = u * spiralTurns * Math.PI * 2;
-          trolleyX = r;
+        if (local >= step) {
+          setBeams(i, beamCount);
+          setRings(i, ringCount);
+          setSlab(i, 1);
+          continue;
+        }
+        posed = true;
+        columnTop = Math.max(columnTop, i * FH + slabH);
+        carriageY = i * FH + 1.65;
+        if (local < beamSpan) {
+          const u = local / beamSpan;
+          const shown = u * beamCount;
+          setBeams(i, shown);
+          setRings(i, 0);
+          setSlab(i, 0);
+          const idx = Math.min(beamCount - 1, Math.floor(shown));
+          spin = (idx / beamCount) * Math.PI * 2;
+          trolleyX = beamR0 + beamLen * (shown - idx);
           pour = true;
-          dip = 0.08;
+          dip = 0.06;
+          wallStoreys = i;
+          wallU = 0;
+        } else if (local < meshSpan) {
+          const u = (local - beamSpan) / ringSpan;
+          const shown = u * ringCount;
+          setBeams(i, beamCount);
+          setRings(i, shown);
+          setSlab(i, 0);
+          const idx = Math.min(ringCount - 1, Math.floor(shown));
+          spin = u * ringCount * Math.PI * 2;
+          trolleyX = decks[i]!.ringR[idx] ?? beamR1;
+          pour = true;
+          dip = 0.06;
+          wallStoreys = i;
+          wallU = 0;
+        } else if (local < meshSpan + slabSpan) {
+          const u = (local - meshSpan) / slabSpan;
+          setBeams(i, beamCount);
+          setRings(i, ringCount);
+          setSlab(i, u);
+          spin = u * Math.PI * 2;
+          trolleyX = beamR0 + beamLen * u;
+          pour = true;
+          dip = 0.05;
           wallStoreys = i;
           wallU = 0;
         } else {
-          showSlabs(i, spiralN);
-          const u = Math.min(1, (local - slabSpan) / wallSpan);
-          carriageY = 0;
+          setBeams(i, beamCount);
+          setRings(i, ringCount);
+          setSlab(i, 1);
+          const u = Math.min(1, (local - meshSpan - slabSpan) / wallSpan);
           wallStoreys = i;
           wallU = u;
           pour = u < 0.995;
           dip = 0.05;
           spin = t * 0.5;
           trolleyX = boomLen * 0.88;
+          carriageY = 0;
         }
+      }
+      if (!posed && after >= GANTRY_FLOORS * step) {
+        wallStoreys = GANTRY_FLOORS - 1;
+        wallU = 1;
+        carriageY = GANTRY_FLOORS * FH + 1.2;
+        spin = 0.4;
+        trolleyX = boomLen * 0.7;
       }
       const startTop = wallStoreys === 0 ? wallBottom : wallStoreys * FH;
       const endTop = (wallStoreys + 1) * FH;
@@ -1007,7 +1156,7 @@ function buildGantryStage(
       if (wallU > 0) columnTop = Math.max(columnTop, wallTop);
     }
 
-    const bermScale = 0.65 * bermT;
+    const bermScale = bermT;
     berm.isVisible = bermT > 0.02;
     berm.scaling.y = bermScale;
     // Torus tube radius is 1.1. Keep the bottom on grade while the ring rises.
@@ -1017,22 +1166,20 @@ function buildGantryStage(
     tool.rotation.z = dip;
     trolley.position.x = trolleyX;
     stream.isVisible = pour;
-    bucket.isVisible = !pour && t < colEnd;
-    // Pitched disc: the low rim must clear the gantry, not just the hinge.
-    const pitch = (POD.solarPitchDeg * Math.PI) / 180;
-    const lowDrop = (TOWER_SPEC.outerDiameter / 2) * Math.tan(pitch) + 0.35;
-    const gantryTop = 1.5;
+    bucket.isVisible = t < digEnd;
     roof.setEnabled(true);
-    roof.position.y = carriageY + gantryTop + lowDrop - pitchedDiscCenterY(0);
-    // Column grows up to the roof hinge so the disc stays supported once the pour starts.
-    let columnReach = containerTop;
-    if (t >= colEnd) columnReach = roof.position.y;
-    else if (t >= digEnd) {
-      const u = (t - digEnd) / (colEnd - digEnd);
-      columnReach = containerTop + (roof.position.y - containerTop) * u;
+    if (t >= digEnd) {
+      // Low rim of the pitched disc sits just above the local hinge.
+      const lowRim = roofDisc.position.y - roofR * Math.sin(-roofDisc.rotation.x);
+      const minLift = carriageY + 1.7 - lowRim;
+      roof.position.y = Math.max(roof.position.y, minLift);
+      const u = t >= colEnd ? 1 : (t - digEnd) / (colEnd - digEnd);
+      const columnReach = containerTop + (roof.position.y + roofDisc.position.y - containerTop) * u;
+      const colT = Math.max(0, Math.min(1, (columnReach - containerTop) / columnMeshH));
+      setGrowY(column, containerTop, columnMeshH, colT);
+    } else {
+      setGrowY(column, containerTop, columnMeshH, 0);
     }
-    const colT = Math.max(0, (columnReach - containerTop) / columnMeshH);
-    setGrowY(column, containerTop, columnMeshH, colT);
   };
 
   apply(0);
@@ -3116,6 +3263,7 @@ export function buildConstructionStrip(
   scene: Scene,
   bab: Bab,
   groundAt: (x: number, z: number) => number,
+  ground: Mesh | null = null,
 ): TransformNode {
   const { TransformNode, DynamicTexture } = bab;
   const strip = new TransformNode("construction-strip", scene);
@@ -3140,11 +3288,10 @@ export function buildConstructionStrip(
     } else if (stage.id === "tower-full") {
       buildRiseStage(scene, bab, root, m, TOWER_SPEC.floorsFull);
     } else if (stage.id === "gantry") {
-      buildGantryStage(scene, bab, root, m);
+      buildGantryStage(scene, bab, root, m, ground, stage.x, stage.z, gy);
     }
 
     addLabel(scene, babWithTex, root, stage.label, OUTER_R + 2);
-    addScaleFigures(scene, bab, root, stageIndex);
   }
 
   return strip;
