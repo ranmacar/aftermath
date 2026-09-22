@@ -256,12 +256,21 @@ body {
   touch-action: none;
 }
 
-.walk-label {
+.walk-hud {
   position: absolute;
   z-index: 2;
   top: calc(0.75rem + env(safe-area-inset-top, 0px));
   left: 0.75rem;
-  max-width: min(22rem, calc(100vw - 11rem));
+  right: 11rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  pointer-events: none;
+}
+
+.walk-label {
+  flex: 0 1 auto;
+  max-width: min(16rem, 46vw);
   margin: 0;
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
@@ -271,41 +280,11 @@ body {
   word-break: break-all;
 }
 
-.walk-quest {
-  position: absolute;
-  z-index: 2;
-  left: 0.75rem;
-  bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px));
-  max-width: min(18rem, calc(100vw - 1.5rem));
+.walk-help {
   margin: 0;
-  padding: 0.65rem 0.8rem 0.7rem;
-  border-radius: 1rem;
-  background: var(--panel);
-  pointer-events: none;
-}
-
-.walk-quest-now {
-  margin: 0 0 0.4rem;
-  color: var(--ok);
-  font-size: 0.8rem;
-  line-height: 1.35;
-}
-
-.walk-quest-list {
-  margin: 0;
-  padding: 0 0 0 1.1rem;
   color: var(--muted);
   font-size: 0.72rem;
-  line-height: 1.45;
-}
-
-.walk-quest-list .is-done {
-  color: #8fa56a;
-  text-decoration: line-through;
-}
-
-.walk-quest-list .is-now {
-  color: var(--fg);
+  line-height: 1.35;
 }
 
 .walk-act {
@@ -350,24 +329,6 @@ body {
   background: var(--ok);
 }
 
-.walk-fwd {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
-  transform: translateX(-50%);
-  min-width: 9rem;
-  min-height: 52px;
-  padding: 0 1.2rem;
-  border: 0;
-  border-radius: 999px;
-  background: var(--panel);
-  color: var(--ok);
-  font: inherit;
-  font-size: 0.95rem;
-}
-
-.walk-fwd:active,
 .walk-act:active {
   background: #2a3322;
 }

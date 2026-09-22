@@ -42,18 +42,16 @@
     </div>
     <div id="walk" class="walk" aria-hidden="true">
       <canvas id="walk-canvas" class="walk-canvas"></canvas>
-      <p id="walk-label" class="walk-label"></p>
-      <aside id="walk-quest" class="walk-quest">
-        <p id="walk-quest-now" class="walk-quest-now"></p>
-        <ol id="walk-quest-list" class="walk-quest-list"></ol>
-      </aside>
+      <div class="walk-hud">
+        <p id="walk-label" class="walk-label"></p>
+        <p class="walk-help">WASD move · Shift run · Space jump · hold Space to fly · drag to look</p>
+      </div>
       <button type="button" id="walk-look" class="walk-look">Look</button>
       <button type="button" id="walk-map" class="walk-map">Map</button>
       <button type="button" id="walk-act" class="walk-act" hidden>
         <span id="walk-act-label">Hold</span>
         <span class="walk-act-fill" id="walk-act-fill"></span>
       </button>
-      <button type="button" id="walk-fwd" class="walk-fwd">Hold to walk</button>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

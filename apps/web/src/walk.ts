@@ -1,4 +1,4 @@
-import { currentQuest, questStatus, type Settlement } from "@aftermath/sim";
+import { currentQuest, type Settlement } from "@aftermath/sim";
 import { habitatClusterCells, hexRingEnuRelative } from "./geo";
 import { INTERACT, POD } from "./placements";
 import { applyQuest, awaken } from "./settlement-store";
@@ -157,22 +157,16 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   const labelNode = document.getElementById("walk-label");
   const lookBtn = document.getElementById("walk-look");
   const mapBtn = document.getElementById("walk-map");
-  const fwdBtn = document.getElementById("walk-fwd");
   const actBtn = document.getElementById("walk-act");
   const actLabelNode = document.getElementById("walk-act-label");
-  const questNowNode = document.getElementById("walk-quest-now");
-  const questListNode = document.getElementById("walk-quest-list");
   if (
     !(overlayNode instanceof HTMLElement) ||
     !(canvasNode instanceof HTMLCanvasElement) ||
     !(labelNode instanceof HTMLElement) ||
     !(lookBtn instanceof HTMLElement) ||
     !(mapBtn instanceof HTMLElement) ||
-    !(fwdBtn instanceof HTMLElement) ||
     !(actBtn instanceof HTMLElement) ||
-    !(actLabelNode instanceof HTMLElement) ||
-    !(questNowNode instanceof HTMLElement) ||
-    !(questListNode instanceof HTMLElement)
+    !(actLabelNode instanceof HTMLElement)
   ) {
     throw new Error("missing walk markup");
   }
@@ -181,11 +175,8 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   const label: HTMLElement = labelNode;
   const look: HTMLElement = lookBtn;
   const map: HTMLElement = mapBtn;
-  const fwd: HTMLElement = fwdBtn;
   const act: HTMLElement = actBtn;
   const actLabel: HTMLElement = actLabelNode;
-  const questNow: HTMLElement = questNowNode;
-  const questList: HTMLElement = questListNode;
 
   let engine: {
     stopRenderLoop: () => void;
@@ -197,7 +188,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   } | null = null;
   let sceneDispose: (() => void) | null = null;
   let open = false;
-  let fwdHeld = false;
   let actHeld = false;
   let actProgress = 0;
   let cellId: string | null = null;
@@ -216,21 +206,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     engine?.stopRenderLoop();
     engine?.dispose();
     engine = null;
-  }
-
-  function paintHud(s: Settlement): void {
-    const now = currentQuest(s);
-    questNow.textContent = now
-      ? now.hint
-      : "Pod is live — solar, water, and a first floor.";
-    questList.replaceChildren(
-      ...questStatus(s).map(({ def, done }) => {
-        const li = document.createElement("li");
-        li.textContent = def.title;
-        li.className = done ? "is-done" : now?.id === def.id ? "is-now" : "";
-        return li;
-      }),
-    );
   }
 
   async function openCell(
@@ -260,7 +235,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     overlay.setAttribute("aria-hidden", "false");
     label.textContent = `${modeLabel} · loading terrain…`;
     settlement = awaken(cell);
-    paintHud(settlement);
 
     const patch = await loadTerrainPatch(
       cell,
@@ -777,7 +751,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         moveDown.has("ShiftLeft") || moveDown.has("ShiftRight");
       let mx = 0;
       let mz = 0;
-      if (fwdHeld || moveDown.has("KeyW") || moveDown.has("ArrowUp")) mz += 1;
+      if (moveDown.has("KeyW") || moveDown.has("ArrowUp")) mz += 1;
       if (moveDown.has("KeyS") || moveDown.has("ArrowDown")) mz -= 1;
       if (moveDown.has("KeyA") || moveDown.has("KeyJ") || moveDown.has("ArrowLeft"))
         mx -= 1;
@@ -862,7 +836,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         act.style.setProperty("--p", String(p));
         if (p >= 1) {
           settlement = applyQuest(cellId, q.id);
-          paintHud(settlement);
           syncVisuals(settlement);
           actHeld = false;
           actProgress = 0;
@@ -899,13 +872,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     close();
     handlers.onMap?.();
   });
-  const holdFwd = (on: boolean) => () => {
-    fwdHeld = on;
-  };
-  fwd.addEventListener("pointerdown", holdFwd(true));
-  fwd.addEventListener("pointerup", holdFwd(false));
-  fwd.addEventListener("pointerleave", holdFwd(false));
-  fwd.addEventListener("pointercancel", holdFwd(false));
   const holdAct = (on: boolean) => () => {
     actHeld = on;
     if (!on) actProgress = 0;
