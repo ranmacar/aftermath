@@ -681,9 +681,19 @@ function buildGantryStage(
   );
   berm.material = m.dirt;
   berm.parent = parent;
-  berm.position.y = 0.7;
-  berm.scaling.y = 0.65;
+  berm.scaling.x = 1;
+  berm.scaling.z = 1;
   berm.isVisible = false;
+
+  // Unexcavated fill. It shrinks from the top so the buried container is uncovered.
+  const spoil = MeshBuilder.CreateCylinder(
+    "build-spoil",
+    { height: EXCAVATE_DEPTH, diameter: OUTER_R * 2 - 0.5, tessellation: 40 },
+    scene,
+  );
+  spoil.material = m.soil;
+  spoil.parent = parent;
+  spoil.isVisible = false;
 
   const container = buildVerticalContainer(
     scene,
@@ -916,11 +926,13 @@ function buildGantryStage(
       slipForm.isVisible = false;
       const u = t / digEnd;
       bermT = u;
-      container.isVisible = u > 0.2;
-      container.position.y = pitBottom + POD.length / 2 + (1 - u) * 4;
+      container.isVisible = true;
+      container.position.y = pitBottom + POD.length / 2;
+      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 1 - u);
+      const soilTop = pitBottom + EXCAVATE_DEPTH * (1 - u);
       dip = 0.55 + Math.sin(t * 5) * 0.35;
       spin = t * 1.15;
-      carriageY = 2.4;
+      carriageY = Math.max(1.4, soilTop + 1.5);
       trolleyX = boomLen * 0.85;
     } else if (t < colEnd) {
       hideSlabs();
@@ -928,6 +940,7 @@ function buildGantryStage(
       slipForm.isVisible = false;
       container.isVisible = true;
       container.position.y = pitBottom + POD.length / 2;
+      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 0);
       const u = (t - digEnd) / (colEnd - digEnd);
       bermT = 1;
       pour = true;
@@ -940,6 +953,7 @@ function buildGantryStage(
       bermT = 1;
       container.isVisible = true;
       container.position.y = pitBottom + POD.length / 2;
+      setGrowY(spoil, pitBottom, EXCAVATE_DEPTH, 0);
       columnTop = 2.4;
       const after = t - colEnd;
       const slabSpan = 5;
@@ -993,9 +1007,11 @@ function buildGantryStage(
       if (wallU > 0) columnTop = Math.max(columnTop, wallTop);
     }
 
+    const bermScale = 0.65 * bermT;
     berm.isVisible = bermT > 0.02;
-    berm.scaling.x = bermT;
-    berm.scaling.z = bermT;
+    berm.scaling.y = bermScale;
+    // Torus tube radius is 1.1. Keep the bottom on grade while the ring rises.
+    berm.position.y = 1.1 * bermScale;
     gantry.position.y = carriageY;
     gantry.rotation.y = spin;
     tool.rotation.z = dip;
