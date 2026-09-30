@@ -1,0 +1,91 @@
+name: CAD sync (Onshape → GLB)
+
+# Exports the assets in cad/assets.json from Onshape, optimizes them, and opens a PR with the
+# size/version diff. See docs/asset-pipeline.md. Skips cleanly when the Onshape secrets are not configured.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Sync only this asset name (blank = all)"
+        required: false
+        default: ""
+  schedule:
+    - cron: "17 4 * * 1" # Mondays 04:17 UTC
+  repository_dispatch:
+    types: [cad-version-created] # optional Onshape webhook relay (docs §8)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: cad-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      ONSHAPE_ACCESS_KEY: ${{ secrets.ONSHAPE_ACCESS_KEY }}
+      ONSHAPE_SECRET_KEY: ${{ secrets.ONSHAPE_SECRET_KEY }}
+    steps:
+      - name: Check secrets
+        id: secrets
+        run: |
+          if [ -z "$ONSHAPE_ACCESS_KEY" ] || [ -z "$ONSHAPE_SECRET_KEY" ]; then
+            echo "::notice::ONSHAPE_ACCESS_KEY / ONSHAPE_SECRET_KEY not set, so skipping CAD sync."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.enabled == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.enabled == 'true'
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+        if: steps.secrets.outputs.enabled == 'true'
+
+      - name: Validate manifest
+        if: steps.secrets.outputs.enabled == 'true'
+        run: npm run cad:sync -- --dry-run
+
+      - name: Sync from Onshape
+        if: steps.secrets.outputs.enabled == 'true'
+        env:
+          ONLY: ${{ github.event.inputs.only || github.event.client_payload.asset || '' }}
+        run: |
+          args=(--report "$RUNNER_TEMP/cad-report.md")
+          if [ -n "$ONLY" ]; then args+=(--only "$ONLY"); fi
+          npm run cad:sync -- "${args[@]}"
+          {
+            echo "Automated export from Onshape via \`npm run cad:sync\` (see docs/asset-pipeline.md)."
+            echo
+            cat "$RUNNER_TEMP/cad-report.md"
+            echo
+            echo "Stage changes to \`buildable\` still require human review (\`reviewedBy\` in cad/assets.json)."
+          } > "$RUNNER_TEMP/pr-body.md"
+
+      - name: Build still passes
+        if: steps.secrets.outputs.enabled == 'true'
+        run: npm run build
+
+      - name: Open PR
+        if: steps.secrets.outputs.enabled == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: cad-sync/auto
+          delete-branch: true
+          commit-message: "cad: sync assets from Onshape"
+          title: "cad: sync assets from Onshape"
+          body-path: ${{ runner.temp }}/pr-body.md
+          add-paths: |
+            apps/web/public/models/**
+            cad/assets.lock.json
+          labels: cad

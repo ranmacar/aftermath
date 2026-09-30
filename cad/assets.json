@@ -1,0 +1,88 @@
+{
+  "$comment": "Onshape → game asset manifest. See docs/asset-pipeline.md. Ids are 24-char hex from the Onshape URL: /documents/{did}/{w|v|m}/{wvmid}/e/{elementId}. Entries with placeholder:true or TODO ids are validated but skipped by the live sync.",
+  "assets": [
+    {
+      "name": "pod_container_40hc",
+      "$note": "Onshape doc pod_container_40hc (Arbolis/Aftermath), built by scripts/onshape-bootstrap.mjs from cad/onshape/ShippingContainer.fs: 40 ft HC 12.192 × 2.438 × 2.896 m stood on end, base at Z = 0. Contents (array, heat pumps, gantry drive, soil processor, batteries) not modelled yet; will become an assembly (docs §12.4).",
+      "did": "76933b56f909b455c52143fb",
+      "wvm": "v",
+      "wvmid": "73ecab33055dedcc64e6ca77",
+      "elementType": "partstudio",
+      "elementId": "afe63fb84b52f94636f4657c",
+      "output": "site/pod_container_40hc.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "solar_array",
+      "$note": "Onshape doc solar_array (Arbolis/Aftermath) from cad/onshape/SolarArray.fs: flat Ø20 m disc + rim + console (game geometry; see §12.3 wind flag).",
+      "did": "9987a7131af48a3bf70fde13",
+      "wvm": "v",
+      "wvmid": "3ccfb18adac8814a873a48a6",
+      "elementType": "partstudio",
+      "elementId": "e790d01deabd9e671b738ac7",
+      "output": "site/solar_array.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "solar_panel_mount",
+      "placeholder": true,
+      "$todo": "PLACEHOLDER: no Onshape document yet. Replace the TODO ids with the public solar-panel-mount document (first small fabricated part, after the pod layout; see docs §12.4) and a version named game/… then remove placeholder.",
+      "did": "TODO_DOCUMENT_ID_24_HEX",
+      "wvm": "v",
+      "wvmid": "TODO_VERSION_ID_24_HEX",
+      "elementType": "partstudio",
+      "elementId": "TODO_ELEMENT_ID_24_HEX",
+      "configuration": "",
+      "output": "site/solar_panel_mount.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    }
+  ]
+}

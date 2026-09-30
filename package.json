@@ -1,8 +1,8 @@
 {
   "name": "@aftermath/root",
   "private": true,
-  "version": "0.0.1",
-  "description": "Aftermath \u2014 regenerative Habitat map game (H3, Walk, Agrokruh)",
+  "version": "1.0.0-dev.0",
+  "description": "Aftermath — regenerative Habitat map game (H3, Walk, Agrokruh)",
   "type": "module",
   "workspaces": [
     "apps/*",
@@ -13,9 +13,17 @@
     "build": "npm run build -w @aftermath/web",
     "preview": "npm run preview -w @aftermath/web",
     "test": "npm run test -w @aftermath/sim",
-    "encrypt-tiles-key": "node scripts/encrypt-tiles-key.mjs"
+    "encrypt-tiles-key": "node scripts/encrypt-tiles-key.mjs",
+    "cad:sync": "node scripts/cad-sync.mjs",
+    "cad:test": "node scripts/cad-make-test-glb.mjs cad/.test/test.glb && node scripts/cad-sync.mjs --from-file cad/.test/test.glb --units mm --out cad/.test/out"
   },
   "overrides": {
     "rollup": "npm:@rollup/wasm-node"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.3.0"
   }
 }

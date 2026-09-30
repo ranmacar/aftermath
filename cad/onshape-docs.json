@@ -1,0 +1,51 @@
+{
+  "docs": {
+    "pod_container_40hc": {
+      "did": "76933b56f909b455c52143fb",
+      "wid": "d3f6ba82c21e63fd3c64169b",
+      "featureStudioId": "2cc9da34665612475aae74c6",
+      "partStudioId": "afe63fb84b52f94636f4657c",
+      "featureId": "FdhNdCsQssVd7tY_0",
+      "versionName": "game-v0.1",
+      "versionId": "73ecab33055dedcc64e6ca77",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Pod container"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/w/d3f6ba82c21e63fd3c64169b/e/afe63fb84b52f94636f4657c",
+      "versionUrl": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/v/73ecab33055dedcc64e6ca77/e/afe63fb84b52f94636f4657c"
+    },
+    "solar_array": {
+      "did": "9987a7131af48a3bf70fde13",
+      "wid": "a346c59d3bb2280e5e449446",
+      "featureStudioId": "9f3fbe94c25d2b17f52cc8a2",
+      "partStudioId": "e790d01deabd9e671b738ac7",
+      "featureId": "FbtRt7QnGHZxz3Z_0",
+      "versionName": "game-v0.1",
+      "versionId": "3ccfb18adac8814a873a48a6",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "JLD",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "JPD",
+          "name": "Roof console"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/w/a346c59d3bb2280e5e449446/e/e790d01deabd9e671b738ac7",
+      "versionUrl": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/v/3ccfb18adac8814a873a48a6/e/e790d01deabd9e671b738ac7"
+    }
+  },
+  "folders": {
+    "Arbolis": "4011b96b8d0207b567fec5bf",
+    "Arbolis/Aftermath": "9db69c632387797e677d61a9"
+  },
+  "folderId": "9db69c632387797e677d61a9"
+}
