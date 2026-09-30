@@ -1,0 +1,11 @@
+{
+  "latest": {
+    "version": "latest",
+    "ref": "main",
+    "sha": "77fb4ed027f2dda78afd69ac27a32a3ed1651441",
+    "packageVersion": "1.0.0-dev.0",
+    "path": "/aftermath/",
+    "builtAt": "2026-09-30T19:26:49.167Z"
+  },
+  "versions": []
+}
