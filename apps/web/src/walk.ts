@@ -177,6 +177,20 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   ) {
     throw new Error("missing walk markup");
   }
+  const stickNode = document.getElementById("walk-stick");
+  const knobNode = document.getElementById("walk-stick-knob");
+  const jumpNode = document.getElementById("walk-jump");
+  if (
+    !(stickNode instanceof HTMLElement) ||
+    !(knobNode instanceof HTMLElement) ||
+    !(jumpNode instanceof HTMLButtonElement)
+  ) {
+    throw new Error("missing walk touch markup");
+  }
+  const stick: HTMLElement = stickNode;
+  const knob: HTMLElement = knobNode;
+  const jump: HTMLButtonElement = jumpNode;
+
   const overlay: HTMLElement = overlayNode;
   const canvas: HTMLCanvasElement = canvasNode;
   const label: HTMLElement = labelNode;
@@ -184,6 +198,67 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   const map: HTMLElement = mapBtn;
   const act: HTMLElement = actBtn;
   const actLabel: HTMLElement = actLabelNode;
+
+  let stickX = 0;
+  let stickY = 0;
+  let stickPointer: number | null = null;
+  const STICK_R = 46;
+  let pressJump: (down: boolean) => void = () => {};
+
+  const placeKnob = (dx: number, dy: number): void => {
+    knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+  };
+
+  const resetStick = (): void => {
+    stickX = 0;
+    stickY = 0;
+    stickPointer = null;
+    placeKnob(0, 0);
+  };
+
+  const moveStick = (e: PointerEvent): void => {
+    const rect = stick.getBoundingClientRect();
+    let dx = e.clientX - (rect.left + rect.width / 2);
+    let dy = e.clientY - (rect.top + rect.height / 2);
+    const len = Math.hypot(dx, dy);
+    if (len > STICK_R) {
+      dx = (dx / len) * STICK_R;
+      dy = (dy / len) * STICK_R;
+    }
+    stickX = dx / STICK_R;
+    stickY = -dy / STICK_R;
+    placeKnob(dx, dy);
+  };
+
+  stick.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    stickPointer = e.pointerId;
+    stick.setPointerCapture(e.pointerId);
+    moveStick(e);
+  });
+  stick.addEventListener("pointermove", (e) => {
+    if (e.pointerId !== stickPointer) return;
+    e.preventDefault();
+    moveStick(e);
+  });
+  const endStick = (e: PointerEvent): void => {
+    if (e.pointerId !== stickPointer) return;
+    resetStick();
+  };
+  stick.addEventListener("pointerup", endStick);
+  stick.addEventListener("pointercancel", endStick);
+
+  jump.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    jump.setPointerCapture(e.pointerId);
+    pressJump(true);
+  });
+  const endJump = (e: PointerEvent): void => {
+    if (!jump.hasPointerCapture(e.pointerId)) return;
+    pressJump(false);
+  };
+  jump.addEventListener("pointerup", endJump);
+  jump.addEventListener("pointercancel", endJump);
 
   let engine: {
     stopRenderLoop: () => void;
@@ -616,6 +691,12 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       spaceDown = false;
       spaceArmedJump = false;
       spaceHoldAcc = 0;
+      resetStick();
+    };
+
+    pressJump = (down: boolean): void => {
+      if (!open) return;
+      noteKey("Space", " ", down);
     };
 
     const noteKey = (code: string, key: string, down: boolean): void => {
@@ -758,9 +839,14 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         mx -= 1;
       if (moveDown.has("KeyD") || moveDown.has("KeyL") || moveDown.has("ArrowRight"))
         mx += 1;
+      if (Math.hypot(stickX, stickY) > 0.15) {
+        mx += stickX;
+        mz += stickY;
+      }
 
+      const inputScale = Math.min(1, Math.hypot(mx, mz));
       if (flying) {
-        const speed = (running ? FLY_FAST : FLY_SPEED) * dt;
+        const speed = (running ? FLY_FAST : FLY_SPEED) * dt * inputScale;
         if (mx !== 0 || mz !== 0) {
           const forward = camera.getDirection(Vector3.Forward());
           const right = camera.getDirection(Vector3.Right());
@@ -781,7 +867,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
         }
         if (my !== 0) camera.position.y += my * speed;
       } else {
-        const speed = (running ? RUN_SPEED : WALK_SPEED) * dt;
+        const speed = (running ? RUN_SPEED : WALK_SPEED) * dt * inputScale;
         if (mx !== 0 || mz !== 0) {
           const forward = camera.getDirection(Vector3.Forward());
           const right = camera.getDirection(Vector3.Right());
