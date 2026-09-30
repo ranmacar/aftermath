@@ -34,7 +34,16 @@ TILES_KEY='…ion token…' UNLOCK_PASSWORD='…' npm run encrypt-tiles-key
 
 ### GitHub Pages
 
-`.github/workflows/pages.yml` builds with `GITHUB_PAGES=1` (base `/aftermath/`). Enable **Settings → Pages → GitHub Actions**.
+`.github/workflows/pages.yml` deploys to the **`gh-pages` branch** (enable **Settings → Pages → Deploy from a branch → `gh-pages` / root**):
+
+- push to `main` → https://ranmacar.github.io/aftermath/ (latest; the version folders are kept)
+- push of a tag `v*` → https://ranmacar.github.io/aftermath/<tag>/, e.g. `/aftermath/v0.1.0/`
+- **Actions → GitHub Pages (versioned) → Run workflow**, with `ref` set to a tag or `main`, rebuilds any ref. Tags that were
+  created before this workflow existed (**`v0.1.0`**, the legacy procedural build, also on branch `legacy`) are deployed this way.
+- `versions.json` and `versions.html` at the site root list every deployed version.
+
+The base path comes from `PAGES_BASE` (or `GITHUB_PAGES=1` → `/aftermath/`). The workflow also passes `vite build --base`, so old refs build
+correctly. Local check: `PAGES_BASE=/aftermath/v9.9.9/ npm run build`.
 
 ## Layout
 

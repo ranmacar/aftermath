@@ -59,8 +59,11 @@ function termuxLocation(): Plugin {
 }
 
 export default defineConfig({
-  // GitHub Pages project site: https://ranmacar.github.io/aftermath/
-  base: process.env.GITHUB_PAGES === "1" ? "/aftermath/" : "/",
+  // GitHub Pages project site: https://ranmacar.github.io/aftermath/ (latest) and /aftermath/<tag>/.
+  // PAGES_BASE wins (set by .github/workflows/pages.yml), else GITHUB_PAGES=1 → /aftermath/, else /.
+  base:
+    process.env.PAGES_BASE ||
+    (process.env.GITHUB_PAGES === "1" ? "/aftermath/" : "/"),
   plugins: [termuxLocation()],
   server: {
     host: true,

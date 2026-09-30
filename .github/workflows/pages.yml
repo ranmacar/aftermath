@@ -1,43 +1,157 @@
-name: GitHub Pages
+name: GitHub Pages (versioned)
+
+# Deploys to the gh-pages branch (Settings → Pages → "Deploy from a branch" → gh-pages / root):
+#   push to main          → /aftermath/            (latest; the v*/ subfolders are preserved)
+#   push of a tag v*      → /aftermath/<tag>/      e.g. /aftermath/v0.1.0/
+#   workflow_dispatch     → rebuild any ref. A ref "v*" goes to /aftermath/<ref>/, "main" goes to the root.
+# Tags created before this workflow existed (e.g. v0.1.0) are built by running it manually:
+#   Actions → "GitHub Pages (versioned)" → Run workflow → ref = v0.1.0
+# The workflow file always comes from the default branch. Only the checked-out app source comes from `ref`.
+# The base path is passed as `vite build --base …`, so old refs whose vite.config.ts predates PAGES_BASE
+# still build with the right base.
+# versions.json + versions.html at the gh-pages root list every deployed version.
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to build (tag like v0.1.0, or main)"
+        required: true
+        default: main
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: pages-deploy
+  cancel-in-progress: false
+
+env:
+  REPO_BASE: /${{ github.event.repository.name }}/ # /aftermath/
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve ref and target folder
+        id: t
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_REF: ${{ github.event.inputs.ref }}
+          GH_REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then ref="$INPUT_REF"; else ref="$GH_REF_NAME"; fi
+          case "$ref" in
+            main) target="" ;;
+            v[0-9]*)
+              if ! printf '%s' "$ref" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$'; then
+                echo "::error::tag $ref is not a semver tag"; exit 1
+              fi
+              target="$ref" ;;
+            *) echo "::error::ref '$ref' is neither main nor a v* tag"; exit 1 ;;
+          esac
+          base="${REPO_BASE}${target:+$target/}"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "Building $ref → gh-pages:/${target} (base $base)"
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.t.outputs.ref }}
+          path: src
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: package-lock.json
-      - run: npm ci
-      - run: npm run build
+          cache-dependency-path: src/package-lock.json
+
+      - name: Build
+        working-directory: src
         env:
           GITHUB_PAGES: "1"
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: apps/web/dist
+          PAGES_BASE: ${{ steps.t.outputs.base }}
+        run: |
+          npm ci
+          npm run build -w @aftermath/web -- --base "$PAGES_BASE"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "pkgver=$(node -p 'require("./package.json").version')" >> "$GITHUB_ENV"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Check out gh-pages (or start it)
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          git init -q site
+          cd site
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          # same auth mechanism actions/checkout uses; the token is masked in logs and the dir is discarded
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
+            git fetch -q --depth 1 origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
+
+      - name: Copy build into place
+        env:
+          TARGET: ${{ steps.t.outputs.target }}
+        run: |
+          if [ -z "$TARGET" ]; then
+            # latest at the root: replace everything except the version folders and the index files
+            rsync -a --checksum --delete \
+              --exclude '/v[0-9]*/' --exclude '/versions.json' --exclude '/versions.html' \
+              --exclude '/.nojekyll' --exclude '/.git' \
+              src/apps/web/dist/ site/
+          else
+            mkdir -p "site/$TARGET"
+            rsync -a --checksum --delete src/apps/web/dist/ "site/$TARGET/"
+          fi
+          touch site/.nojekyll
+
+      - name: Update versions.json and versions.html
+        env:
+          TARGET: ${{ steps.t.outputs.target }}
+          REF: ${{ steps.t.outputs.ref }}
+          BASE: ${{ steps.t.outputs.base }}
+        run: |
+          node - <<'JS'
+          const fs = require('fs');
+          const f = 'site/versions.json';
+          const data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : { latest: null, versions: [] };
+          const entry = { version: process.env.TARGET || 'latest', ref: process.env.REF, sha: process.env.sha,
+            packageVersion: process.env.pkgver, path: process.env.BASE, builtAt: new Date().toISOString() };
+          if (!process.env.TARGET) data.latest = entry;
+          else data.versions = [entry, ...data.versions.filter((v) => v.version !== entry.version)];
+          const key = (v) => v.version.replace(/^v/, '').split(/[.-]/).map((x) => (/^\d+$/.test(x) ? x.padStart(6, '0') : x)).join('.');
+          data.versions.sort((a, b) => key(b).localeCompare(key(a)));
+          fs.writeFileSync(f, JSON.stringify(data, null, 2) + '\n');
+          const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+          const row = (v, label) => `<li><a href="${esc(v.path)}">${esc(label)}</a> <small>${esc(v.packageVersion)} · ${esc(v.ref)} @ ${esc((v.sha || '').slice(0, 7))} · ${esc(v.builtAt.slice(0, 10))}</small></li>`;
+          const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Aftermath versions</title>
+          <style>body{font:16px/1.5 system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;background:#12160f;color:#dfe8cf}a{color:#c6e27a}small{color:#8a9579}</style>
+          <h1>Aftermath: deployed versions</h1><ul>
+          ${data.latest ? row(data.latest, 'latest (main)') : ''}
+          ${data.versions.map((v) => row(v, v.version)).join('\n')}
+          </ul><p><a href="versions.json">versions.json</a></p>`;
+          fs.writeFileSync('site/versions.html', html.replace(/^ {10}/gm, ''));
+          JS
+
+      - name: Commit and push gh-pages
+        env:
+          TARGET: ${{ steps.t.outputs.target }}
+          REF: ${{ steps.t.outputs.ref }}
+        run: |
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to deploy"; exit 0; fi
+          git commit -q -m "Deploy ${REF} (${sha::7}) to /${TARGET}"
+          git push -q origin gh-pages
+          echo "::notice::Deployed ${REF} → https://${GITHUB_REPOSITORY_OWNER}.github.io${REPO_BASE}${TARGET:+$TARGET/}"
