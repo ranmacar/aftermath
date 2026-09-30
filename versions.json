@@ -7,5 +7,14 @@
     "path": "/aftermath/",
     "builtAt": "2026-09-30T19:26:49.167Z"
   },
-  "versions": []
+  "versions": [
+    {
+      "version": "v0.1.0",
+      "ref": "v0.1.0",
+      "sha": "c465261d53a5272c09b8ff47a5008149b22606cf",
+      "packageVersion": "0.0.1",
+      "path": "/aftermath/v0.1.0/",
+      "builtAt": "2026-09-30T19:31:22.571Z"
+    }
+  ]
 }
