@@ -699,6 +699,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     const JUMP_SPEED = 4.2;
     const GRAVITY = -16;
     const STEP_HEIGHT = 1.35; // berm / small ledges
+    const SLOPE_SNAP = 1.5; // stick downhill on slopes up to ~56° (drop/run)
     const FLY_HOLD_S = 0.45; // hold Space this long to enter fly
 
     const moveDown = new Set<string>();
@@ -906,6 +907,12 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
                 camera.position.y = gNext + eyeH;
                 vy = 0;
                 grounded = true;
+              } else if (grounded && vy <= 0 && -rise <= speed * SLOPE_SNAP + 0.02) {
+                // Stick to the ground walking downhill. Without this every frame
+                // stepped off the slope and fell a few cm, so descents hopped /
+                // jittered. Real ledges (drop > slope × step) still fall.
+                camera.position.y = gNext + eyeH;
+                vy = 0;
               }
             }
           }
@@ -921,6 +928,8 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
           camera.position.y = floorEye;
           vy = 0;
           grounded = true;
+        } else if (camera.position.y > floorEye + 0.05) {
+          grounded = false; // walked off a ledge — no mid-air jump / snap
         }
       }
 

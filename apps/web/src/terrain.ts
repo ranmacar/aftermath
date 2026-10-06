@@ -40,24 +40,33 @@ function latLngFromEnu(
   return { lat, lng };
 }
 
-async function loadImage(url: string): Promise<HTMLImageElement | null> {
-  try {
-    const res = await fetch(url, { mode: "cors" });
-    if (!res.ok) return null;
-    const blob = await res.blob();
-    const src = URL.createObjectURL(blob);
-    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const el = new Image();
-      el.crossOrigin = "anonymous";
-      el.onload = () => resolve(el);
-      el.onerror = () => reject(new Error(url));
-      el.src = src;
-    });
-    URL.revokeObjectURL(src);
-    return img;
-  } catch {
-    return null;
+async function loadImage(url: string, attempts = 2): Promise<HTMLImageElement | null> {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) {
+        // 404 = no tile; only retry transient failures.
+        if (res.status === 404) return null;
+        continue;
+      }
+      const blob = await res.blob();
+      const src = URL.createObjectURL(blob);
+      try {
+        return await new Promise<HTMLImageElement>((resolve, reject) => {
+          const el = new Image();
+          el.crossOrigin = "anonymous";
+          el.onload = () => resolve(el);
+          el.onerror = () => reject(new Error(url));
+          el.src = src;
+        });
+      } finally {
+        URL.revokeObjectURL(src);
+      }
+    } catch {
+      /* network error — retry once */
+    }
   }
+  return null;
 }
 
 function terrariumMeters(data: Uint8ClampedArray, idx: number): number {
@@ -67,7 +76,15 @@ function terrariumMeters(data: Uint8ClampedArray, idx: number): number {
   return r * 256 + g + b / 256 - 32768;
 }
 
-type Raster = { z: number; x: number; y: number; canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D };
+type Raster = {
+  z: number;
+  x: number;
+  y: number;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  /** Decoded lazily, once; per-sample getImageData was 4k+ readbacks per patch. */
+  pixels: Uint8ClampedArray | null;
+};
 
 async function loadTileGrid(
   urlTemplate: string,
@@ -94,7 +111,7 @@ async function loadTileGrid(
           const ctx = canvas.getContext("2d", { willReadFrequently: true });
           if (!ctx) return;
           ctx.drawImage(img, 0, 0);
-          out.set(`${z}/${x}/${y}`, { z, x, y, canvas, ctx });
+          out.set(`${z}/${x}/${y}`, { z, x, y, canvas, ctx, pixels: null });
         }),
       );
     }
@@ -103,24 +120,112 @@ async function loadTileGrid(
   return out;
 }
 
+/** One DEM pixel addressed in global (world) pixel space at zoom `z`. */
+function terrariumPixel(
+  tiles: Map<string, Raster>,
+  z: number,
+  gx: number,
+  gy: number,
+  tileSize: number,
+): number | null {
+  const tx = Math.floor(gx / tileSize);
+  const ty = Math.floor(gy / tileSize);
+  const tile = tiles.get(`${z}/${tx}/${ty}`);
+  if (!tile) return null;
+  const ix = gx - tx * tileSize;
+  const iy = gy - ty * tileSize;
+  tile.pixels ??= tile.ctx.getImageData(0, 0, tile.canvas.width, tile.canvas.height).data;
+  const h = terrariumMeters(tile.pixels, (iy * tile.canvas.width + ix) * 4);
+  // Terrarium has no explicit nodata; guard against corrupt / blank pixels.
+  return Number.isFinite(h) && h > -12_000 && h < 9_000 ? h : null;
+}
+
+/**
+ * Bilinear DEM sample. Nearest-pixel sampling (old) terraced steep slopes:
+ * z15 pixels are ~3–5 m, the Walk grid is 2.8 m, so neighbouring vertices
+ * snapped to the same or skipped pixels (up to ~5 m steps on alpine slopes).
+ * Works across tile seams in global pixel space (pixel centres at +0.5).
+ */
 function sampleTerrarium(
   tiles: Map<string, Raster>,
   z: number,
   lat: number,
   lng: number,
+  tileSize = 256,
 ): number | null {
-  const fx = tileX(lng, z);
-  const fy = tileY(lat, z);
-  const tx = Math.floor(fx);
-  const ty = Math.floor(fy);
-  const tile = tiles.get(`${z}/${tx}/${ty}`);
-  if (!tile) return null;
-  const px = (fx - tx) * tile.canvas.width;
-  const py = (fy - ty) * tile.canvas.height;
-  const ix = Math.min(tile.canvas.width - 1, Math.max(0, Math.floor(px)));
-  const iy = Math.min(tile.canvas.height - 1, Math.max(0, Math.floor(py)));
-  const img = tile.ctx.getImageData(ix, iy, 1, 1).data;
-  return terrariumMeters(img, 0);
+  const gx = tileX(lng, z) * tileSize - 0.5;
+  const gy = tileY(lat, z) * tileSize - 0.5;
+  const x0 = Math.floor(gx);
+  const y0 = Math.floor(gy);
+  const fx = gx - x0;
+  const fy = gy - y0;
+  const h00 = terrariumPixel(tiles, z, x0, y0, tileSize);
+  const h10 = terrariumPixel(tiles, z, x0 + 1, y0, tileSize);
+  const h01 = terrariumPixel(tiles, z, x0, y0 + 1, tileSize);
+  const h11 = terrariumPixel(tiles, z, x0 + 1, y0 + 1, tileSize);
+  const w = [
+    [h00, (1 - fx) * (1 - fy)],
+    [h10, fx * (1 - fy)],
+    [h01, (1 - fx) * fy],
+    [h11, fx * fy],
+  ] as const;
+  let sum = 0;
+  let wsum = 0;
+  for (const [h, wt] of w) {
+    if (h === null) continue;
+    sum += h * wt;
+    wsum += wt;
+  }
+  // Missing neighbour tile: renormalise over the pixels we do have.
+  return wsum > 1e-6 ? sum / wsum : null;
+}
+
+/** Fill grid holes (missing DEM tile / bad pixels) from nearest valid samples. */
+function fillHoles(heights: Float32Array, valid: Uint8Array, cells: number): boolean {
+  let any = false;
+  for (let i = 0; i < valid.length; i++) {
+    if (valid[i]) {
+      any = true;
+      break;
+    }
+  }
+  if (!any) return false;
+  // Iterative dilation: each pass fills holes adjacent to valid cells.
+  let pending = true;
+  while (pending) {
+    pending = false;
+    const next = valid.slice();
+    for (let iz = 0; iz < cells; iz++) {
+      for (let ix = 0; ix < cells; ix++) {
+        const i = iz * cells + ix;
+        if (valid[i]) continue;
+        let sum = 0;
+        let n = 0;
+        for (const [dx, dz] of [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ] as const) {
+          const jx = ix + dx;
+          const jz = iz + dz;
+          if (jx < 0 || jz < 0 || jx >= cells || jz >= cells) continue;
+          const j = jz * cells + jx;
+          if (!valid[j]) continue;
+          sum += heights[j] ?? 0;
+          n++;
+        }
+        if (n > 0) {
+          heights[i] = sum / n;
+          next[i] = 1;
+        } else {
+          pending = true;
+        }
+      }
+    }
+    valid.set(next);
+  }
+  return true;
 }
 
 export function samplePatch(patch: TerrainPatch, x: number, z: number): number {
@@ -129,8 +234,10 @@ export function samplePatch(patch: TerrainPatch, x: number, z: number): number {
   const v = ((z + size / 2) / size) * (cells - 1);
   const x0 = Math.max(0, Math.min(cells - 2, Math.floor(u)));
   const z0 = Math.max(0, Math.min(cells - 2, Math.floor(v)));
-  const tx = u - x0;
-  const tz = v - z0;
+  // Clamp: outside the patch hold the edge height instead of extrapolating
+  // the edge slope (player / fly-out past the edge shot up or down).
+  const tx = Math.min(1, Math.max(0, u - x0));
+  const tz = Math.min(1, Math.max(0, v - z0));
   const h00 = heights[z0 * cells + x0] ?? 0;
   const h10 = heights[z0 * cells + x0 + 1] ?? h00;
   const h01 = heights[(z0 + 1) * cells + x0] ?? h00;
@@ -156,31 +263,43 @@ export async function loadTerrainPatch(
       latLngFromEnu(origin.lat, origin.lng, -size / 2, size / 2),
       latLngFromEnu(origin.lat, origin.lng, size / 2, size / 2),
     ];
+    // Pad by one pixel so bilinear taps at the patch edge have their neighbour tile.
+    const pad = 1 / 256;
     const xs = corners.map((c) => tileX(c.lng, zDem));
     const ys = corners.map((c) => tileY(c.lat, zDem));
     const demTiles = await loadTileGrid(
       DEM_URL,
       zDem,
-      Math.floor(Math.min(...xs)),
-      Math.floor(Math.min(...ys)),
-      Math.floor(Math.max(...xs)),
-      Math.floor(Math.max(...ys)),
+      Math.floor(Math.min(...xs) - pad),
+      Math.floor(Math.min(...ys) - pad),
+      Math.floor(Math.max(...xs) + pad),
+      Math.floor(Math.max(...ys) + pad),
     );
 
     const heights = new Float32Array(cells * cells);
-    let originHeight = 0;
+    const valid = new Uint8Array(cells * cells);
     for (let iz = 0; iz < cells; iz++) {
       for (let ix = 0; ix < cells; ix++) {
         const x = -size / 2 + (ix / (cells - 1)) * size;
         const z = -size / 2 + (iz / (cells - 1)) * size;
         const ll = latLngFromEnu(origin.lat, origin.lng, x, z);
-        const h = sampleTerrarium(demTiles, zDem, ll.lat, ll.lng) ?? 0;
-        heights[iz * cells + ix] = h;
-        if (ix === Math.floor(cells / 2) && iz === Math.floor(cells / 2)) {
-          originHeight = h;
+        const h = sampleTerrarium(demTiles, zDem, ll.lat, ll.lng);
+        if (h !== null) {
+          heights[iz * cells + ix] = h;
+          valid[iz * cells + ix] = 1;
         }
       }
     }
+    // A failed tile used to read as 0 m → a cliff of -originHeight. Fill from
+    // neighbours instead; an all-missing patch stays flat at 0.
+    const demOk = fillHoles(heights, valid, cells);
+    if (!demOk) {
+      heights.fill(0);
+      // Don't pin a flat placeholder for the whole session — retry next open.
+      cache.delete(cacheKey);
+    }
+    const mid = Math.floor(cells / 2);
+    const originHeight = heights[mid * cells + mid] ?? 0;
     for (let i = 0; i < heights.length; i++) heights[i] -= originHeight;
 
     let texture: HTMLCanvasElement | null = null;

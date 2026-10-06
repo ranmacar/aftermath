@@ -3,6 +3,20 @@ import { VertexBuffer } from "@babylonjs/core/Buffers/buffer";
 import { VertexData } from "@babylonjs/core/Meshes/mesh.vertexData";
 
 /**
+ * Pit surface height for a vertex whose terrain height is `terrainY`.
+ * `t` = 0 on the pit floor, 0→1 across the rim bank.
+ *
+ * Banks blend to the vertex's own terrain (not the centre grade) and the pit
+ * only ever digs. Blending to centre grade on a slope raised the downhill
+ * side into a floating shelf and left a cliff at the rim uphill — the big
+ * stretched flaps seen in Walk on steep cells.
+ */
+function pitHeight(terrainY: number, floorY: number, t: number): number {
+  const s = t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); // smoothstep bank
+  return Math.min(terrainY, floorY + (terrainY - floorY) * s);
+}
+
+/**
  * Punch a cylindrical pit into an updatable ground mesh so the hole
  * overrides the terrain instead of sitting under it.
  */
@@ -30,15 +44,9 @@ export function carveTerrainPit(
     const dx = x - cx;
     const dz = z - cz;
     const d2 = dx * dx + dz * dz;
-    if (d2 <= rInner2) {
-      positions[i + 1] = floorY;
-    } else if (d2 < rOuter2) {
-      const d = Math.sqrt(d2);
-      const t = (d - rInner) / rimWidth; // 0 at lip inner, 1 at outer
-      // Smoothstep bank
-      const s = t * t * (3 - 2 * t);
-      positions[i + 1] = floorY + (gradeY - floorY) * s;
-    }
+    if (d2 >= rOuter2) continue;
+    const t = d2 <= rInner2 ? 0 : (Math.sqrt(d2) - rInner) / rimWidth;
+    positions[i + 1] = pitHeight(positions[i + 1] ?? gradeY, floorY, t);
   }
 
   ground.updateVerticesData(VertexBuffer.PositionKind, positions);
@@ -100,13 +108,8 @@ export function setTerrainPitFraction(
     const x = positions[i] ?? 0;
     const z = positions[i + 2] ?? 0;
     const d = Math.hypot(x - cx, z - cz);
-    let target = vert.baseY;
-    if (d <= rInner) target = floorY;
-    else if (d < rOuter) {
-      const t = (d - rInner) / rimWidth;
-      const s = t * t * (3 - 2 * t);
-      target = floorY + (gradeY - floorY) * s;
-    }
+    const target =
+      d < rOuter ? pitHeight(vert.baseY, floorY, d <= rInner ? 0 : (d - rInner) / rimWidth) : vert.baseY;
     positions[i + 1] = vert.baseY + (target - vert.baseY) * f;
   }
 
