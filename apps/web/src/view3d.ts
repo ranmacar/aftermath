@@ -5,10 +5,9 @@ import {
 } from "h3-js";
 import maplibregl from "maplibre-gl";
 import type { GeoJSONSource } from "maplibre-gl";
-import { lngLatToEnu } from "./geo";
 import { H3_RES } from "./h3-overlay";
 import { stageFootprints } from "./stages";
-import { loadTerrainPatch, samplePatch } from "./terrain";
+import { loadTerrainPatch } from "./terrain";
 import { GOOGLE_PHOTOREALISTIC_ASSET, ionToken } from "./cesium-ion";
 import { getTilesKey } from "./tiles-key";
 
@@ -150,6 +149,17 @@ function terrainStyle(): maplibregl.StyleSpecification {
         tileSize: 256,
         maxzoom: 15,
       },
+      // Same DEM, separate source: MapLibre renders 3D terrain at reduced
+      // quality when hillshade and terrain share one raster-dem source.
+      hillshade: {
+        type: "raster-dem",
+        tiles: [
+          "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+        ],
+        encoding: "terrarium",
+        tileSize: 256,
+        maxzoom: 15,
+      },
       [HEX_SOURCE]: {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -160,18 +170,19 @@ function terrainStyle(): maplibregl.StyleSpecification {
       {
         id: "hills",
         type: "hillshade",
-        source: "terrain",
+        source: "hillshade",
         paint: { "hillshade-exaggeration": 0.45 },
       },
       {
+        // Draped fill, not a 1.2 m fill-extrusion: MapLibre lifts a whole
+        // extrusion to the terrain height at its centroid, so on a slope the
+        // ~130 m hex became a flat plate floating downhill / buried uphill.
         id: HEX_FILL,
-        type: "fill-extrusion",
+        type: "fill",
         source: HEX_SOURCE,
         paint: {
-          "fill-extrusion-color": "#c6e27a",
-          "fill-extrusion-height": 1.2,
-          "fill-extrusion-base": 0,
-          "fill-extrusion-opacity": 0.45,
+          "fill-color": "#c6e27a",
+          "fill-opacity": 0.45,
         },
       },
       {
@@ -229,39 +240,48 @@ export function attachView3d(handlers: {
     errorEl.textContent = message ?? "";
   }
 
-  async function heightsForRing(
-    cell: string,
-    lng: number,
-    lat: number,
-    ring: number[][],
-  ): Promise<{ center: number; ring: number[] }> {
-    if (viewer && cesium && viewer.scene.sampleHeightMostDetailed) {
-      const C = cesium;
-      const samples = [
-        C.Cartographic.fromDegrees(lng, lat),
-        ...ring.map(([lo, la]) => C.Cartographic.fromDegrees(lo, la)),
-      ];
-      await viewer.scene.sampleHeightMostDetailed(samples);
-      const center = samples[0]?.height;
-      if (typeof center === "number" && Number.isFinite(center)) {
-        return {
-          center,
-          ring: samples.slice(1).map((p) =>
-            typeof p.height === "number" && Number.isFinite(p.height)
-              ? p.height
-              : center,
-          ),
-        };
-      }
+  /**
+   * Ground height per point cluster from the photoreal tiles.
+   * Tile hits are the visible surface (tree canopy, roofs), so a single centre
+   * sample in a forest put footprints / the hex on top of the trees. Take the
+   * lower quartile of a small cluster instead. Clusters with no hit → null.
+   */
+  async function tileGroundHeights(clusters: [number, number][][]): Promise<(number | null)[]> {
+    if (!viewer || !cesium || !viewer.scene.sampleHeightMostDetailed) {
+      return clusters.map(() => null);
     }
-    const patch = await loadTerrainPatch(cell);
-    return {
-      center: patch.originHeight,
-      ring: ring.map(([lo, la]) => {
-        const enu = lngLatToEnu(la, lo, lat, lng);
-        return patch.originHeight + samplePatch(patch, enu.x, enu.z);
-      }),
-    };
+    const C = cesium;
+    const flat = clusters.flat().map(([lo, la]) => C.Cartographic.fromDegrees(lo, la));
+    try {
+      await viewer.scene.sampleHeightMostDetailed(flat);
+    } catch {
+      return clusters.map(() => null);
+    }
+    let k = 0;
+    return clusters.map((pts) => {
+      const hs: number[] = [];
+      for (let i = 0; i < pts.length; i++) {
+        const h = flat[k++]?.height;
+        if (typeof h === "number" && Number.isFinite(h)) hs.push(h);
+      }
+      if (hs.length === 0) return null;
+      hs.sort((x, y) => x - y);
+      return hs[Math.floor((hs.length - 1) * 0.25)] ?? null;
+    });
+  }
+
+  /** Centre + `n` points on a circle of `radiusM` (metres) around lng/lat. */
+  function cluster(lng: number, lat: number, radiusM: number, n = 6): [number, number][] {
+    const cosLat = Math.max(Math.cos((lat * Math.PI) / 180), 0.2);
+    const pts: [number, number][] = [[lng, lat]];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      pts.push([
+        lng + (radiusM * Math.cos(a)) / (111_111 * cosLat),
+        lat + (radiusM * Math.sin(a)) / 111_111,
+      ]);
+    }
+    return pts;
   }
 
   async function lookAtHex(cell: string): Promise<void> {
@@ -301,8 +321,28 @@ export function attachView3d(handlers: {
       ),
     );
     viewer.scene.requestRender();
-    const sampled = await heightsForRing(cell, lng, lat, ring);
-    const ground = sampled.center;
+    const cosLat = Math.cos((lat * Math.PI) / 180);
+    const footprints = stageFootprints().map((fp) => {
+      const fLat = lat + fp.z / 111_111;
+      const fLng = lng + fp.x / (111_111 * Math.max(cosLat, 0.2));
+      return { fp, fLat, fLng };
+    });
+    const edge = getHexagonEdgeLengthAvg(H3_RES, "m");
+    const heights = await tileGroundHeights([
+      cluster(lng, lat, edge * 0.35),
+      ...footprints.map(({ fp, fLat, fLng }) => cluster(fLng, fLat, fp.radius * 0.6)),
+    ]);
+    let ground = heights[0] ?? null;
+    if (ground === null) {
+      const hits = heights.filter((h): h is number => h !== null);
+      if (hits.length > 0) ground = Math.min(...hits);
+    }
+    if (ground === null) {
+      // No tile hit at all: DEM fallback. NB terrarium is metres above sea level,
+      // Cesium wants ellipsoid height (geoid offset, ~+40–50 m in central Europe).
+      const patch = await loadTerrainPatch(cell);
+      ground = patch.originHeight;
+    }
     viewer.camera.lookAt(
       cesium.Cartesian3.fromDegrees(lng, lat, ground),
       new cesium.HeadingPitchRange(
@@ -312,43 +352,47 @@ export function attachView3d(handlers: {
       ),
     );
     viewer.entities.removeAll();
-    const withH: number[] = [];
-    ring.forEach(([ringLng, ringLat], i) => {
-      withH.push(ringLng, ringLat, (sampled.ring[i] ?? ground) + 0.4);
-    });
+    // Drape the hex on the tiles (was 6 flat-facet vertices at sampled
+    // heights: cut through ridges / floated over valleys and tree tops).
+    const flatRing: number[] = [];
+    for (const [ringLng, ringLat] of ring) flatRing.push(ringLng, ringLat);
     const first = ring[0];
-    if (first) withH.push(first[0], first[1], (sampled.ring[0] ?? ground) + 0.4);
-    const draped = cesium.Cartesian3.fromDegreesArrayHeights(withH);
+    if (first) flatRing.push(first[0], first[1]);
+    const outline = cesium.Cartesian3.fromDegreesArray(flatRing);
     viewer.entities.add({
       polyline: {
-        positions: draped,
+        positions: outline,
         width: 4,
+        clampToGround: true,
+        classificationType: cesium.ClassificationType.CESIUM_3D_TILE,
         material: cesium.Color.fromCssColorString("#c6e27a"),
       },
     });
     viewer.entities.add({
       polygon: {
-        hierarchy: draped,
-        perPositionHeight: true,
+        hierarchy: outline,
+        classificationType: cesium.ClassificationType.CESIUM_3D_TILE,
         material: cesium.Color.fromCssColorString("#c6e27a").withAlpha(0.28),
       },
     });
-    const cosLat = Math.cos((lat * Math.PI) / 180);
-    for (const fp of stageFootprints()) {
-      const fLat = lat + fp.z / 111_111;
-      const fLng = lng + fp.x / (111_111 * Math.max(cosLat, 0.2));
-      viewer.entities.add({
-        position: cesium.Cartesian3.fromDegrees(fLng, fLat, ground + fp.height / 2),
+    // Each footprint sits on its own ground (Walk places stages at
+    // groundAt(stage.x, stage.z)); was the hex-centre height for all of them.
+    const C = cesium;
+    const v = viewer;
+    footprints.forEach(({ fp, fLat, fLng }, i) => {
+      const base = heights[i + 1] ?? ground;
+      v.entities.add({
+        position: C.Cartesian3.fromDegrees(fLng, fLat, base + fp.height / 2),
         cylinder: {
           length: fp.height,
           topRadius: fp.radius * (fp.id === "live-pod" ? 0.35 : 0.85),
           bottomRadius: fp.radius,
-          material: cesium.Color.fromCssColorString(fp.color).withAlpha(0.9),
+          material: C.Color.fromCssColorString(fp.color).withAlpha(0.9),
           outline: true,
-          outlineColor: cesium.Color.fromCssColorString("#e8eedc"),
+          outlineColor: C.Color.fromCssColorString("#e8eedc"),
         },
       });
-    }
+    });
     viewer.scene.requestRender();
   }
 
