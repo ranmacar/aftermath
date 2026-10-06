@@ -15,6 +15,12 @@ import {
 } from "./geo";
 import { POD, TOWER_SPEC } from "./placements";
 import { spawnHabitatCrowd } from "./crowd";
+import {
+  cadAssetReady,
+  cadPart,
+  placeCadAssembly,
+  type CadAsset,
+} from "./cad-assets";
 
 export type StageId =
   | "solar-flat"
@@ -85,6 +91,20 @@ function markWall(mesh: CollisionMesh): void {
 /** Floors/roofs/bridges — ground snap owns vertical; do not mesh-collide. */
 function markWalkSurface(mesh: { checkCollisions: boolean }): void {
   mesh.checkCollisions = false;
+}
+
+/**
+ * Onshape kit part (cad/onshape/Kits.fs) as a drop-in for a MeshBuilder
+ * primitive — same origin/axes, so the caller's transforms stay unchanged.
+ * Falls back to `make()` when CAD is off (?procedural=1) or the part is missing.
+ */
+function kitMesh(
+  asset: CadAsset,
+  part: string,
+  name: string,
+  make: () => Mesh,
+): Mesh {
+  return cadPart(asset, part, name) ?? make();
 }
 
 function mats(scene: Scene, bab: Bab) {
@@ -229,17 +249,21 @@ function buildVerticalContainer(
   m: ReturnType<typeof mats>,
   bottomY: number,
   name = "container",
+  /** Onshape kit part with the same 2.438×12.192×2.591 box. */
+  cadKit?: readonly [CadAsset, string],
 ): import("@babylonjs/core").Mesh {
   const { MeshBuilder } = bab;
-  const box = MeshBuilder.CreateBox(
-    name,
-    {
-      width: POD.width,
-      height: POD.length,
-      depth: POD.height,
-    },
-    scene,
-  );
+  const make = () =>
+    MeshBuilder.CreateBox(
+      name,
+      {
+        width: POD.width,
+        height: POD.length,
+        depth: POD.height,
+      },
+      scene,
+    );
+  const box = cadKit ? kitMesh(cadKit[0], cadKit[1], name, make) : make();
   box.material = m.corten;
   box.parent = parent;
   box.position.set(0, bottomY + POD.length / 2, 0);
@@ -257,24 +281,34 @@ function buildColumnWithConsole(
   m: ReturnType<typeof mats>,
   bottomY: number,
   topY: number,
+  /** Live pod only: Onshape "Live column" / "Live console" (column −1 → 2.4 m). */
+  livePodKit = false,
 ): { tube: import("@babylonjs/core").Mesh; consoleBox: import("@babylonjs/core").Mesh } {
   const { MeshBuilder } = bab;
   const h = topY - bottomY;
-  const tube = MeshBuilder.CreateCylinder(
-    "hatch-tube",
-    { height: h, diameter: POD.tubeDiameter, tessellation: 20 },
-    scene,
-  );
+  const makeTube = () =>
+    MeshBuilder.CreateCylinder(
+      "hatch-tube",
+      { height: h, diameter: POD.tubeDiameter, tessellation: 20 },
+      scene,
+    );
+  const tube = livePodKit
+    ? kitMesh("live_pod_kit", "Live column", "hatch-tube", makeTube)
+    : makeTube();
   tube.material = m.tube;
   tube.parent = parent;
   tube.position.set(0, bottomY + h / 2, 0);
   markWall(tube);
 
-  const consoleBox = MeshBuilder.CreateBox(
-    "pod-console",
-    { width: POD.consoleW, height: POD.consoleH, depth: POD.consoleD },
-    scene,
-  );
+  const makeConsole = () =>
+    MeshBuilder.CreateBox(
+      "pod-console",
+      { width: POD.consoleW, height: POD.consoleH, depth: POD.consoleD },
+      scene,
+    );
+  const consoleBox = livePodKit
+    ? kitMesh("live_pod_kit", "Live console", "pod-console", makeConsole)
+    : makeConsole();
   consoleBox.material = m.console;
   consoleBox.parent = parent;
   consoleBox.position.set(POD.tubeDiameter * 0.55, POD.consoleH / 2, 0);
@@ -472,7 +506,10 @@ export function buildBuriedPod(
 
   const topY = -POD.buryDepth;
   const bottomY = topY - POD.length;
-  buildVerticalContainer(scene, bab, root, m, bottomY, "live-container");
+  buildVerticalContainer(scene, bab, root, m, bottomY, "live-container", [
+    "live_pod_kit",
+    "Live container",
+  ]);
 
   const columnTop = POD.tubeHeightAboveGrade;
   const { tube, consoleBox } = buildColumnWithConsole(
@@ -482,12 +519,15 @@ export function buildBuriedPod(
     m,
     topY,
     columnTop,
+    true,
   );
 
-  const solarPreview = MeshBuilder.CreateCylinder(
-    "live-solar",
-    { height: 0.12, diameter: TOWER_SPEC.outerDiameter, tessellation: 48 },
-    scene,
+  const solarPreview = kitMesh("live_pod_kit", "Live solar disc", "live-solar", () =>
+    MeshBuilder.CreateCylinder(
+      "live-solar",
+      { height: 0.12, diameter: TOWER_SPEC.outerDiameter, tessellation: 48 },
+      scene,
+    ),
   );
   solarPreview.material = m.solar;
   solarPreview.parent = root;
@@ -542,6 +582,11 @@ function buildExcavateStage(
   parent: TransformNode,
   m: ReturnType<typeof mats>,
 ): void {
+  // Onshape stage_excavate: pod, column, console, pitched solar, bridge, berm.
+  if (placeCadAssembly("stage_excavate", parent, m, { name: "cad-excavate" })) {
+    woodMat(m); // bridge + rim share solarFrame (procedural side effect)
+    return;
+  }
   const floorY = -EXCAVATE_DEPTH;
   buildVerticalContainer(scene, bab, parent, m, floorY, "pit-container");
   const containerTop = floorY + POD.length;
@@ -579,24 +624,28 @@ function buildGantryStage(
   const containerTop = pitBottom + POD.length;
   // Tall enough to reach the pitched roof, whose low rim sits above the gantry.
   const columnMeshH = GANTRY_FLOORS * FH + 14 - containerTop;
-  const column = MeshBuilder.CreateCylinder(
-    "build-column",
-    { height: columnMeshH, diameter: POD.tubeDiameter, tessellation: 24 },
-    scene,
+  const column = kitMesh("gantry_kit", "Build column", "build-column", () =>
+    MeshBuilder.CreateCylinder(
+      "build-column",
+      { height: columnMeshH, diameter: POD.tubeDiameter, tessellation: 24 },
+      scene,
+    ),
   );
   column.material = m.column;
   column.parent = parent;
   column.isVisible = false;
 
-  const berm = MeshBuilder.CreateTorus(
-    "build-berm",
-    {
-      // Outside the carved bank so the ring is on uncut ground.
-      diameter: (OUTER_R + 3.6) * 2,
-      thickness: 2.2,
-      tessellation: 40,
-    },
-    scene,
+  const berm = kitMesh("gantry_kit", "Build berm", "build-berm", () =>
+    MeshBuilder.CreateTorus(
+      "build-berm",
+      {
+        // Outside the carved bank so the ring is on uncut ground.
+        diameter: (OUTER_R + 3.6) * 2,
+        thickness: 2.2,
+        tessellation: 40,
+      },
+      scene,
+    ),
   );
   berm.material = m.dirt;
   berm.parent = parent;
@@ -611,24 +660,25 @@ function buildGantryStage(
     m,
     pitBottom,
     "tech-container",
+    ["gantry_kit", "Tech container"],
   );
   container.isVisible = false;
   const tech = new StandardMaterial("tech-glow", scene);
   tech.diffuseColor = new Color3(0.15, 0.35, 0.32);
   tech.emissiveColor = new Color3(0.05, 0.22, 0.18);
-  const door = MeshBuilder.CreateBox(
-    "tech-door",
-    { width: 1.1, height: 2.1, depth: 0.06 },
-    scene,
+  const door = kitMesh("gantry_kit", "Tech door", "tech-door", () =>
+    MeshBuilder.CreateBox("tech-door", { width: 1.1, height: 2.1, depth: 0.06 }, scene),
   );
   door.material = m.console;
   door.parent = container;
   door.position.set(0, POD.length / 2 - 1.4, POD.height / 2 + 0.02);
   for (let rack = 0; rack < 3; rack++) {
-    const cab = MeshBuilder.CreateBox(
-      `tech-rack-${rack}`,
-      { width: 0.55, height: 1.8, depth: 0.4 },
-      scene,
+    const cab = kitMesh("gantry_kit", "Tech rack", `tech-rack-${rack}`, () =>
+      MeshBuilder.CreateBox(
+        `tech-rack-${rack}`,
+        { width: 0.55, height: 1.8, depth: 0.4 },
+        scene,
+      ),
     );
     cab.material = tech;
     cab.parent = container;
@@ -662,10 +712,12 @@ function buildGantryStage(
       spoke.parent = parent;
       spoke.position.y = y;
       spoke.rotation.y = (b / beamCount) * Math.PI * 2;
-      const beam = MeshBuilder.CreateCylinder(
-        `beam-${i}-${b}`,
-        { height: beamLen, diameter: 0.34, tessellation: 10 },
-        scene,
+      const beam = kitMesh("gantry_kit", "Deck beam", `beam-${i}-${b}`, () =>
+        MeshBuilder.CreateCylinder(
+          `beam-${i}-${b}`,
+          { height: beamLen, diameter: 0.34, tessellation: 10 },
+          scene,
+        ),
       );
       beam.material = m.floor;
       beam.parent = spoke;
@@ -678,10 +730,12 @@ function buildGantryStage(
     const ringR: number[] = [];
     for (let r = 0; r < ringCount; r++) {
       const radius = beamR0 + ((r + 1) / ringCount) * beamLen;
-      const ring = MeshBuilder.CreateTorus(
-        `ring-${i}-${r}`,
-        { diameter: radius * 2, thickness: 0.36, tessellation: 36 },
-        scene,
+      const ring = kitMesh("gantry_kit", `Deck ring ${r}`, `ring-${i}-${r}`, () =>
+        MeshBuilder.CreateTorus(
+          `ring-${i}-${r}`,
+          { diameter: radius * 2, thickness: 0.36, tessellation: 36 },
+          scene,
+        ),
       );
       ring.material = m.floor;
       ring.parent = parent;
@@ -690,25 +744,29 @@ function buildGantryStage(
       rings.push(ring);
       ringR.push(radius);
     }
-    const disc = MeshBuilder.CreateCylinder(
-      `full-slab-src-${i}`,
-      { height: slabH, diameter: OUTER_R * 2, tessellation: 48 },
-      scene,
-    );
-    disc.isVisible = false;
-    const hole = MeshBuilder.CreateCylinder(
-      `full-slab-hole-${i}`,
-      { height: slabH + 0.2, diameter: POD.tubeDiameter + 0.4, tessellation: 24 },
-      scene,
-    );
-    hole.isVisible = false;
-    const slab = CSG.FromMesh(disc).subtract(CSG.FromMesh(hole)).toMesh(
-      `full-slab-${i}`,
-      m.floor,
-      scene,
-    );
-    disc.dispose();
-    hole.dispose();
+    const slab = kitMesh("gantry_kit", "Deck slab", `full-slab-${i}`, () => {
+      const disc = MeshBuilder.CreateCylinder(
+        `full-slab-src-${i}`,
+        { height: slabH, diameter: OUTER_R * 2, tessellation: 48 },
+        scene,
+      );
+      disc.isVisible = false;
+      const hole = MeshBuilder.CreateCylinder(
+        `full-slab-hole-${i}`,
+        { height: slabH + 0.2, diameter: POD.tubeDiameter + 0.4, tessellation: 24 },
+        scene,
+      );
+      hole.isVisible = false;
+      const csg = CSG.FromMesh(disc).subtract(CSG.FromMesh(hole)).toMesh(
+        `full-slab-${i}`,
+        m.floor,
+        scene,
+      );
+      disc.dispose();
+      hole.dispose();
+      return csg;
+    });
+    slab.material = m.floor;
     slab.parent = parent;
     slab.position.y = y;
     slab.isVisible = false;
@@ -717,133 +775,96 @@ function buildGantryStage(
 
   const shellOuterD = OUTER_R * 2;
   const shellInnerD = shellOuterD - OUTER_WALL_T * 2;
-  const wallOuter = MeshBuilder.CreateCylinder(
-    "slip-wall-out",
-    { height: wallFullH, diameter: shellOuterD, tessellation: 48 },
-    scene,
+  /** Procedural fallback: CSG annulus (outer minus taller inner). */
+  const csgRing = (
+    name: string,
+    h: number,
+    od: number,
+    hIn: number,
+    id: number,
+    mat: import("@babylonjs/core").Material,
+  ): Mesh => {
+    const o = MeshBuilder.CreateCylinder(`${name}-out`, { height: h, diameter: od, tessellation: 48 }, scene);
+    const n = MeshBuilder.CreateCylinder(`${name}-in`, { height: hIn, diameter: id, tessellation: 40 }, scene);
+    o.isVisible = false;
+    n.isVisible = false;
+    const r = CSG.FromMesh(o).subtract(CSG.FromMesh(n)).toMesh(name, mat, scene);
+    o.dispose();
+    n.dispose();
+    return r;
+  };
+  const slipWall = kitMesh("gantry_kit", "Slip wall", "slip-wall", () =>
+    csgRing("slip-wall", wallFullH, shellOuterD, wallFullH + 0.4, shellInnerD, m.facade),
   );
-  const wallInner = MeshBuilder.CreateCylinder(
-    "slip-wall-in",
-    { height: wallFullH + 0.4, diameter: shellInnerD, tessellation: 40 },
-    scene,
-  );
-  wallOuter.isVisible = false;
-  wallInner.isVisible = false;
-  const slipWall = CSG.FromMesh(wallOuter)
-    .subtract(CSG.FromMesh(wallInner))
-    .toMesh("slip-wall", m.facade, scene);
-  wallOuter.dispose();
-  wallInner.dispose();
+  slipWall.material = m.facade;
   slipWall.parent = parent;
   slipWall.isVisible = false;
 
   const formH = 1.15;
-  const formOuter = MeshBuilder.CreateCylinder(
-    "slip-form-out",
-    { height: formH, diameter: shellOuterD + 0.16, tessellation: 48 },
-    scene,
+  const slipForm = kitMesh("gantry_kit", "Slip form", "slip-form", () =>
+    csgRing("slip-form", formH, shellOuterD + 0.16, formH + 0.3, shellInnerD - 0.12, steel),
   );
-  const formInner = MeshBuilder.CreateCylinder(
-    "slip-form-in",
-    { height: formH + 0.3, diameter: shellInnerD - 0.12, tessellation: 40 },
-    scene,
-  );
-  formOuter.isVisible = false;
-  formInner.isVisible = false;
-  const slipForm = CSG.FromMesh(formOuter)
-    .subtract(CSG.FromMesh(formInner))
-    .toMesh("slip-form", steel, scene);
-  formOuter.dispose();
-  formInner.dispose();
+  slipForm.material = steel;
   slipForm.parent = parent;
   slipForm.isVisible = false;
 
   const baseH = EXCAVATE_DEPTH;
-  const baseOut = MeshBuilder.CreateCylinder(
-    "base-wall-out",
-    { height: baseH, diameter: shellOuterD, tessellation: 48 },
-    scene,
+  const baseWall = kitMesh("gantry_kit", "Base wall", "base-wall", () =>
+    csgRing("base-wall", baseH, shellOuterD, baseH + 0.4, shellInnerD, m.facade),
   );
-  const baseIn = MeshBuilder.CreateCylinder(
-    "base-wall-in",
-    { height: baseH + 0.4, diameter: shellInnerD, tessellation: 40 },
-    scene,
-  );
-  baseOut.isVisible = false;
-  baseIn.isVisible = false;
-  const baseWall = CSG.FromMesh(baseOut)
-    .subtract(CSG.FromMesh(baseIn))
-    .toMesh("base-wall", m.facade, scene);
-  baseOut.dispose();
-  baseIn.dispose();
+  baseWall.material = m.facade;
   baseWall.parent = parent;
   baseWall.isVisible = false;
-  const baseFormOut = MeshBuilder.CreateCylinder(
-    "base-form-out",
-    { height: formH, diameter: shellOuterD + 0.16, tessellation: 48 },
-    scene,
+  // Same section as the slip form (procedural used identical dims).
+  const baseForm = kitMesh("gantry_kit", "Slip form", "base-form", () =>
+    csgRing("base-form", formH, shellOuterD + 0.16, formH + 0.3, shellInnerD - 0.12, steel),
   );
-  const baseFormIn = MeshBuilder.CreateCylinder(
-    "base-form-in",
-    { height: formH + 0.3, diameter: shellInnerD - 0.12, tessellation: 40 },
-    scene,
-  );
-  baseFormOut.isVisible = false;
-  baseFormIn.isVisible = false;
-  const baseForm = CSG.FromMesh(baseFormOut)
-    .subtract(CSG.FromMesh(baseFormIn))
-    .toMesh("base-form", steel, scene);
-  baseFormOut.dispose();
-  baseFormIn.dispose();
+  baseForm.material = steel;
   baseForm.parent = parent;
   baseForm.isVisible = false;
 
   const gantry = new TransformNode("gantry", scene);
   gantry.parent = parent;
-  const sleeve = MeshBuilder.CreateCylinder(
-    "gantry-sleeve",
-    { height: 1.5, diameter: POD.tubeDiameter + 0.45, tessellation: 20 },
-    scene,
+  const sleeve = kitMesh("gantry_kit", "Gantry sleeve", "gantry-sleeve", () =>
+    MeshBuilder.CreateCylinder(
+      "gantry-sleeve",
+      { height: 1.5, diameter: POD.tubeDiameter + 0.45, tessellation: 20 },
+      scene,
+    ),
   );
   sleeve.material = steel;
   sleeve.parent = gantry;
   const boomLen = OUTER_R + 2;
-  const boom = MeshBuilder.CreateBox(
-    "gantry-boom",
-    { width: boomLen, height: 0.32, depth: 0.42 },
-    scene,
+  const boom = kitMesh("gantry_kit", "Gantry boom", "gantry-boom", () =>
+    MeshBuilder.CreateBox("gantry-boom", { width: boomLen, height: 0.32, depth: 0.42 }, scene),
   );
   boom.material = steel;
   boom.parent = gantry;
   boom.position.x = boomLen / 2;
-  const trolley = MeshBuilder.CreateBox(
-    "gantry-trolley",
-    { width: 0.7, height: 0.38, depth: 0.55 },
-    scene,
+  const trolley = kitMesh("gantry_kit", "Gantry trolley", "gantry-trolley", () =>
+    MeshBuilder.CreateBox("gantry-trolley", { width: 0.7, height: 0.38, depth: 0.55 }, scene),
   );
   trolley.material = m.column;
   trolley.parent = gantry;
   trolley.position.set(boomLen * 0.7, 0.28, 0);
-  const cabin = MeshBuilder.CreateBox(
-    "gantry-cabin",
-    { width: 1.1, height: 1.1, depth: 1.1 },
-    scene,
+  const cabin = kitMesh("gantry_kit", "Gantry cabin", "gantry-cabin", () =>
+    MeshBuilder.CreateBox("gantry-cabin", { width: 1.1, height: 1.1, depth: 1.1 }, scene),
   );
   cabin.material = m.console;
   cabin.parent = gantry;
   cabin.position.set(-0.2, 0.9, 0.9);
-  const slew = MeshBuilder.CreateTorus(
-    "gantry-slew",
-    { diameter: POD.tubeDiameter + 0.9, thickness: 0.18, tessellation: 20 },
-    scene,
+  const slew = kitMesh("gantry_kit", "Gantry slew ring", "gantry-slew", () =>
+    MeshBuilder.CreateTorus(
+      "gantry-slew",
+      { diameter: POD.tubeDiameter + 0.9, thickness: 0.18, tessellation: 20 },
+      scene,
+    ),
   );
   slew.material = steel;
   slew.parent = gantry;
   slew.position.y = -0.7;
-  const counter = MeshBuilder.CreateBox(
-    "gantry-counter",
-    { width: 1.6, height: 0.7, depth: 0.7 },
-    scene,
+  const counter = kitMesh("gantry_kit", "Gantry counterweight", "gantry-counter", () =>
+    MeshBuilder.CreateBox("gantry-counter", { width: 1.6, height: 0.7, depth: 0.7 }, scene),
   );
   counter.material = m.column;
   counter.parent = gantry;
@@ -851,25 +872,19 @@ function buildGantryStage(
   const tool = new TransformNode("gantry-tool", scene);
   tool.parent = gantry;
   tool.position.x = boomLen;
-  const hopper = MeshBuilder.CreateBox(
-    "gantry-hopper",
-    { width: 0.9, height: 0.7, depth: 0.9 },
-    scene,
+  const hopper = kitMesh("gantry_kit", "Gantry hopper", "gantry-hopper", () =>
+    MeshBuilder.CreateBox("gantry-hopper", { width: 0.9, height: 0.7, depth: 0.9 }, scene),
   );
   hopper.material = steel;
   hopper.parent = tool;
-  const bucket = MeshBuilder.CreateBox(
-    "gantry-bucket",
-    { width: 0.7, height: 0.45, depth: 1.1 },
-    scene,
+  const bucket = kitMesh("gantry_kit", "Gantry bucket", "gantry-bucket", () =>
+    MeshBuilder.CreateBox("gantry-bucket", { width: 0.7, height: 0.45, depth: 1.1 }, scene),
   );
   bucket.material = m.corten;
   bucket.parent = tool;
   bucket.position.y = -0.7;
-  const stream = MeshBuilder.CreateCylinder(
-    "gantry-stream",
-    { height: 1.4, diameter: 0.12, tessellation: 8 },
-    scene,
+  const stream = kitMesh("gantry_kit", "Gantry stream", "gantry-stream", () =>
+    MeshBuilder.CreateCylinder("gantry-stream", { height: 1.4, diameter: 0.12, tessellation: 8 }, scene),
   );
   stream.material = m.floor;
   stream.parent = tool;
@@ -879,10 +894,12 @@ function buildGantryStage(
   const roof = new TransformNode("build-roof", scene);
   roof.parent = parent;
   const roofR = TOWER_SPEC.outerDiameter / 2;
-  const roofDisc = MeshBuilder.CreateCylinder(
-    "gantry-roof",
-    { height: 0.12, diameter: TOWER_SPEC.outerDiameter, tessellation: 48 },
-    scene,
+  const roofDisc = kitMesh("gantry_kit", "Gantry roof disc", "gantry-roof", () =>
+    MeshBuilder.CreateCylinder(
+      "gantry-roof",
+      { height: 0.12, diameter: TOWER_SPEC.outerDiameter, tessellation: 48 },
+      scene,
+    ),
   );
   roofDisc.material = m.solar;
   roofDisc.parent = roof;
@@ -2910,6 +2927,66 @@ function buildFlight(
 
 }
 
+/**
+ * Onshape tower (cad/onshape/Tower.fs), same layout as the procedural rise:
+ *  - floor 0: `tower_floor` (flight up to 1)
+ *  - floors 1..N-2: `tower_floor_mid` (exported at floor 1) lifted (i-1)·FH and
+ *    turned so the entrance advances +45°/floor. Babylon rotation.y = θ maps
+ *    plan angle a → a − θ, hence θ = −(floorYaw(i) − floorYaw(1)).
+ *  - top floor: `tower_crown_N` — floor N-1 at its true height, clipped to the
+ *    pitched roof, roof infill, pod container, hatch column, pitched solar,
+ *    entrance bridge (+ pit wall for rise-1).
+ * LOD neighbours: `tower_lod` (7 floors). walkSurfaceY stays dims-based.
+ * @returns true when CAD meshes were attached (caller should skip procedural).
+ */
+function buildRiseStageFromCad(
+  scene: Scene,
+  bab: Bab,
+  parent: TransformNode,
+  m: ReturnType<typeof mats>,
+  floors: number,
+  lod: boolean,
+): boolean {
+  if (lod) {
+    if (floors !== 7 || !cadAssetReady("tower_lod")) return false;
+    return placeCadAssembly("tower_lod", parent, m, { name: "cad-tower-lod" }) !== null;
+  }
+  const crown = `tower_crown_${floors}` as CadAsset;
+  if (![1, 3, 7].includes(floors) || !cadAssetReady(crown)) return false;
+  if (floors >= 2 && !cadAssetReady("tower_floor")) return false;
+  if (floors >= 3 && !cadAssetReady("tower_floor_mid")) return false;
+
+  const { TransformNode } = bab;
+  const cadRoot = new TransformNode("cad-tower", scene);
+  cadRoot.parent = parent;
+  const ok = (n: TransformNode | null): boolean => n !== null;
+  let good = true;
+  if (floors >= 2) {
+    good &&= ok(placeCadAssembly("tower_floor", cadRoot, m, { name: "cad-f0" }));
+  }
+  for (let i = 1; i <= floors - 2 && good; i++) {
+    good &&= ok(
+      placeCadAssembly("tower_floor_mid", cadRoot, m, {
+        name: `cad-f${i}`,
+        y: (i - 1) * FH,
+        rotY: -(floorYaw(i) - floorYaw(1)),
+      }),
+    );
+  }
+  good &&= ok(placeCadAssembly(crown, cadRoot, m, { name: `cad-f${floors - 1}-crown` }));
+  if (!good) {
+    console.warn("[stages] CAD tower placement failed; falling back");
+    cadRoot.dispose(false, false);
+    return false;
+  }
+  woodMat(m); // bridge + rim share solarFrame (procedural side effect)
+  // Meter grid lines are an in-game measuring aid, not geometry — keep them.
+  for (let i = 0; i < floors; i++) {
+    buildFloorMeterGrid(scene, bab, parent, `rise-grid-${i}`, i * FH + SLAB_H, FACADE_R);
+  }
+  return true;
+}
+
 /** Cheap neighbor silhouette: unpunched facade + slab discs + solar (no interiors/stairs). */
 function buildRiseStageLod(
   scene: Scene,
@@ -2918,6 +2995,7 @@ function buildRiseStageLod(
   m: ReturnType<typeof mats>,
   floors: number,
 ): void {
+  if (buildRiseStageFromCad(scene, bab, parent, m, floors, true)) return;
   const { MeshBuilder } = bab;
   const h = floors * FH;
   const facade = MeshBuilder.CreateCylinder(
@@ -2964,6 +3042,7 @@ function buildRiseStage(
   m: ReturnType<typeof mats>,
   floors: number,
 ): void {
+  if (buildRiseStageFromCad(scene, bab, parent, m, floors, false)) return;
   const columnTop = EXCAVATE_COLUMN_TOP + floors * FH;
   const shaftR = OUTER_R;
   const floorY = -EXCAVATE_DEPTH;
@@ -3278,7 +3357,10 @@ export function buildConstructionStrip(
     root.position.set(stage.x, gy + 0.04, stage.z);
 
     if (stage.id === "solar-flat") {
-      buildSolarPanel(scene, bab, root, m, false, 0, undefined, true);
+      // Onshape solar_array: flat Ø20 disc + rim + roof console (same dims).
+      if (!placeCadAssembly("solar_array", root, m, { name: "cad-solar-flat" })) {
+        buildSolarPanel(scene, bab, root, m, false, 0, undefined, true);
+      }
     } else if (stage.id === "excavate") {
       buildExcavateStage(scene, bab, root, m);
     } else if (stage.id === "rise-1") {
@@ -3521,14 +3603,20 @@ function buildAgrokruh(
     );
     bedNodes.push(node);
 
-    const soil = MeshBuilder.CreateCylinder(
-      `agro-soil-${i}`,
-      {
-        height: AGRO_BED_H,
-        diameter: bed.r * 2,
-        tessellation: detail === "lod" ? 12 : 24,
-      },
-      scene,
+    // Onshape agrokruh_kit parts are authored for the standard R=11 bed.
+    const kitOk = bed.r === AGRO_BED_R;
+    const agroKit = (part: string, name: string, make: () => Mesh): Mesh =>
+      kitOk ? kitMesh("agrokruh_kit", part, name, make) : make();
+    const soil = agroKit("Agro soil bed", `agro-soil-${i}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-soil-${i}`,
+        {
+          height: AGRO_BED_H,
+          diameter: bed.r * 2,
+          tessellation: detail === "lod" ? 12 : 24,
+        },
+        scene,
+      ),
     );
     soil.parent = node;
     soil.position.y = AGRO_BED_H / 2;
@@ -3537,24 +3625,28 @@ function buildAgrokruh(
     soil.doNotSyncBoundingInfo = true;
 
     // Annuals / small perennials in-circle (placeholder crop pad).
-    const crop = MeshBuilder.CreateCylinder(
-      `agro-crop-${i}`,
-      {
-        height: AGRO_CROP_H,
-        diameter: bed.r * 2 - 0.8,
-        tessellation: detail === "lod" ? 10 : 16,
-      },
-      scene,
+    const crop = agroKit("Agro crop pad", `agro-crop-${i}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-crop-${i}`,
+        {
+          height: AGRO_CROP_H,
+          diameter: bed.r * 2 - 0.8,
+          tessellation: detail === "lod" ? 10 : 16,
+        },
+        scene,
+      ),
     );
     crop.parent = node;
     crop.position.y = AGRO_BED_H + AGRO_CROP_H / 2;
     crop.material = m.crop;
     crop.isPickable = false;
 
-    const pivot = MeshBuilder.CreateCylinder(
-      `agro-pivot-${i}`,
-      { height: 1.1, diameter: 0.22, tessellation: 10 },
-      scene,
+    const pivot = agroKit("Agro pivot", `agro-pivot-${i}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-pivot-${i}`,
+        { height: 1.1, diameter: 0.22, tessellation: 10 },
+        scene,
+      ),
     );
     pivot.parent = node;
     pivot.position.y = 0.55;
@@ -3581,15 +3673,19 @@ function buildAgrokruh(
     const armLen = bed.r;
     const boomH = 1.5; // working height of the Agrokruh frame
 
+    const armKit = (part: string, name: string, make: () => Mesh): Mesh =>
+      bed.r === AGRO_BED_R ? kitMesh("agrokruh_kit", part, name, make) : make();
     const boomRoot = new TransformNode(`agro-arm-${bi}`, scene);
     boomRoot.parent = bedNode;
     boomRoot.rotation.y = yaw0;
 
     // Vertical mast to working height.
-    const mast = MeshBuilder.CreateCylinder(
-      `agro-arm-mast-${bi}`,
-      { height: boomH, diameter: 0.28, tessellation: 10 },
-      scene,
+    const mast = armKit("Agro arm mast", `agro-arm-mast-${bi}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-arm-mast-${bi}`,
+        { height: boomH, diameter: 0.28, tessellation: 10 },
+        scene,
+      ),
     );
     mast.parent = boomRoot;
     mast.position.y = boomH / 2;
@@ -3598,10 +3694,12 @@ function buildAgrokruh(
     mast.doNotSyncBoundingInfo = true;
 
     // Radial boom from hub toward rim (depth along local +Z).
-    const boom = MeshBuilder.CreateBox(
-      `agro-arm-boom-${bi}`,
-      { width: 0.32, height: 0.22, depth: Math.max(0.5, armLen - wheelR * 0.3) },
-      scene,
+    const boom = armKit("Agro arm boom", `agro-arm-boom-${bi}`, () =>
+      MeshBuilder.CreateBox(
+        `agro-arm-boom-${bi}`,
+        { width: 0.32, height: 0.22, depth: Math.max(0.5, armLen - wheelR * 0.3) },
+        scene,
+      ),
     );
     boom.parent = boomRoot;
     boom.position.set(0, boomH, Math.max(0.5, armLen - wheelR * 0.3) / 2);
@@ -3610,10 +3708,12 @@ function buildAgrokruh(
     boom.doNotSyncBoundingInfo = true;
 
     // Carriage / tool head just inside the wheel.
-    const head = MeshBuilder.CreateBox(
-      `agro-arm-head-${bi}`,
-      { width: 0.55, height: 0.4, depth: 0.65 },
-      scene,
+    const head = armKit("Agro arm head", `agro-arm-head-${bi}`, () =>
+      MeshBuilder.CreateBox(
+        `agro-arm-head-${bi}`,
+        { width: 0.55, height: 0.4, depth: 0.65 },
+        scene,
+      ),
     );
     head.parent = boomRoot;
     head.position.set(0, boomH - 0.02, armLen - wheelR - 0.45);
@@ -3623,10 +3723,12 @@ function buildAgrokruh(
 
     // Drive wheel on the perimeter: axle radial (local Z), disk vertical in the
     // tangent plane so it rolls along the circle as the arm spins.
-    const wheel = MeshBuilder.CreateCylinder(
-      `agro-arm-wheel-${bi}`,
-      { height: 0.16, diameter: wheelR * 2, tessellation: 18 },
-      scene,
+    const wheel = armKit("Agro arm wheel", `agro-arm-wheel-${bi}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-arm-wheel-${bi}`,
+        { height: 0.16, diameter: wheelR * 2, tessellation: 18 },
+        scene,
+      ),
     );
     wheel.parent = boomRoot;
     wheel.rotation.x = Math.PI / 2; // cylinder axis → local Z (radial axle)
@@ -3636,10 +3738,12 @@ function buildAgrokruh(
     wheel.doNotSyncBoundingInfo = true;
 
     // Drop from boom tip down to the perimeter wheel.
-    const drop = MeshBuilder.CreateCylinder(
-      `agro-arm-drop-${bi}`,
-      { height: Math.max(0.2, boomH - wheelR), diameter: 0.14, tessellation: 8 },
-      scene,
+    const drop = armKit("Agro arm drop", `agro-arm-drop-${bi}`, () =>
+      MeshBuilder.CreateCylinder(
+        `agro-arm-drop-${bi}`,
+        { height: Math.max(0.2, boomH - wheelR), diameter: 0.14, tessellation: 8 },
+        scene,
+      ),
     );
     drop.parent = boomRoot;
     drop.position.set(0, (boomH + wheelR) / 2, armLen);
@@ -3684,24 +3788,33 @@ function buildAgrokruh(
     node.parent = plants;
     node.position.set(tx, gy, tz);
 
-    const trunk = MeshBuilder.CreateCylinder(
-      `agro-trunk-${i}`,
-      { height: trunkH, diameter: 0.22 * scale, tessellation: 8 },
-      scene,
-    );
+    // Onshape proxies are authored at scale 1 → uniform `scale` on the mesh.
+    const cadTrunk = cadPart("agrokruh_kit", "Tree trunk", `agro-trunk-${i}`);
+    if (cadTrunk) cadTrunk.scaling.setAll(scale);
+    const trunk =
+      cadTrunk ??
+      MeshBuilder.CreateCylinder(
+        `agro-trunk-${i}`,
+        { height: trunkH, diameter: 0.22 * scale, tessellation: 8 },
+        scene,
+      );
     trunk.parent = node;
     trunk.position.y = trunkH / 2;
     trunk.material = m.trunk;
     trunk.isPickable = false;
 
-    const canopy = MeshBuilder.CreateSphere(
-      `agro-canopy-${i}`,
-      { diameter: canopyR * 2, segments: 8 },
-      scene,
-    );
+    const cadCanopy = cadPart("agrokruh_kit", "Tree canopy", `agro-canopy-${i}`);
+    const canopyK = cadCanopy ? scale : 1;
+    const canopy =
+      cadCanopy ??
+      MeshBuilder.CreateSphere(
+        `agro-canopy-${i}`,
+        { diameter: canopyR * 2, segments: 8 },
+        scene,
+      );
     canopy.parent = node;
     canopy.position.y = trunkH + canopyR * 0.55;
-    canopy.scaling.y = 0.85;
+    canopy.scaling.set(canopyK, 0.85 * canopyK, canopyK);
     canopy.material = m.canopy;
     canopy.isPickable = false;
   };
@@ -3791,30 +3904,38 @@ function buildAgrokruh(
     node.position.set(s.x, gy, s.z);
     node.rotation.y = rand() * Math.PI * 2;
 
-    const bush = MeshBuilder.CreateSphere(
-      `agro-bush-${i}`,
-      { diameter: 1.1 * scale, segments: 6 },
-      scene,
-    );
+    const cadBush = cadPart("agrokruh_kit", "Shrub", `agro-bush-${i}`);
+    const bushK = cadBush ? scale : 1;
+    const bush =
+      cadBush ??
+      MeshBuilder.CreateSphere(
+        `agro-bush-${i}`,
+        { diameter: 1.1 * scale, segments: 6 },
+        scene,
+      );
     bush.parent = node;
     bush.position.y = 0.35 * scale;
-    bush.scaling.set(1.15, 0.7, 1.05);
+    bush.scaling.set(1.15 * bushK, 0.7 * bushK, 1.05 * bushK);
     bush.material = m.shrub;
     bush.isPickable = false;
 
     if (rand() > 0.45) {
-      const bush2 = MeshBuilder.CreateSphere(
-        `agro-bush2-${i}`,
-        { diameter: 0.75 * scale, segments: 6 },
-        scene,
-      );
+      const cadBush2 = cadPart("agrokruh_kit", "Shrub small", `agro-bush2-${i}`);
+      const bush2K = cadBush2 ? scale : 1;
+      const bush2 =
+        cadBush2 ??
+        MeshBuilder.CreateSphere(
+          `agro-bush2-${i}`,
+          { diameter: 0.75 * scale, segments: 6 },
+          scene,
+        );
       bush2.parent = node;
       bush2.position.set(
         (rand() - 0.5) * 0.45 * scale,
         0.28 * scale,
         (rand() - 0.5) * 0.45 * scale,
       );
-      bush2.scaling.set(1.1, 0.65, 1.0);
+      bush2.scaling.set(1.1 * bush2K, 0.65 * bush2K, 1.0 * bush2K);
       bush2.material = m.shrub;
       bush2.isPickable = false;
     }
@@ -3929,6 +4050,9 @@ if (import.meta.hot) {
     import.meta.hot?.invalidate();
   });
   import.meta.hot.accept("./crowd", () => {
+    import.meta.hot?.invalidate();
+  });
+  import.meta.hot.accept("./cad-assets", () => {
     import.meta.hot?.invalidate();
   });
 }

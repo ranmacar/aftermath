@@ -1,5 +1,9 @@
 import { execFile } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin } from "vite";
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 /** Expose Termux GPS to the page when the browser geolocation API is blocked. */
 function termuxLocation(): Plugin {
@@ -69,5 +73,13 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(rootDir, "index.html"),
+        cadPreview: path.resolve(rootDir, "cad-preview.html"),
+      },
+    },
   },
 });

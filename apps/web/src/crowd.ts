@@ -4,6 +4,8 @@
  */
 import type { Scene } from "@babylonjs/core/scene";
 import type { TransformNode as BTransformNode } from "@babylonjs/core/Meshes/transformNode";
+import type { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { cadPart } from "./cad-assets";
 
 type Bab = {
   MeshBuilder: typeof import("@babylonjs/core/Meshes/meshBuilder").MeshBuilder;
@@ -205,6 +207,24 @@ type PersonRig = {
   speed: number;
 };
 
+/**
+ * Onshape crowd_kit part (authored for a 1.75 m person) scaled by `s`, or the
+ * MeshBuilder primitive. `k` = factor to fold into any extra per-axis scaling.
+ */
+function personPart(
+  part: string,
+  name: string,
+  s: number,
+  make: () => Mesh,
+): { mesh: Mesh; k: number } {
+  const cad = cadPart("crowd_kit", part, name);
+  if (cad) {
+    cad.scaling.setAll(s);
+    return { mesh: cad, k: s };
+  }
+  return { mesh: make(), k: 1 };
+}
+
 function bone(
   bab: Bab,
   scene: Scene,
@@ -213,14 +233,18 @@ function bone(
   len: number,
   thick: number,
   mat: InstanceType<Bab["StandardMaterial"]>,
+  kitPart: string,
+  s: number,
 ): BTransformNode {
   const { MeshBuilder, TransformNode } = bab;
   const n = new TransformNode(name, scene);
   n.parent = parent;
-  const mesh = MeshBuilder.CreateCylinder(
-    `${name}-m`,
-    { height: len, diameter: thick, tessellation: 6 },
-    scene,
+  const { mesh } = personPart(kitPart, `${name}-m`, s, () =>
+    MeshBuilder.CreateCylinder(
+      `${name}-m`,
+      { height: len, diameter: thick, tessellation: 6 },
+      scene,
+    ),
   );
   mesh.material = mat;
   mesh.parent = n;
@@ -250,18 +274,22 @@ function buildSkeletonPerson(
   hips.parent = root;
   hips.position.y = 0.92 * s;
 
-  const hipMesh = MeshBuilder.CreateSphere(`${name}-hipm`, { diameter: 0.28 * s, segments: 6 }, scene);
+  const { mesh: hipMesh, k: hipK } = personPart("Person hip", `${name}-hipm`, s, () =>
+    MeshBuilder.CreateSphere(`${name}-hipm`, { diameter: 0.28 * s, segments: 6 }, scene),
+  );
   hipMesh.material = mat;
   hipMesh.parent = hips;
-  hipMesh.scaling.y = 0.65;
+  hipMesh.scaling.y = 0.65 * hipK;
 
   const spine = new TransformNode(`${name}-spine`, scene);
   spine.parent = hips;
   const torsoLen = 0.38 * s;
-  const torso = MeshBuilder.CreateCylinder(
-    `${name}-torso`,
-    { height: torsoLen, diameterTop: 0.26 * s, diameterBottom: 0.3 * s, tessellation: 8 },
-    scene,
+  const { mesh: torso } = personPart("Person torso", `${name}-torso`, s, () =>
+    MeshBuilder.CreateCylinder(
+      `${name}-torso`,
+      { height: torsoLen, diameterTop: 0.26 * s, diameterBottom: 0.3 * s, tessellation: 8 },
+      scene,
+    ),
   );
   torso.material = mat;
   torso.parent = spine;
@@ -270,39 +298,45 @@ function buildSkeletonPerson(
   const chest = new TransformNode(`${name}-chest`, scene);
   chest.parent = spine;
   chest.position.y = torsoLen;
-  const chestM = MeshBuilder.CreateSphere(`${name}-chestm`, { diameter: 0.32 * s, segments: 6 }, scene);
+  const { mesh: chestM, k: chestK } = personPart("Person chest", `${name}-chestm`, s, () =>
+    MeshBuilder.CreateSphere(`${name}-chestm`, { diameter: 0.32 * s, segments: 6 }, scene),
+  );
   chestM.material = mat;
   chestM.parent = chest;
-  chestM.scaling.set(1.15, 0.55, 0.7);
+  chestM.scaling.set(1.15 * chestK, 0.55 * chestK, 0.7 * chestK);
 
   const head = new TransformNode(`${name}-head`, scene);
   head.parent = chest;
   head.position.y = 0.22 * s;
-  const headM = MeshBuilder.CreateSphere(`${name}-headm`, { diameter: 0.22 * s, segments: 8 }, scene);
+  const { mesh: headM } = personPart("Person head", `${name}-headm`, s, () =>
+    MeshBuilder.CreateSphere(`${name}-headm`, { diameter: 0.22 * s, segments: 8 }, scene),
+  );
   headM.material = mat;
   headM.parent = head;
   headM.position.y = 0.12 * s;
 
   const makeArm = (side: "L" | "R"): Pick<Limb, "upper" | "fore"> => {
     const sign = side === "L" ? -1 : 1;
-    const upper = bone(bab, scene, `${name}-${side}-ua`, chest, 0.28 * s, 0.07 * s, mat);
+    const upper = bone(bab, scene, `${name}-${side}-ua`, chest, 0.28 * s, 0.07 * s, mat, "Person upper arm", s);
     upper.position.set(sign * 0.18 * s, 0.02 * s, 0);
     upper.rotation.z = sign * 0.15;
-    const fore = bone(bab, scene, `${name}-${side}-fa`, upper, 0.26 * s, 0.06 * s, mat);
+    const fore = bone(bab, scene, `${name}-${side}-fa`, upper, 0.26 * s, 0.06 * s, mat, "Person forearm", s);
     fore.position.y = -0.28 * s;
     return { upper, fore };
   };
 
   const makeLeg = (side: "L" | "R"): Pick<Limb, "thigh" | "shin"> => {
     const sign = side === "L" ? -1 : 1;
-    const thigh = bone(bab, scene, `${name}-${side}-th`, hips, 0.42 * s, 0.1 * s, mat);
+    const thigh = bone(bab, scene, `${name}-${side}-th`, hips, 0.42 * s, 0.1 * s, mat, "Person thigh", s);
     thigh.position.set(sign * 0.09 * s, 0, 0);
-    const shin = bone(bab, scene, `${name}-${side}-sh`, thigh, 0.4 * s, 0.08 * s, mat);
+    const shin = bone(bab, scene, `${name}-${side}-sh`, thigh, 0.4 * s, 0.08 * s, mat, "Person shin", s);
     shin.position.y = -0.42 * s;
-    const foot = MeshBuilder.CreateBox(
-      `${name}-${side}-ft`,
-      { width: 0.08 * s, height: 0.05 * s, depth: 0.18 * s },
-      scene,
+    const { mesh: foot } = personPart("Person foot", `${name}-${side}-ft`, s, () =>
+      MeshBuilder.CreateBox(
+        `${name}-${side}-ft`,
+        { width: 0.08 * s, height: 0.05 * s, depth: 0.18 * s },
+        scene,
+      ),
     );
     foot.material = mat;
     foot.parent = shin;

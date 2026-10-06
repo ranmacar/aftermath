@@ -17,6 +17,7 @@ import {
   BRIDGE_HALF_WIDTH,
   type WalkLayout,
 } from "./stages";
+import { cadPart, preloadCadAssets, useCadGlbs } from "./cad-assets";
 import { carveTerrainPit } from "./carve";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 
@@ -120,6 +121,9 @@ async function rebuildWalkStrip(
     session.strip.dispose(false, true);
     const scene = session.scene as Parameters<typeof buildConstructionStrip>[0];
     const bab = session.bab as Parameters<typeof buildConstructionStrip>[1];
+    if (useCadGlbs()) {
+      await preloadCadAssets(scene);
+    }
     session.strip =
       session.layout === "habitat"
         ? stages.buildHabitatStrip(scene, bab, session.groundAt, session.cell)
@@ -145,6 +149,9 @@ if (import.meta.hot) {
     );
   });
   import.meta.hot.accept("./placements", () => {
+    void import("./stages").then((mod) => rebuildWalkStrip(mod));
+  });
+  import.meta.hot.accept("./cad-assets", () => {
     void import("./stages").then((mod) => rebuildWalkStrip(mod));
   });
   // Fallback: if Vite applies the update but accept does not fire, still rebuild.
@@ -433,6 +440,11 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       Vector3,
       DynamicTexture,
     };
+    // Load CAD before the live pod / dig props so they can use Onshape parts.
+    if (useCadGlbs()) {
+      label.textContent = `${modeLabel} · loading CAD…`;
+      await preloadCadAssets(scene);
+    }
     const live = buildBuriedPod(scene, bab, originY);
     const { consoleBox, solarPreview } = live;
 
@@ -450,15 +462,18 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     digMark.position.set(digDiam / 2 + 1.0, digY + 1.05, 0);
     digMark.material = markMat;
     // 1 m berm around live dig (shown after excavate quest)
-    const digBerm = MeshBuilder.CreateTorus(
-      "dig-berm",
-      {
-        diameter: digDiam + 5.5,
-        thickness: 2.2,
-        tessellation: 48,
-      },
-      scene,
-    );
+    // Onshape live_pod_kit "Live berm" = same D25.5 × T2.2 torus.
+    const digBerm =
+      cadPart("live_pod_kit", "Live berm", "dig-berm") ??
+      MeshBuilder.CreateTorus(
+        "dig-berm",
+        {
+          diameter: digDiam + 5.5,
+          thickness: 2.2,
+          tessellation: 48,
+        },
+        scene,
+      );
     digBerm.material = dirtMat;
     digBerm.rotation.set(0, 0, 0);
     digBerm.scaling.y = 0.7;
@@ -469,11 +484,13 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     const woodMat = new StandardMaterial("dig-beam-wood", scene);
     woodMat.diffuseColor = new Color3(0.42, 0.3, 0.16);
     const digBeamDepth = digDiam / 2 + 2.5;
-    const digBeam = MeshBuilder.CreateBox(
-      "dig-beam",
-      { width: BRIDGE_HALF_WIDTH * 2, height: 0.28, depth: digBeamDepth },
-      scene,
-    );
+    const digBeam =
+      cadPart("live_pod_kit", "Live dig beam", "dig-beam") ??
+      MeshBuilder.CreateBox(
+        "dig-beam",
+        { width: BRIDGE_HALF_WIDTH * 2, height: 0.28, depth: digBeamDepth },
+        scene,
+      );
     digBeam.material = woodMat;
     digBeam.position.set(
       0,
