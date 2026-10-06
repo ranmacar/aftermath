@@ -108,3 +108,14 @@ The Part Studio's own unit setting doesn't matter, because every value carries i
 
 All files share the same `af*` helper functions. If you change a helper, change it in every file, or
 paste the edited Tower.fs helpers into the others.
+
+## Mild-realism drafts (game-v0.2)
+
+Same silhouette as the game, continuous curves (no 24-segment panels). Changes vs game-v0.1 / code:
+
+- **Container:** ISO 40 ft HC depth **2.896 m** (game still uses 2.591) + optional ISO 1161 corner castings (on by default).
+- **Core wall:** default **0.15 m** (game 0.1) — still a continuous shell.
+- **Facade / corridor:** true cylinders; openings still snap to the same 96 angles as the code. Facade thickness stays **0.14 m**.
+- **Tower doc:** reduced to **2 floors** with rails/frames/windows off for export weight; use `tower_floor` for a full single floor.
+
+Bootstrap: `node scripts/onshape-bootstrap.mjs` creates/updates docs and pins **`game-v0.2`** (leaves `game-v0.1` intact). Preview GLBs locally: `npm run dev` then open `/cad-preview.html?asset=tower`.

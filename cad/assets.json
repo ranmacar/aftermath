@@ -1,12 +1,12 @@
 {
-  "$comment": "Onshape → game asset manifest. See docs/asset-pipeline.md. Ids are 24-char hex from the Onshape URL: /documents/{did}/{w|v|m}/{wvmid}/e/{elementId}. Entries with placeholder:true or TODO ids are validated but skipped by the live sync.",
+  "$comment": "Onshape → game asset manifest. See docs/asset-pipeline.md. game-v0.2 mild-realism drafts (continuous curves, HC container). game-v0.1 versions left intact in Onshape.",
   "assets": [
     {
       "name": "pod_container_40hc",
-      "$note": "Onshape doc pod_container_40hc (Arbolis/Aftermath), built by scripts/onshape-bootstrap.mjs from cad/onshape/ShippingContainer.fs: 40 ft HC 12.192 × 2.438 × 2.896 m stood on end, base at Z = 0. Contents (array, heat pumps, gantry drive, soil processor, batteries) not modelled yet; will become an assembly (docs §12.4).",
+      "$note": "ISO 40 ft HC 12.192×2.438×2.896 m stood on end + ISO corner castings. game-v0.2. Continuous silhouette matches game (game still uses 2.591 depth).",
       "did": "76933b56f909b455c52143fb",
       "wvm": "v",
-      "wvmid": "73ecab33055dedcc64e6ca77",
+      "wvmid": "5b42442c7eb3c99d1e36b2f1",
       "elementType": "partstudio",
       "elementId": "afe63fb84b52f94636f4657c",
       "output": "site/pod_container_40hc.glb",
@@ -30,10 +30,10 @@
     },
     {
       "name": "solar_array",
-      "$note": "Onshape doc solar_array (Arbolis/Aftermath) from cad/onshape/SolarArray.fs: flat Ø20 m disc + rim + console (game geometry; see §12.3 wind flag).",
+      "$note": "Ø20 m × 0.12 m flat disc + rim + console. game-v0.2. Same as game geometry.",
       "did": "9987a7131af48a3bf70fde13",
       "wvm": "v",
-      "wvmid": "3ccfb18adac8814a873a48a6",
+      "wvmid": "f27ce30af9e14e5c38a10a8b",
       "elementType": "partstudio",
       "elementId": "e790d01deabd9e671b738ac7",
       "output": "site/solar_array.glb",
@@ -56,9 +56,511 @@
       "stage": "game"
     },
     {
+      "name": "floor_slab",
+      "$note": "Ø20 × 0.22 m slab with elevator + stair openings + gate newels. game-v0.2.",
+      "did": "28d1b39640ff0c0614205b09",
+      "wvm": "v",
+      "wvmid": "9b4b5559bf2fc3c5e7a5f188",
+      "elementType": "partstudio",
+      "elementId": "d29c917fcb8a721947a6707f",
+      "output": "site/floor_slab.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "elevator_shaft",
+      "$note": "Ø3 continuous core, wallT 0.15 m (mild bump from game 0.1), 2 floors, curved door. game-v0.2.",
+      "did": "f81c45e434cdafd5d00a6fe8",
+      "wvm": "v",
+      "wvmid": "1378232e0cdcbcd0bc514941",
+      "elementType": "partstudio",
+      "elementId": "cdeeb622fd3d912e4b0135af",
+      "output": "site/elevator_shaft.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "floor_walls",
+      "$note": "Continuous Ø15 facade + Ø6.5 corridor (true curves, openings snapped to 96 angles). Frames/windows off. game-v0.2.",
+      "did": "5587d67c2f328e28266bc78c",
+      "wvm": "v",
+      "wvmid": "e336b4cb8b43450145b99204",
+      "elementType": "partstudio",
+      "elementId": "96934459c6686f62cf18cfcd",
+      "output": "site/floor_walls.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "exterior_stair",
+      "$note": "One helical flight, 24 risers, rails on. game-v0.2.",
+      "did": "8fafeac33febda08bc5b310b",
+      "wvm": "v",
+      "wvmid": "afcb88724d25eb1e61f72f60",
+      "elementType": "partstudio",
+      "elementId": "830f844342b6687bc5aaad1a",
+      "output": "site/exterior_stair.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "agrokruh_bed",
+      "$note": "One Ø22 m bed + arm (full field off). game-v0.2.",
+      "did": "dcb61d81583424344ec798b4",
+      "wvm": "v",
+      "wvmid": "67c256b7d633662f789ebda7",
+      "elementType": "partstudio",
+      "elementId": "9a5fd1c75e8827866088f556",
+      "output": "site/agrokruh_bed.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "pod_assembly",
+      "$note": "Live stage: HC container + ISO corners + column + pitched solar. game-v0.2.",
+      "did": "ae1c9c22113c0bbaac56e6ac",
+      "wvm": "v",
+      "wvmid": "700100a94abcbdf78f022bbb",
+      "elementType": "partstudio",
+      "elementId": "7e7c261ccf5ec24f0b0faf52",
+      "output": "site/pod_assembly.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_floor",
+      "$note": "Tower floor 0 (Tower.fs aftermathTowerFloor floorIndex 0, flight up, frames/windows/furniture/rail on). game-v0.3. Used as the ground floor of every stacked tower.",
+      "did": "6c462f8ccaf658e3bbe82bd4",
+      "wvm": "v",
+      "wvmid": "f66623068ac133378fde6f37",
+      "elementType": "partstudio",
+      "elementId": "18dce8726cd2c34e0b58b9aa",
+      "output": "site/tower_floor.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower",
+      "$note": "Reduced 2-floor tower draft (rails/frames off) for weight. game-v0.2.",
+      "did": "8a00d7751c8227a1d88412f2",
+      "wvm": "v",
+      "wvmid": "b52e156b0242a1d2b85a74a7",
+      "elementType": "partstudio",
+      "elementId": "30d652b812a9a93c8c5e91f9",
+      "output": "site/tower.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_floor_mid",
+      "$note": "Tower floor 1 (balcony ring + flight up). Floors 1..N-2 are this asset rotated -(i-1)*45deg about Y and lifted (i-1)*3.5 m. game-v0.2.",
+      "did": "4eac607f3dff665adbd9dac9",
+      "wvm": "v",
+      "wvmid": "9de9075b667f2edd9aaf684f",
+      "elementType": "partstudio",
+      "elementId": "5b6f56d3c5f0c7bee6acfbe6",
+      "output": "site/tower_floor_mid.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_crown_1",
+      "$note": "Rise-1 stage: single floor 0 as top floor (no flight up), clipped to the 35deg pitched roof, roof infill, pit wall, pod container, hatch column, pitched solar + bridge. game-v0.2.",
+      "did": "d01cd1029d4a09876e0334c3",
+      "wvm": "v",
+      "wvmid": "d0a4ecd87dc65342389d9414",
+      "elementType": "partstudio",
+      "elementId": "cc7421a4d45c407b53b04ecc",
+      "output": "site/tower_crown_1.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_crown_3",
+      "$note": "Top floor (index 2) of the 3-floor tower clipped to the pitched roof + roof infill + pod/column/pitched solar/bridge. Placed at origin (floor z baked). game-v0.2.",
+      "did": "28765a01141733f968ad29d5",
+      "wvm": "v",
+      "wvmid": "802152eafa5bf19d5b74851b",
+      "elementType": "partstudio",
+      "elementId": "47812d4937b518a75ca89b31",
+      "output": "site/tower_crown_3.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_crown_7",
+      "$note": "Top floor (index 6) of the 7-floor tower clipped to the pitched roof + roof infill + pod/column/pitched solar/bridge. Placed at origin (floor z baked). game-v0.2.",
+      "did": "9bcd829f1f72743f32bfd57a",
+      "wvm": "v",
+      "wvmid": "9d7c1a935787cd8b8efbdd72",
+      "elementType": "partstudio",
+      "elementId": "d3b1791fc270e2396c5ba9f6",
+      "output": "site/tower_crown_7.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "tower_lod",
+      "$note": "Neighbour-cell LOD tower: facade drum Ø15 × 7 floors, slabs, Ø0.55 column, pitched solar with rim. game-v0.2.",
+      "did": "76913cc36c688987ef7cc3dd",
+      "wvm": "v",
+      "wvmid": "0504ef48a68460a5d324f15c",
+      "elementType": "partstudio",
+      "elementId": "f45eb2376ed9c431ca15a607",
+      "output": "site/tower_lod.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "stage_excavate",
+      "$note": "Construction strip 'excavate' stage: buried pod, column, pitched solar, bridge, spoil berm (PodAssembly.fs EXCAVATE). game-v0.2.",
+      "did": "ca2282c03d5f1a90bc704a50",
+      "wvm": "v",
+      "wvmid": "85cd3b475bbaf3e0811517f4",
+      "elementType": "partstudio",
+      "elementId": "27bb47f07803c206c64531b7",
+      "output": "site/stage_excavate.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game"
+    },
+    {
+      "name": "live_pod_kit",
+      "$note": "Kit of drop-in parts for the Walk live dig/pod (container 2.438x12.192x2.591, column, console, solar disc, berm torus, dig beam). Parts are recentred in game. game-v0.2.",
+      "did": "abda7a8c9a63521f381436eb",
+      "wvm": "v",
+      "wvmid": "f5241514049587b385bbf815",
+      "elementType": "partstudio",
+      "elementId": "713a091c1bfd9f5cffe5f540",
+      "output": "site/live_pod_kit.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game",
+      "tessellation": {
+        "angleTolerance": 0.2618,
+        "chordTolerance": 0.04
+      }
+    },
+    {
+      "name": "gantry_kit",
+      "$note": "Kit of drop-in parts for the gantry construction stage (column, berm, tech container/door/rack, deck beam/rings/slab, slip wall/form, base wall, crane parts). game-v0.2.",
+      "did": "595de8bdf045859e4e2eb159",
+      "wvm": "v",
+      "wvmid": "6785a53934fe658bcf35010b",
+      "elementType": "partstudio",
+      "elementId": "28346a766bef5ee7f8b060f9",
+      "output": "site/gantry_kit.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game",
+      "tessellation": {
+        "angleTolerance": 0.2618,
+        "chordTolerance": 0.04
+      }
+    },
+    {
+      "name": "agrokruh_kit",
+      "$note": "Kit of drop-in parts for agrokruh beds (soil, crop pad, pivot, irrigation arm parts) plus tree/shrub proxies matching the procedural primitives. game-v0.2.",
+      "did": "b8245862d6582aab008775f6",
+      "wvm": "v",
+      "wvmid": "9851a65245d44e9e55515c04",
+      "elementType": "partstudio",
+      "elementId": "ba3a3668e065034cb8c2a914",
+      "output": "site/agrokruh_kit.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game",
+      "tessellation": {
+        "angleTolerance": 0.5,
+        "chordTolerance": 0.05
+      }
+    },
+    {
+      "name": "crowd_kit",
+      "$note": "Kit of person proxy parts (hip, torso, chest, head, limbs, foot) at 1.75 m scale, matching crowd.ts skeleton primitives. game-v0.2.",
+      "did": "02af19007a9bade1919eaf5a",
+      "wvm": "v",
+      "wvmid": "bec8fb93f9694929769df1e0",
+      "elementType": "partstudio",
+      "elementId": "1f4c16c8419488b8d027058b",
+      "output": "site/crowd_kit.glb",
+      "units": "m",
+      "upAxis": "z",
+      "compress": "meshopt",
+      "lods": [
+        {
+          "ratio": 1
+        },
+        {
+          "ratio": 0.5,
+          "error": 0.01
+        },
+        {
+          "ratio": 0.2,
+          "error": 0.03
+        }
+      ],
+      "stage": "game",
+      "tessellation": {
+        "angleTolerance": 0.5,
+        "chordTolerance": 0.01
+      }
+    },
+    {
       "name": "solar_panel_mount",
       "placeholder": true,
-      "$todo": "PLACEHOLDER: no Onshape document yet. Replace the TODO ids with the public solar-panel-mount document (first small fabricated part, after the pod layout; see docs §12.4) and a version named game/… then remove placeholder.",
+      "$todo": "PLACEHOLDER: no Onshape document yet.",
       "did": "TODO_DOCUMENT_ID_24_HEX",
       "wvm": "v",
       "wvmid": "TODO_VERSION_ID_24_HEX",

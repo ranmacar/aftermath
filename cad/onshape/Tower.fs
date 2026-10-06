@@ -13,7 +13,7 @@ import(path : "onshape/std/geometry.fs", version : "2960.0");
 // --- apps/web/src/placements.ts : POD (vertical ISO 40 ft container + column) ---
 const POD_LENGTH = 12.192 * meter;            // placements.ts:18  POD.length (vertical extent, stood on end)
 const POD_WIDTH = 2.438 * meter;              // placements.ts:19  POD.width  (Babylon X)
-const POD_HEIGHT = 2.591 * meter;             // placements.ts:21  POD.height (Babylon Z "depth" when vertical)
+const POD_HEIGHT = 2.896 * meter;             // CAD: ISO 40 ft HC external height (game still uses 2.591 standard)
 const POD_WALL = 0.08 * meter;                // placements.ts:22  POD.wall (declared, no mesh in the app uses it)
 const POD_BURY_DEPTH = 1 * meter;             // placements.ts:23  POD.buryDepth (container top 1 m below grade)
 const POD_TUBE_DIAMETER = 1 * meter;          // placements.ts:24  POD.tubeDiameter (column)
@@ -73,7 +73,7 @@ const ROOM_H_GAP = 0.4 * meter;               // stages.ts:2189
 const FACADE_TOP_FACTOR = 0.92;               // stages.ts:2190 facadeTop = roomH * 0.92
 const FACADE_WALL_T = 0.14 * meter;           // stages.ts:2198 wallDepth (facade shell)
 const PARTITION_T = 0.08 * meter;             // stages.ts:2199 partT (partitions, corridor shell)
-const CORE_WALL_T = 0.1 * meter;              // stages.ts:2233 elevator shell depth
+const CORE_WALL_T = 0.15 * meter;             // mild CAD bump from game 0.1 (stages.ts:2233); continuous shell
 const ELEV_DOOR_W = 0.9 * meter;              // stages.ts:2223 makeDoorCut(coreR, ELEV_ANG, 0.9, DOOR_HEIGHT)
 const ELEV_ANG_OFFSET = 210 * degree;         // stages.ts:2222 ELEV_ANG = PI/2 + 2PI/3 + yaw
 const SLAB_ELEV_CLEAR = 0.1 * meter;          // stages.ts:2665 slab hole diameter = CORE_D + 0.1
@@ -449,7 +449,8 @@ function afDerive(d is map) returns map
  * Babylon box { width: POD.width, height: POD.length, depth: POD.height } centred at bottomY + length / 2.
  */
 function afBuildContainer(context is Context, hid is Id, bottomZ is ValueWithUnits, length is ValueWithUnits,
-    width is ValueWithUnits, depth is ValueWithUnits, hollow is boolean, wallT is ValueWithUnits, techDetails is boolean)
+    width is ValueWithUnits, depth is ValueWithUnits, hollow is boolean, wallT is ValueWithUnits, techDetails is boolean,
+    isoCorners is boolean)
 {
     const cz = bottomZ + length / 2;
     const boxBody = afBabBox(context, hid + "box", width, length, depth, 0 * meter, cz, 0 * meter, 0 * radian);
@@ -461,6 +462,29 @@ function afBuildContainer(context is Context, hid is Id, bottomZ is ValueWithUni
         afSubtract(context, hid + "hollow", boxBody, [voidBody]);
     }
     afName(context, boxBody, "Pod container");
+    if (isoCorners)
+    {
+        // ISO 1161 corner casting approx 178 × 162 × 118 mm. Container stood on end: length along Z.
+        const cx = 0.178 * meter;
+        const cy = 0.162 * meter;
+        const czCast = 0.118 * meter;
+        const xs = [-width / 2 + cx / 2, width / 2 - cx / 2];
+        const ys = [-depth / 2 + cy / 2, depth / 2 - cy / 2];
+        const zs = [bottomZ + czCast / 2, bottomZ + length - czCast / 2];
+        var n = 0;
+        for (var zi = 0; zi < 2; zi += 1)
+        {
+            for (var xi = 0; xi < 2; xi += 1)
+            {
+                for (var yi = 0; yi < 2; yi += 1)
+                {
+                    const cast = afBabBox(context, hid + ("cast" ~ n), cx, czCast, cy, xs[xi], zs[zi], ys[yi], 0 * radian);
+                    afName(context, cast, "ISO corner " ~ n);
+                    n += 1;
+                }
+            }
+        }
+    }
     if (techDetails)
     {
         // Gantry-stage tech container details, stages.ts:619-640 (children of the container, container-centred coords).
@@ -1519,7 +1543,7 @@ export const aftermathTower = defineFeature(function(context is Context, id is I
         if (definition.pod)
         {
             const containerBottom = -EXCAVATE_DEPTH;                  // stages.ts:2969
-            afBuildContainer(context, id + "container", containerBottom, POD_LENGTH, POD_WIDTH, POD_HEIGHT, false, POD_WALL, false);
+            afBuildContainer(context, id + "container", containerBottom, POD_LENGTH, POD_WIDTH, POD_HEIGHT, false, POD_WALL, false, true);
             afBuildColumn(context, id + "column", containerBottom + POD_LENGTH, columnTop, POD_TUBE_DIAMETER, true);
         }
         if (definition.solar)
@@ -1531,4 +1555,128 @@ export const aftermathTower = defineFeature(function(context is Context, id is I
         {
             afBuildBridge(context, id + "bridge", d.outerR, d.facadeR - 0.05 * meter);   // INNER_R - 0.05
         }
+    });
+
+// ===========================================================================
+// game-v0.3 additions: tower crown (top floor clipped to the pitched roof + infill ribbon + pod spine)
+// and the cheap neighbour LOD tower. Same dims as the procedural code.
+// ===========================================================================
+
+const ROOF_CLEAR = 0.05 * meter;              // stages.ts:69   ROOF_CLEAR (gap under the pitched disc)
+const INFILL_T = 0.14 * meter;                // stages.ts:408  buildPitchedWallInfill depth
+const PIT_WALL_T = 0.02 * meter;              // stages.ts:1203 buildSolidWallBand is a zero-thickness tube; 20 mm here
+const LOD_COLUMN_D = 0.55 * meter;            // stages.ts:2950 buildRiseStageLod stub diameter
+
+/**
+ * Solid above the pitched solar underside minus ROOF_CLEAR, i.e. ceilingAt (stages.ts:3009):
+ * Babylon y = pitchedDiscCenterY(columnTop) + z * tan(pitch) - halfT * cos(pitch) - ROOF_CLEAR,
+ * which in Onshape is Z = c + Y * tan(pitch) (north / +Y edge high).
+ */
+function afRoofCutter(context is Context, hid is Id, columnTop is ValueWithUnits) returns Query
+{
+    const pitch = POD_SOLAR_PITCH;
+    const c = afPitchedDiscCenterZ(columnTop, TOWER_OUTER_D, pitch) - SOLAR_DISC_T / 2 * cos(pitch) - ROOF_CLEAR;
+    fCuboid(context, hid + "box", { "corner1" : vector(-60, -60, 0) * meter, "corner2" : vector(60, 60, 120) * meter });
+    opTransform(context, hid + "tilt", {
+                "bodies" : qCreatedBy(hid + "box", EntityType.BODY),
+                "transform" : transform(vector(0 * meter, 0 * meter, c)) *
+                    rotationAround(line(vector(0, 0, 0) * meter, vector(1, 0, 0)), pitch)
+            });
+    return qCreatedBy(hid + "box", EntityType.BODY);
+}
+
+annotation { "Feature Type Name" : "Aftermath tower crown" }
+export const aftermathTowerCrown = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {
+        // The crown is the top floor (index floors - 1) of an N-floor tower plus its pod spine.
+        annotation { "Name" : "Floors in the tower" }
+        isInteger(definition.floors, { (unitless) : [1, 7, 50] } as IntegerBoundSpec);
+        // rise-1 (stages.ts:2989): open pit, zero-thickness pit wall from -13 m to grade
+        annotation { "Name" : "Open-pit wall (rise-1)", "Default" : false }
+        definition.pitWall is boolean;
+        annotation { "Name" : "Balcony rails", "Default" : true }
+        definition.rail is boolean;
+        annotation { "Name" : "Door frames, leaves, elevator door", "Default" : true }
+        definition.frames is boolean;
+        annotation { "Name" : "Window frames + glass", "Default" : true }
+        definition.windows is boolean;
+        annotation { "Name" : "Beds", "Default" : true }
+        definition.furniture is boolean;
+        annotation { "Name" : "Buried container + column + console", "Default" : true }
+        definition.pod is boolean;
+        annotation { "Name" : "Pitched solar roof disc", "Default" : true }
+        definition.solar is boolean;
+        annotation { "Name" : "Bridge beam to the entrance", "Default" : true }
+        definition.bridge is boolean;
+    }
+    {
+        var d = afDerive(afDefaults());
+        const n = definition.floors;
+        const top = n - 1;
+        const columnTop = EXCAVATE_COLUMN_TOP + n * d.floorH;          // stages.ts:2967
+        afBuildTowerFloor(context, id + "top", d, top, true, {
+                    "splitLanding" : false, "frames" : definition.frames, "windows" : definition.windows,
+                    "furniture" : definition.furniture, "rail" : definition.rail, "flightUp" : false
+                });
+        // ceilingAt clip of the top floor (code samples min heights; here a true plane).
+        opBoolean(context, id + "roofClip", {
+                    "tools" : afRoofCutter(context, id + "roofCut", columnTop),
+                    "targets" : qCreatedBy(id + "top", EntityType.BODY),
+                    "operationType" : BooleanOperationType.SUBTRACTION
+                });
+        // buildPitchedWallInfill (stages.ts:394): Ø15 ribbon from the top facade band up to the roof underside.
+        const interiorY = top * d.floorH + d.slabH;
+        const zBot = interiorY + d.facadeTop;
+        afRing(context, id + "infill", d.facadeR - INFILL_T / 2, d.facadeR + INFILL_T / 2, zBot, zBot + 40 * meter);
+        opBoolean(context, id + "infillClip", {
+                    "tools" : afRoofCutter(context, id + "infillCut", columnTop),
+                    "targets" : qCreatedBy(id + "infill", EntityType.BODY),
+                    "operationType" : BooleanOperationType.SUBTRACTION
+                });
+        afName(context, qCreatedBy(id + "infill", EntityType.BODY), "Roof infill");
+        if (definition.pitWall)
+        {
+            const pw = afRing(context, id + "pitWall", d.facadeR - PIT_WALL_T / 2, d.facadeR + PIT_WALL_T / 2, -EXCAVATE_DEPTH, 0 * meter);
+            afName(context, pw, "Pit wall");
+        }
+        if (definition.pod)
+        {
+            const containerBottom = -EXCAVATE_DEPTH;
+            afBuildContainer(context, id + "container", containerBottom, POD_LENGTH, POD_WIDTH, POD_HEIGHT, false, POD_WALL, false, true);
+            afBuildColumn(context, id + "column", containerBottom + POD_LENGTH, columnTop, POD_TUBE_DIAMETER, true);
+        }
+        if (definition.solar)
+        {
+            afBuildSolar(context, id + "solar", TOWER_OUTER_D, SOLAR_DISC_T, POD_SOLAR_PITCH,
+                afPitchedDiscCenterZ(columnTop, TOWER_OUTER_D, POD_SOLAR_PITCH), 0 * meter, true, false);
+        }
+        if (definition.bridge)
+        {
+            afBuildBridge(context, id + "bridge", d.outerR, d.facadeR - 0.05 * meter);
+        }
+    });
+
+annotation { "Feature Type Name" : "Aftermath tower LOD" }
+export const aftermathTowerLod = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {
+        // buildRiseStageLod (stages.ts:2914): unpunched facade + slab discs + stub column + pitched solar
+        annotation { "Name" : "Floors" }
+        isInteger(definition.floors, { (unitless) : [1, 7, 50] } as IntegerBoundSpec);
+    }
+    {
+        const d = afDerive(afDefaults());
+        const n = definition.floors;
+        const h = n * d.floorH;
+        afName(context, afCylZ(context, id + "facade", 0 * meter, 0 * meter, d.facadeR, 0 * meter, h), "LOD facade");
+        for (var i = 0; i <= n; i += 1)
+        {
+            afName(context, afCylZ(context, id + ("slab" ~ i), 0 * meter, 0 * meter, d.outerR, i * d.floorH, i * d.floorH + d.slabH), "LOD slab");
+        }
+        const columnTop = EXCAVATE_COLUMN_TOP + n * d.floorH;
+        // stub: height columnTop + 0.4 centred at columnTop / 2
+        afName(context, afCylZ(context, id + "stub", 0 * meter, 0 * meter, LOD_COLUMN_D / 2, -0.2 * meter, columnTop + 0.2 * meter), "LOD column");
+        afBuildSolar(context, id + "solar", TOWER_OUTER_D, SOLAR_DISC_T, POD_SOLAR_PITCH,
+            afPitchedDiscCenterZ(columnTop, TOWER_OUTER_D, POD_SOLAR_PITCH), 0 * meter, true, false);
     });

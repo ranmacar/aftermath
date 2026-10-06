@@ -13,7 +13,7 @@ import(path : "onshape/std/geometry.fs", version : "2960.0");
 // --- apps/web/src/placements.ts : POD (vertical ISO 40 ft container + column) ---
 const POD_LENGTH = 12.192 * meter;            // placements.ts:18  POD.length (vertical extent, stood on end)
 const POD_WIDTH = 2.438 * meter;              // placements.ts:19  POD.width  (Babylon X)
-const POD_HEIGHT = 2.591 * meter;             // placements.ts:21  POD.height (Babylon Z "depth" when vertical)
+const POD_HEIGHT = 2.896 * meter;             // CAD: ISO 40 ft HC external height (game still uses 2.591 standard)
 const POD_WALL = 0.08 * meter;                // placements.ts:22  POD.wall (declared, no mesh in the app uses it)
 const POD_BURY_DEPTH = 1 * meter;             // placements.ts:23  POD.buryDepth (container top 1 m below grade)
 const POD_TUBE_DIAMETER = 1 * meter;          // placements.ts:24  POD.tubeDiameter (column)
@@ -73,7 +73,7 @@ const ROOM_H_GAP = 0.4 * meter;               // stages.ts:2189
 const FACADE_TOP_FACTOR = 0.92;               // stages.ts:2190 facadeTop = roomH * 0.92
 const FACADE_WALL_T = 0.14 * meter;           // stages.ts:2198 wallDepth (facade shell)
 const PARTITION_T = 0.08 * meter;             // stages.ts:2199 partT (partitions, corridor shell)
-const CORE_WALL_T = 0.1 * meter;              // stages.ts:2233 elevator shell depth
+const CORE_WALL_T = 0.15 * meter;             // mild CAD bump from game 0.1 (stages.ts:2233); continuous shell
 const ELEV_DOOR_W = 0.9 * meter;              // stages.ts:2223 makeDoorCut(coreR, ELEV_ANG, 0.9, DOOR_HEIGHT)
 const ELEV_ANG_OFFSET = 210 * degree;         // stages.ts:2222 ELEV_ANG = PI/2 + 2PI/3 + yaw
 const SLAB_ELEV_CLEAR = 0.1 * meter;          // stages.ts:2665 slab hole diameter = CORE_D + 0.1
@@ -449,7 +449,8 @@ function afDerive(d is map) returns map
  * Babylon box { width: POD.width, height: POD.length, depth: POD.height } centred at bottomY + length / 2.
  */
 function afBuildContainer(context is Context, hid is Id, bottomZ is ValueWithUnits, length is ValueWithUnits,
-    width is ValueWithUnits, depth is ValueWithUnits, hollow is boolean, wallT is ValueWithUnits, techDetails is boolean)
+    width is ValueWithUnits, depth is ValueWithUnits, hollow is boolean, wallT is ValueWithUnits, techDetails is boolean,
+    isoCorners is boolean)
 {
     const cz = bottomZ + length / 2;
     const boxBody = afBabBox(context, hid + "box", width, length, depth, 0 * meter, cz, 0 * meter, 0 * radian);
@@ -461,6 +462,29 @@ function afBuildContainer(context is Context, hid is Id, bottomZ is ValueWithUni
         afSubtract(context, hid + "hollow", boxBody, [voidBody]);
     }
     afName(context, boxBody, "Pod container");
+    if (isoCorners)
+    {
+        // ISO 1161 corner casting approx 178 × 162 × 118 mm. Container stood on end: length along Z.
+        const cx = 0.178 * meter;
+        const cy = 0.162 * meter;
+        const czCast = 0.118 * meter;
+        const xs = [-width / 2 + cx / 2, width / 2 - cx / 2];
+        const ys = [-depth / 2 + cy / 2, depth / 2 - cy / 2];
+        const zs = [bottomZ + czCast / 2, bottomZ + length - czCast / 2];
+        var n = 0;
+        for (var zi = 0; zi < 2; zi += 1)
+        {
+            for (var xi = 0; xi < 2; xi += 1)
+            {
+                for (var yi = 0; yi < 2; yi += 1)
+                {
+                    const cast = afBabBox(context, hid + ("cast" ~ n), cx, czCast, cy, xs[xi], zs[zi], ys[yi], 0 * radian);
+                    afName(context, cast, "ISO corner " ~ n);
+                    n += 1;
+                }
+            }
+        }
+    }
     if (techDetails)
     {
         // Gantry-stage tech container details, stages.ts:619-640 (children of the container, container-centred coords).

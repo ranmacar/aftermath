@@ -6,16 +6,48 @@
       "featureStudioId": "2cc9da34665612475aae74c6",
       "partStudioId": "afe63fb84b52f94636f4657c",
       "featureId": "FdhNdCsQssVd7tY_0",
-      "versionName": "game-v0.1",
-      "versionId": "73ecab33055dedcc64e6ca77",
+      "versionName": "game-v0.2",
+      "versionId": "5b42442c7eb3c99d1e36b2f1",
       "parts": [
         {
           "partId": "JHD",
           "name": "Pod container"
+        },
+        {
+          "partId": "JLD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "JPD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "JTD",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "JXD",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "JbD",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "JfD",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "JjD",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "JnD",
+          "name": "ISO corner 7"
         }
       ],
       "url": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/w/d3f6ba82c21e63fd3c64169b/e/afe63fb84b52f94636f4657c",
-      "versionUrl": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/v/73ecab33055dedcc64e6ca77/e/afe63fb84b52f94636f4657c"
+      "versionUrl": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/v/5b42442c7eb3c99d1e36b2f1/e/afe63fb84b52f94636f4657c"
     },
     "solar_array": {
       "did": "9987a7131af48a3bf70fde13",
@@ -23,8 +55,8 @@
       "featureStudioId": "9f3fbe94c25d2b17f52cc8a2",
       "partStudioId": "e790d01deabd9e671b738ac7",
       "featureId": "FbtRt7QnGHZxz3Z_0",
-      "versionName": "game-v0.1",
-      "versionId": "3ccfb18adac8814a873a48a6",
+      "versionName": "game-v0.2",
+      "versionId": "f27ce30af9e14e5c38a10a8b",
       "parts": [
         {
           "partId": "JHD",
@@ -40,7 +72,7125 @@
         }
       ],
       "url": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/w/a346c59d3bb2280e5e449446/e/e790d01deabd9e671b738ac7",
-      "versionUrl": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/v/3ccfb18adac8814a873a48a6/e/e790d01deabd9e671b738ac7"
+      "versionUrl": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/v/f27ce30af9e14e5c38a10a8b/e/e790d01deabd9e671b738ac7"
+    },
+    "floor_slab": {
+      "did": "28d1b39640ff0c0614205b09",
+      "wid": "1c27f0d1289f06476ca20e19",
+      "featureStudioId": "f84656297d4cb52a9c34db7c",
+      "partStudioId": "d29c917fcb8a721947a6707f",
+      "featureId": "F07TIknI30mTGhf_0",
+      "versionName": "game-v0.2",
+      "versionId": "9b4b5559bf2fc3c5e7a5f188",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 0"
+        },
+        {
+          "partId": "JUD",
+          "name": "Gate newel 0"
+        },
+        {
+          "partId": "JYD",
+          "name": "Gate newel 0"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/28d1b39640ff0c0614205b09/w/1c27f0d1289f06476ca20e19/e/d29c917fcb8a721947a6707f",
+      "versionUrl": "https://cad.onshape.com/documents/28d1b39640ff0c0614205b09/v/9b4b5559bf2fc3c5e7a5f188/e/d29c917fcb8a721947a6707f"
+    },
+    "elevator_shaft": {
+      "did": "f81c45e434cdafd5d00a6fe8",
+      "wid": "b3e58a7ab0249d7a06cb6f0f",
+      "featureStudioId": "2493be6575d9e14d7c85d009",
+      "partStudioId": "cdeeb622fd3d912e4b0135af",
+      "featureId": "FBt1Oc2bEQ14NoR_0",
+      "versionName": "game-v0.2",
+      "versionId": "1378232e0cdcbcd0bc514941",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Elevator shell 0"
+        },
+        {
+          "partId": "JVD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "JZD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "JdD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "JhD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "JlD",
+          "name": "Elevator door leaf 0"
+        },
+        {
+          "partId": "JpD",
+          "name": "Elevator door track 0"
+        },
+        {
+          "partId": "JtD",
+          "name": "Elevator shell 1"
+        },
+        {
+          "partId": "J7D",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "J/D",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RDBD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RHBD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RLBD",
+          "name": "Elevator door leaf 1"
+        },
+        {
+          "partId": "RPBD",
+          "name": "Elevator door track 1"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/f81c45e434cdafd5d00a6fe8/w/b3e58a7ab0249d7a06cb6f0f/e/cdeeb622fd3d912e4b0135af",
+      "versionUrl": "https://cad.onshape.com/documents/f81c45e434cdafd5d00a6fe8/v/1378232e0cdcbcd0bc514941/e/cdeeb622fd3d912e4b0135af"
+    },
+    "agrokruh_bed": {
+      "did": "dcb61d81583424344ec798b4",
+      "wid": "92fe24e718d28478ddc6aa5a",
+      "featureStudioId": "c4ad00199ce4dd2ca0ab1130",
+      "partStudioId": "9a5fd1c75e8827866088f556",
+      "featureId": "FItCmQ1A3McQz9u_0",
+      "versionName": "game-v0.2",
+      "versionId": "67c256b7d633662f789ebda7",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Agrokruh soil bed"
+        },
+        {
+          "partId": "JLD",
+          "name": "Agrokruh crop pad"
+        },
+        {
+          "partId": "JPD",
+          "name": "Agrokruh pivot"
+        },
+        {
+          "partId": "JTD",
+          "name": "Agrokruh arm"
+        },
+        {
+          "partId": "JXD",
+          "name": "Agrokruh arm"
+        },
+        {
+          "partId": "JbD",
+          "name": "Agrokruh arm"
+        },
+        {
+          "partId": "JfD",
+          "name": "Agrokruh arm"
+        },
+        {
+          "partId": "JjD",
+          "name": "Agrokruh arm"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/dcb61d81583424344ec798b4/w/92fe24e718d28478ddc6aa5a/e/9a5fd1c75e8827866088f556",
+      "versionUrl": "https://cad.onshape.com/documents/dcb61d81583424344ec798b4/v/67c256b7d633662f789ebda7/e/9a5fd1c75e8827866088f556"
+    },
+    "exterior_stair": {
+      "did": "8fafeac33febda08bc5b310b",
+      "wid": "e83a6dab4ba44b7e70e542fa",
+      "featureStudioId": "e4ffc78f1725b8ade251cdee",
+      "partStudioId": "830f844342b6687bc5aaad1a",
+      "featureId": "Fbz9ffDH3dENgCH_0",
+      "versionName": "game-v0.2",
+      "versionId": "afcb88724d25eb1e61f72f60",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JLD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JPD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JTD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JXD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JbD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JfD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JjD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JnD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JrD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JvD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "JzD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "J3D",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "J7D",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "J/D",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RDBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RHBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RLBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RPBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RTBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RXBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RbBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RfBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RjBD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RnBD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RrBD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RvBD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RzBD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R3BD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R7BD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R/BD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RDCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RHCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RLCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RPCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RTCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RXCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RbCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RfCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RjCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RnCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RrCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RvCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RzCD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R3CD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R7CD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R/CD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RDDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RHDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RRDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RWDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RbDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RlDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RqDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RvDD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R5DD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R+DD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RDED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RIED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RNED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RSED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RXED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RcED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RhED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RmED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RrED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RwED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R1ED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R6ED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R/ED",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "REFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "REGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RxGD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R2GD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R7GD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RFHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RKHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RPHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RZHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "ReHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RjHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RtHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RyHD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R3HD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RBID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RGID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RLID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RQID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RVID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RaID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RfID",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RkID",
+          "name": "Stair rail in 0"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/8fafeac33febda08bc5b310b/w/e83a6dab4ba44b7e70e542fa/e/830f844342b6687bc5aaad1a",
+      "versionUrl": "https://cad.onshape.com/documents/8fafeac33febda08bc5b310b/v/afcb88724d25eb1e61f72f60/e/830f844342b6687bc5aaad1a"
+    },
+    "floor_walls": {
+      "did": "5587d67c2f328e28266bc78c",
+      "wid": "b8dd228e0f05278bd2c4d1c6",
+      "featureStudioId": "55e27ef8e0d307ae700c902c",
+      "partStudioId": "96934459c6686f62cf18cfcd",
+      "featureId": "Fn5JpY6bZrZSVlN_0",
+      "versionName": "game-v0.2",
+      "versionId": "e336b4cb8b43450145b99204",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JLD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JPD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JTD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JXD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JbD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JfD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "JjD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "JnD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "JrD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "JvD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "JzD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "J3D",
+          "name": "Corridor wall 0"
+        },
+        {
+          "partId": "RZBD",
+          "name": "Facade 0"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/5587d67c2f328e28266bc78c/w/b8dd228e0f05278bd2c4d1c6/e/96934459c6686f62cf18cfcd",
+      "versionUrl": "https://cad.onshape.com/documents/5587d67c2f328e28266bc78c/v/e336b4cb8b43450145b99204/e/96934459c6686f62cf18cfcd"
+    },
+    "pod_assembly": {
+      "did": "ae1c9c22113c0bbaac56e6ac",
+      "wid": "efdf5b4b54aa297738469ff1",
+      "featureStudioId": "e3243f6eaa0af63baa3b4e11",
+      "partStudioId": "7e7c261ccf5ec24f0b0faf52",
+      "featureId": "FCKvXXFB8lBd9Xt_0",
+      "versionName": "game-v0.2",
+      "versionId": "700100a94abcbdf78f022bbb",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Pod container"
+        },
+        {
+          "partId": "JLD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "JPD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "JTD",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "JXD",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "JbD",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "JfD",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "JjD",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "JnD",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "JrD",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "JvD",
+          "name": "Pod console"
+        },
+        {
+          "partId": "JzD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "J3D",
+          "name": "Solar rim"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/ae1c9c22113c0bbaac56e6ac/w/efdf5b4b54aa297738469ff1/e/7e7c261ccf5ec24f0b0faf52",
+      "versionUrl": "https://cad.onshape.com/documents/ae1c9c22113c0bbaac56e6ac/v/700100a94abcbdf78f022bbb/e/7e7c261ccf5ec24f0b0faf52"
+    },
+    "tower_floor": {
+      "did": "6c462f8ccaf658e3bbe82bd4",
+      "wid": "f8bea157e1c25d3b8966f29f",
+      "featureStudioId": "eff719925cce99696479653a",
+      "partStudioId": "18dce8726cd2c34e0b58b9aa",
+      "featureId": "FdaRND64NBGWOgf_0",
+      "versionName": "game-v0.3",
+      "versionId": "f66623068ac133378fde6f37",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 0"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JkD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JoD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JsD",
+          "name": "Separator door leaf (bed)"
+        },
+        {
+          "partId": "JwD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J0D",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J4D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "J8D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "RABD",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "REBD",
+          "name": "Separator door leaf (bath)"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8BD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RACD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RECD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RICD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwCD",
+          "name": "Bed (double)"
+        },
+        {
+          "partId": "R0CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R4CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R8CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "RADD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "REDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RIDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RYDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RkDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4DD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R8DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQED",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RUED",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0GD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMHD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQHD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwID",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0ID",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0JD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMKD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQKD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUKD",
+          "name": "Corridor wall 0"
+        },
+        {
+          "partId": "R2KD",
+          "name": "Facade 0"
+        },
+        {
+          "partId": "RQMD",
+          "name": "Elevator shell 0"
+        },
+        {
+          "partId": "ReMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RiMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RmMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RqMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RuMD",
+          "name": "Elevator door leaf 0"
+        },
+        {
+          "partId": "RyMD",
+          "name": "Elevator door track 0"
+        },
+        {
+          "partId": "R2MD",
+          "name": "Gate newel 0"
+        },
+        {
+          "partId": "R6MD",
+          "name": "Gate newel 0"
+        },
+        {
+          "partId": "R+MD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RCND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RGND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RKND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ROND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RSND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RWND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RaND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ReND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RiND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RmND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RqND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RuND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RyND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R2ND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R6ND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R+ND",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RCOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RGOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RKOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ROOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RSOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RWOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RaOD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ReOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RiOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RmOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RqOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RuOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RyOD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R2OD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R6OD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R+OD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RCPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RGPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RKPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "ROPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RSPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RWPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RaPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RePD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RiPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RmPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RqPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RuPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RyPD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R2PD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R6PD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R+PD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RDQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RIQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RNQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RSQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RXQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RcQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RhQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RmQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RrQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RwQD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R1QD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R6QD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R/QD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RERD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RJRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RORD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RTRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RYRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RdRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RiRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RnRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RsRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "RxRD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R2RD",
+          "name": "Stair rail out 0"
+        },
+        {
+          "partId": "R7RD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R/RD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RDSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RHSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RLSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RPSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RTSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RXSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RbSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RfSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RjSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RnSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RrSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RvSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RzSD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R3SD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R7SD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R/SD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RDTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RHTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RLTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RPTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RTTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RXTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RbTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RfTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RjTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RoTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RtTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RyTD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R3TD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R8TD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RBUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RGUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RLUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RQUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RVUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RaUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RfUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RkUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RpUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RuUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RzUD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R4UD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "R9UD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RCVD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RHVD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RMVD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RRVD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RWVD",
+          "name": "Stair rail in 0"
+        },
+        {
+          "partId": "RbVD",
+          "name": "Stair rail in 0"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/6c462f8ccaf658e3bbe82bd4/w/f8bea157e1c25d3b8966f29f/e/18dce8726cd2c34e0b58b9aa",
+      "versionUrl": "https://cad.onshape.com/documents/6c462f8ccaf658e3bbe82bd4/v/f66623068ac133378fde6f37/e/18dce8726cd2c34e0b58b9aa"
+    },
+    "tower": {
+      "did": "8a00d7751c8227a1d88412f2",
+      "wid": "e8c2fa9dbb1a55ad189fc6da",
+      "featureStudioId": "ef4f6f39f095d08cce865b8d",
+      "partStudioId": "30d652b812a9a93c8c5e91f9",
+      "featureId": "FH8CGvvreN169ar_0",
+      "versionName": "game-v0.2",
+      "versionId": "b52e156b0242a1d2b85a74a7",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 0"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JkD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JoD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JsD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "JwD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "J0D",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "J4D",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "J8D",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RABD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "REBD",
+          "name": "Corridor wall 0"
+        },
+        {
+          "partId": "RmBD",
+          "name": "Facade 0"
+        },
+        {
+          "partId": "RADD",
+          "name": "Elevator shell 0"
+        },
+        {
+          "partId": "RODD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RSDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RWDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RaDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ReDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RiDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RmDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RqDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RuDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RyDD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R2DD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R6DD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "R+DD",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RCED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RGED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RKED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ROED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RSED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RWED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RaED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "ReED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RiED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RmED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RqED",
+          "name": "Stair tread 0"
+        },
+        {
+          "partId": "RuED",
+          "name": "Slab 1"
+        },
+        {
+          "partId": "R7ED",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "R/ED",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RDFD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RHFD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RLFD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RPFD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RTFD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RXFD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RbFD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RfFD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RjFD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RnFD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RrFD",
+          "name": "Corridor wall 1"
+        },
+        {
+          "partId": "RNGD",
+          "name": "Facade 1"
+        },
+        {
+          "partId": "RnHD",
+          "name": "Elevator shell 1"
+        },
+        {
+          "partId": "R1HD",
+          "name": "Pod container"
+        },
+        {
+          "partId": "R5HD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "R9HD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "RBID",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "RFID",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "RJID",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "RNID",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "RRID",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "RVID",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "RZID",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "RdID",
+          "name": "Pod console"
+        },
+        {
+          "partId": "RhID",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "RlID",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "RqID",
+          "name": "Bridge deck"
+        },
+        {
+          "partId": "RuID",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RyID",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "R2ID",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "R6ID",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "R+ID",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RCJD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RGJD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RKJD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "ROJD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RSJD",
+          "name": "Bridge post"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/8a00d7751c8227a1d88412f2/w/e8c2fa9dbb1a55ad189fc6da/e/30d652b812a9a93c8c5e91f9",
+      "versionUrl": "https://cad.onshape.com/documents/8a00d7751c8227a1d88412f2/v/b52e156b0242a1d2b85a74a7/e/30d652b812a9a93c8c5e91f9"
+    },
+    "crowd_kit": {
+      "did": "02af19007a9bade1919eaf5a",
+      "wid": "9efef9bfb24dfce761aa2be2",
+      "featureStudioId": "b30a4956c586aefe30b9622a",
+      "partStudioId": "1f4c16c8419488b8d027058b",
+      "featureId": "FMyj2Uzw3mlYKG6_0",
+      "versionName": "game-v0.2",
+      "versionId": "bec8fb93f9694929769df1e0",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Person hip"
+        },
+        {
+          "partId": "JMD",
+          "name": "Person torso"
+        },
+        {
+          "partId": "JQD",
+          "name": "Person chest"
+        },
+        {
+          "partId": "JVD",
+          "name": "Person head"
+        },
+        {
+          "partId": "JaD",
+          "name": "Person upper arm"
+        },
+        {
+          "partId": "JeD",
+          "name": "Person forearm"
+        },
+        {
+          "partId": "JiD",
+          "name": "Person thigh"
+        },
+        {
+          "partId": "JmD",
+          "name": "Person shin"
+        },
+        {
+          "partId": "JqD",
+          "name": "Person foot"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/02af19007a9bade1919eaf5a/w/9efef9bfb24dfce761aa2be2/e/1f4c16c8419488b8d027058b",
+      "versionUrl": "https://cad.onshape.com/documents/02af19007a9bade1919eaf5a/v/bec8fb93f9694929769df1e0/e/1f4c16c8419488b8d027058b"
+    },
+    "tower_lod": {
+      "did": "76913cc36c688987ef7cc3dd",
+      "wid": "f34fb202ac0f599cdd7e5ae5",
+      "featureStudioId": "2d7fe7abd34bf96ed3daa19a",
+      "partStudioId": "f45eb2376ed9c431ca15a607",
+      "featureId": "F7qnk2to5NlClx7_0",
+      "versionName": "game-v0.2",
+      "versionId": "0504ef48a68460a5d324f15c",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "LOD facade"
+        },
+        {
+          "partId": "JLD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JPD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JTD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JXD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JbD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JfD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JjD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JnD",
+          "name": "LOD slab"
+        },
+        {
+          "partId": "JrD",
+          "name": "LOD column"
+        },
+        {
+          "partId": "JvD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "JzD",
+          "name": "Solar rim"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/76913cc36c688987ef7cc3dd/w/f34fb202ac0f599cdd7e5ae5/e/f45eb2376ed9c431ca15a607",
+      "versionUrl": "https://cad.onshape.com/documents/76913cc36c688987ef7cc3dd/v/0504ef48a68460a5d324f15c/e/f45eb2376ed9c431ca15a607"
+    },
+    "stage_excavate": {
+      "did": "ca2282c03d5f1a90bc704a50",
+      "wid": "4e6cae8be04897aacfb92d30",
+      "featureStudioId": "9446b125d747852cb641d6c0",
+      "partStudioId": "27bb47f07803c206c64531b7",
+      "featureId": "Fk1A4gbkhiOhPJ9_0",
+      "versionName": "game-v0.2",
+      "versionId": "85cd3b475bbaf3e0811517f4",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Pod container"
+        },
+        {
+          "partId": "JLD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "JPD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "JTD",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "JXD",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "JbD",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "JfD",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "JjD",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "JnD",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "JrD",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "JvD",
+          "name": "Pod console"
+        },
+        {
+          "partId": "JzD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "J3D",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "J8D",
+          "name": "Bridge deck"
+        },
+        {
+          "partId": "RABD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "REBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Spoil berm"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/ca2282c03d5f1a90bc704a50/w/4e6cae8be04897aacfb92d30/e/27bb47f07803c206c64531b7",
+      "versionUrl": "https://cad.onshape.com/documents/ca2282c03d5f1a90bc704a50/v/85cd3b475bbaf3e0811517f4/e/27bb47f07803c206c64531b7"
+    },
+    "live_pod_kit": {
+      "did": "abda7a8c9a63521f381436eb",
+      "wid": "4f95d1ad4a6bec4799f0db60",
+      "featureStudioId": "037c019b0d3b59b38f08babb",
+      "partStudioId": "713a091c1bfd9f5cffe5f540",
+      "featureId": "FyaGuaskGLuGZgn_0",
+      "versionName": "game-v0.2",
+      "versionId": "f5241514049587b385bbf815",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Live container"
+        },
+        {
+          "partId": "JLD",
+          "name": "Live column"
+        },
+        {
+          "partId": "JPD",
+          "name": "Live console"
+        },
+        {
+          "partId": "JTD",
+          "name": "Live solar disc"
+        },
+        {
+          "partId": "JXD",
+          "name": "Live berm"
+        },
+        {
+          "partId": "JbD",
+          "name": "Live dig beam"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/abda7a8c9a63521f381436eb/w/4f95d1ad4a6bec4799f0db60/e/713a091c1bfd9f5cffe5f540",
+      "versionUrl": "https://cad.onshape.com/documents/abda7a8c9a63521f381436eb/v/f5241514049587b385bbf815/e/713a091c1bfd9f5cffe5f540"
+    },
+    "gantry_kit": {
+      "did": "595de8bdf045859e4e2eb159",
+      "wid": "2b989fe8ac49ec4366ab1754",
+      "featureStudioId": "ff6530b25166bbe0085b26c1",
+      "partStudioId": "28346a766bef5ee7f8b060f9",
+      "featureId": "FJOmJ2AvxKUtwic_0",
+      "versionName": "game-v0.2",
+      "versionId": "6785a53934fe658bcf35010b",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Build column"
+        },
+        {
+          "partId": "JLD",
+          "name": "Build berm"
+        },
+        {
+          "partId": "JPD",
+          "name": "Tech container"
+        },
+        {
+          "partId": "JTD",
+          "name": "Tech door"
+        },
+        {
+          "partId": "JXD",
+          "name": "Tech rack"
+        },
+        {
+          "partId": "JbD",
+          "name": "Deck beam"
+        },
+        {
+          "partId": "JfD",
+          "name": "Deck ring 0"
+        },
+        {
+          "partId": "JjD",
+          "name": "Deck ring 1"
+        },
+        {
+          "partId": "JnD",
+          "name": "Deck ring 2"
+        },
+        {
+          "partId": "JrD",
+          "name": "Deck ring 3"
+        },
+        {
+          "partId": "JvD",
+          "name": "Deck ring 4"
+        },
+        {
+          "partId": "JzD",
+          "name": "Deck slab"
+        },
+        {
+          "partId": "J8D",
+          "name": "Slip wall"
+        },
+        {
+          "partId": "RFBD",
+          "name": "Slip form"
+        },
+        {
+          "partId": "ROBD",
+          "name": "Base wall"
+        },
+        {
+          "partId": "RXBD",
+          "name": "Gantry sleeve"
+        },
+        {
+          "partId": "RbBD",
+          "name": "Gantry boom"
+        },
+        {
+          "partId": "RfBD",
+          "name": "Gantry trolley"
+        },
+        {
+          "partId": "RjBD",
+          "name": "Gantry cabin"
+        },
+        {
+          "partId": "RnBD",
+          "name": "Gantry slew ring"
+        },
+        {
+          "partId": "RrBD",
+          "name": "Gantry counterweight"
+        },
+        {
+          "partId": "RvBD",
+          "name": "Gantry hopper"
+        },
+        {
+          "partId": "RzBD",
+          "name": "Gantry bucket"
+        },
+        {
+          "partId": "R3BD",
+          "name": "Gantry stream"
+        },
+        {
+          "partId": "R7BD",
+          "name": "Gantry roof disc"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/595de8bdf045859e4e2eb159/w/2b989fe8ac49ec4366ab1754/e/28346a766bef5ee7f8b060f9",
+      "versionUrl": "https://cad.onshape.com/documents/595de8bdf045859e4e2eb159/v/6785a53934fe658bcf35010b/e/28346a766bef5ee7f8b060f9"
+    },
+    "agrokruh_kit": {
+      "did": "b8245862d6582aab008775f6",
+      "wid": "c7df95213b0e784e1a1f1c46",
+      "featureStudioId": "56e5f3aae59cf60bcafe6c5a",
+      "partStudioId": "ba3a3668e065034cb8c2a914",
+      "featureId": "FDpG18wm3bhUsay_0",
+      "versionName": "game-v0.2",
+      "versionId": "9851a65245d44e9e55515c04",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Agro soil bed"
+        },
+        {
+          "partId": "JLD",
+          "name": "Agro crop pad"
+        },
+        {
+          "partId": "JPD",
+          "name": "Agro pivot"
+        },
+        {
+          "partId": "JTD",
+          "name": "Agro arm mast"
+        },
+        {
+          "partId": "JXD",
+          "name": "Agro arm boom"
+        },
+        {
+          "partId": "JbD",
+          "name": "Agro arm head"
+        },
+        {
+          "partId": "JfD",
+          "name": "Agro arm wheel"
+        },
+        {
+          "partId": "JjD",
+          "name": "Agro arm drop"
+        },
+        {
+          "partId": "JnD",
+          "name": "Tree trunk"
+        },
+        {
+          "partId": "JrD",
+          "name": "Tree canopy"
+        },
+        {
+          "partId": "JwD",
+          "name": "Shrub"
+        },
+        {
+          "partId": "J1D",
+          "name": "Shrub small"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/b8245862d6582aab008775f6/w/c7df95213b0e784e1a1f1c46/e/ba3a3668e065034cb8c2a914",
+      "versionUrl": "https://cad.onshape.com/documents/b8245862d6582aab008775f6/v/9851a65245d44e9e55515c04/e/ba3a3668e065034cb8c2a914"
+    },
+    "tower_floor_mid": {
+      "did": "4eac607f3dff665adbd9dac9",
+      "wid": "83daebaac35503dba05d54da",
+      "featureStudioId": "d884bbb8786ffc604e78ba25",
+      "partStudioId": "5b6f56d3c5f0c7bee6acfbe6",
+      "featureId": "FeNxbuwdIwAeoIF_0",
+      "versionName": "game-v0.2",
+      "versionId": "9de9075b667f2edd9aaf684f",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 1"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JkD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JoD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JsD",
+          "name": "Separator door leaf (bed)"
+        },
+        {
+          "partId": "JwD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J0D",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J4D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "J8D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "RABD",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "REBD",
+          "name": "Separator door leaf (bath)"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8BD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RACD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RECD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RICD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwCD",
+          "name": "Bed (double)"
+        },
+        {
+          "partId": "R0CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R4CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R8CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "RADD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "REDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RIDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RYDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RkDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4DD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R8DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQED",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RUED",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0GD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMHD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQHD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwID",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0ID",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0JD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMKD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQKD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUKD",
+          "name": "Corridor wall 1"
+        },
+        {
+          "partId": "R2KD",
+          "name": "Facade 1"
+        },
+        {
+          "partId": "RQMD",
+          "name": "Elevator shell 1"
+        },
+        {
+          "partId": "ReMD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RiMD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RmMD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RqMD",
+          "name": "Elevator door frame 1"
+        },
+        {
+          "partId": "RuMD",
+          "name": "Elevator door leaf 1"
+        },
+        {
+          "partId": "RyMD",
+          "name": "Elevator door track 1"
+        },
+        {
+          "partId": "R2MD",
+          "name": "Gate newel 1"
+        },
+        {
+          "partId": "R6MD",
+          "name": "Gate newel 1"
+        },
+        {
+          "partId": "R+MD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RCND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RGND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RKND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "ROND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RSND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RWND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RaND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "ReND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RiND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RmND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RqND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RuND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RyND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "R2ND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "R6ND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "R+ND",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RCOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RGOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RKOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "ROOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RSOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RWOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RaOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "ReOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RiOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RmOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RqOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RuOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "RyOD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "R2OD",
+          "name": "Balcony post 1"
+        },
+        {
+          "partId": "R6OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RePD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ReQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+QD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RCRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RGRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RKRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RORD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RSRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RWRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RaRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "ReRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RiRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RmRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RqRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RuRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RyRD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "R2RD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "R6RD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "R+RD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RCSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RGSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RKSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "ROSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RSSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RWSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "RaSD",
+          "name": "Stair tread 1"
+        },
+        {
+          "partId": "ReSD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RiSD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RmSD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RqSD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RuSD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RySD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R2SD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R6SD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R+SD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RCTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RGTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RKTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "ROTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RSTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RWTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RaTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "ReTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RiTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RmTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RqTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RuTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RyTD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R2TD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R6TD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R+TD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RDUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RIUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RNUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RSUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RXUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RcUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RhUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RmUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RrUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RwUD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R1UD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R6UD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R/UD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "REVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RJVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "ROVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RTVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RYVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RdVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RiVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RnVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RsVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "RxVD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R2VD",
+          "name": "Stair rail out 1"
+        },
+        {
+          "partId": "R7VD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R/VD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RDWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RHWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RLWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RPWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RTWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RXWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RbWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RfWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RjWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RnWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RrWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RvWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RzWD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R3WD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R7WD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R/WD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RDXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RHXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RLXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RPXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RTXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RXXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RbXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RfXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RjXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RoXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RtXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RyXD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R3XD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R8XD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RBYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RGYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RLYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RQYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RVYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RaYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RfYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RkYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RpYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RuYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RzYD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R4YD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "R9YD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RCZD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RHZD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RMZD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RRZD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RWZD",
+          "name": "Stair rail in 1"
+        },
+        {
+          "partId": "RbZD",
+          "name": "Stair rail in 1"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/4eac607f3dff665adbd9dac9/w/83daebaac35503dba05d54da/e/5b6f56d3c5f0c7bee6acfbe6",
+      "versionUrl": "https://cad.onshape.com/documents/4eac607f3dff665adbd9dac9/v/9de9075b667f2edd9aaf684f/e/5b6f56d3c5f0c7bee6acfbe6"
+    },
+    "tower_crown_1": {
+      "did": "d01cd1029d4a09876e0334c3",
+      "wid": "733320419bb0a268e00d1081",
+      "featureStudioId": "6c9d8013526e4b058975412d",
+      "partStudioId": "cc7421a4d45c407b53b04ecc",
+      "featureId": "FEQ4oXB3I1QCmFs_0",
+      "versionName": "game-v0.2",
+      "versionId": "d0a4ecd87dc65342389d9414",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 0"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JkD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JoD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JsD",
+          "name": "Separator door leaf (bed)"
+        },
+        {
+          "partId": "JwD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J0D",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J4D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "J8D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "RABD",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "REBD",
+          "name": "Separator door leaf (bath)"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8BD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RACD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RECD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RICD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwCD",
+          "name": "Bed (double)"
+        },
+        {
+          "partId": "R0CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R4CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R8CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "RADD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "REDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RIDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RYDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RkDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4DD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R8DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQED",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RUED",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0GD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMHD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQHD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwID",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0ID",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0JD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMKD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQKD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUKD",
+          "name": "Corridor wall 0"
+        },
+        {
+          "partId": "R2KD",
+          "name": "Facade 0"
+        },
+        {
+          "partId": "RQMD",
+          "name": "Elevator shell 0"
+        },
+        {
+          "partId": "ReMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RiMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RmMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RqMD",
+          "name": "Elevator door frame 0"
+        },
+        {
+          "partId": "RuMD",
+          "name": "Elevator door leaf 0"
+        },
+        {
+          "partId": "RyMD",
+          "name": "Elevator door track 0"
+        },
+        {
+          "partId": "R2MD",
+          "name": "Gate newel 0"
+        },
+        {
+          "partId": "R6MD",
+          "name": "Gate newel 0"
+        },
+        {
+          "partId": "REND",
+          "name": "Roof infill"
+        },
+        {
+          "partId": "RTND",
+          "name": "Pit wall"
+        },
+        {
+          "partId": "RcND",
+          "name": "Pod container"
+        },
+        {
+          "partId": "RgND",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "RkND",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "RoND",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "RsND",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "RwND",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "R0ND",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "R4ND",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "R8ND",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "RAOD",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "REOD",
+          "name": "Pod console"
+        },
+        {
+          "partId": "RIOD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "RMOD",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "RROD",
+          "name": "Bridge deck"
+        },
+        {
+          "partId": "RVOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RZOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RdOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RhOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RlOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RpOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RtOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RxOD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "R1OD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "R5OD",
+          "name": "Bridge post"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/d01cd1029d4a09876e0334c3/w/733320419bb0a268e00d1081/e/cc7421a4d45c407b53b04ecc",
+      "versionUrl": "https://cad.onshape.com/documents/d01cd1029d4a09876e0334c3/v/d0a4ecd87dc65342389d9414/e/cc7421a4d45c407b53b04ecc"
+    },
+    "tower_crown_3": {
+      "did": "28765a01141733f968ad29d5",
+      "wid": "0d1656dcbe1f3c554ee05300",
+      "featureStudioId": "f9aee7f962d8842a4f3b9896",
+      "partStudioId": "47812d4937b518a75ca89b31",
+      "featureId": "FCilGlVeNanpkbb_0",
+      "versionName": "game-v0.2",
+      "versionId": "802152eafa5bf19d5b74851b",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 2"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JkD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JoD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JsD",
+          "name": "Separator door leaf (bed)"
+        },
+        {
+          "partId": "JwD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J0D",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J4D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "J8D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "RABD",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "REBD",
+          "name": "Separator door leaf (bath)"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8BD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RACD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RECD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RICD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwCD",
+          "name": "Bed (double)"
+        },
+        {
+          "partId": "R0CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R4CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R8CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "RADD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "REDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RIDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RYDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RkDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4DD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R8DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQED",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RUED",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0GD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMHD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQHD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwID",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0ID",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0JD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMKD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQKD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUKD",
+          "name": "Corridor wall 2"
+        },
+        {
+          "partId": "R2KD",
+          "name": "Facade 2"
+        },
+        {
+          "partId": "RQMD",
+          "name": "Elevator shell 2"
+        },
+        {
+          "partId": "ReMD",
+          "name": "Elevator door frame 2"
+        },
+        {
+          "partId": "RiMD",
+          "name": "Elevator door frame 2"
+        },
+        {
+          "partId": "RmMD",
+          "name": "Elevator door frame 2"
+        },
+        {
+          "partId": "RqMD",
+          "name": "Elevator door frame 2"
+        },
+        {
+          "partId": "RuMD",
+          "name": "Elevator door leaf 2"
+        },
+        {
+          "partId": "RyMD",
+          "name": "Elevator door track 2"
+        },
+        {
+          "partId": "R2MD",
+          "name": "Gate newel 2"
+        },
+        {
+          "partId": "R6MD",
+          "name": "Gate newel 2"
+        },
+        {
+          "partId": "R+MD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RCND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RGND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RKND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "ROND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RSND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RWND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RaND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "ReND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RiND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RmND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RqND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RuND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RyND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "R2ND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "R6ND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "R+ND",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RCOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RGOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RKOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "ROOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RSOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RWOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RaOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "ReOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RiOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RmOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RqOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RuOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "RyOD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "R2OD",
+          "name": "Balcony post 2"
+        },
+        {
+          "partId": "R6OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RePD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ReQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RERD",
+          "name": "Roof infill"
+        },
+        {
+          "partId": "RTRD",
+          "name": "Pod container"
+        },
+        {
+          "partId": "RXRD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "RbRD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "RfRD",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "RjRD",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "RnRD",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "RrRD",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "RvRD",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "RzRD",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "R3RD",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "R7RD",
+          "name": "Pod console"
+        },
+        {
+          "partId": "R/RD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "RDSD",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "RISD",
+          "name": "Bridge deck"
+        },
+        {
+          "partId": "RMSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RQSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RUSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RYSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RcSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RgSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RkSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RoSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RsSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RwSD",
+          "name": "Bridge post"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/28765a01141733f968ad29d5/w/0d1656dcbe1f3c554ee05300/e/47812d4937b518a75ca89b31",
+      "versionUrl": "https://cad.onshape.com/documents/28765a01141733f968ad29d5/v/802152eafa5bf19d5b74851b/e/47812d4937b518a75ca89b31"
+    },
+    "tower_crown_7": {
+      "did": "9bcd829f1f72743f32bfd57a",
+      "wid": "0c6203fde64647d61c5e4433",
+      "featureStudioId": "f7fcaa1931869e333cd59617",
+      "partStudioId": "d3b1791fc270e2396c5ba9f6",
+      "featureId": "FPzH2qC6IqTFGkq_0",
+      "versionName": "game-v0.2",
+      "versionId": "9d7c1a935787cd8b8efbdd72",
+      "parts": [
+        {
+          "partId": "JHD",
+          "name": "Slab 6"
+        },
+        {
+          "partId": "JUD",
+          "name": "Core tangent wall"
+        },
+        {
+          "partId": "JYD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JcD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "JgD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JkD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JoD",
+          "name": "Separator door frame (bed)"
+        },
+        {
+          "partId": "JsD",
+          "name": "Separator door leaf (bed)"
+        },
+        {
+          "partId": "JwD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J0D",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "J4D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "J8D",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "RABD",
+          "name": "Separator door frame (bath)"
+        },
+        {
+          "partId": "REBD",
+          "name": "Separator door leaf (bath)"
+        },
+        {
+          "partId": "RIBD",
+          "name": "Living-bedroom separator"
+        },
+        {
+          "partId": "RMBD",
+          "name": "Bedroom-bath wall"
+        },
+        {
+          "partId": "RQBD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RUBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgBD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkBD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RoBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwBD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4BD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8BD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RACD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RECD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RICD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoCD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsCD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwCD",
+          "name": "Bed (double)"
+        },
+        {
+          "partId": "R0CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R4CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "R8CD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "RADD",
+          "name": "Main door frame"
+        },
+        {
+          "partId": "REDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RIDD",
+          "name": "Main door leaf"
+        },
+        {
+          "partId": "RMDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RYDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgDD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RkDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwDD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R4DD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R8DD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMED",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQED",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RUED",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4ED",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ED",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoFD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsFD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwFD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0FD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8FD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYGD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcGD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwGD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0GD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8GD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIHD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMHD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQHD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUHD",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "RYHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RgHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RkHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RoHD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RsHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RwHD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R0HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R4HD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8HD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RAID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RQID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RUID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RYID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RcID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RgID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoID",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsID",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RwID",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "R0ID",
+          "name": "Radial demise wall"
+        },
+        {
+          "partId": "R4ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "R8ID",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RAJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "REJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RIJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RMJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RQJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RUJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RYJD",
+          "name": "Door frame"
+        },
+        {
+          "partId": "RcJD",
+          "name": "Door leaf"
+        },
+        {
+          "partId": "RgJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RkJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RoJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RsJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RwJD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R0JD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "R4JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "R8JD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RAKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "REKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RIKD",
+          "name": "Window frame"
+        },
+        {
+          "partId": "RMKD",
+          "name": "Window glass"
+        },
+        {
+          "partId": "RQKD",
+          "name": "Bed (single)"
+        },
+        {
+          "partId": "RUKD",
+          "name": "Corridor wall 6"
+        },
+        {
+          "partId": "R2KD",
+          "name": "Facade 6"
+        },
+        {
+          "partId": "RQMD",
+          "name": "Elevator shell 6"
+        },
+        {
+          "partId": "ReMD",
+          "name": "Elevator door frame 6"
+        },
+        {
+          "partId": "RiMD",
+          "name": "Elevator door frame 6"
+        },
+        {
+          "partId": "RmMD",
+          "name": "Elevator door frame 6"
+        },
+        {
+          "partId": "RqMD",
+          "name": "Elevator door frame 6"
+        },
+        {
+          "partId": "RuMD",
+          "name": "Elevator door leaf 6"
+        },
+        {
+          "partId": "RyMD",
+          "name": "Elevator door track 6"
+        },
+        {
+          "partId": "R2MD",
+          "name": "Gate newel 6"
+        },
+        {
+          "partId": "R6MD",
+          "name": "Gate newel 6"
+        },
+        {
+          "partId": "R+MD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RCND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RGND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RKND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "ROND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RSND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RWND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RaND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "ReND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RiND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RmND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RqND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RuND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RyND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "R2ND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "R6ND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "R+ND",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RCOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RGOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RKOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "ROOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RSOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RWOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RaOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "ReOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RiOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RmOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RqOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RuOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "RyOD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "R2OD",
+          "name": "Balcony post 6"
+        },
+        {
+          "partId": "R6OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+OD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RePD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyPD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R+PD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RCQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RGQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RKQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ROQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RSQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RWQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RaQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "ReQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RiQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RmQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RqQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RuQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RyQD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R2QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "R6QD",
+          "name": "Balcony rail"
+        },
+        {
+          "partId": "RERD",
+          "name": "Roof infill"
+        },
+        {
+          "partId": "RTRD",
+          "name": "Pod container"
+        },
+        {
+          "partId": "RXRD",
+          "name": "ISO corner 0"
+        },
+        {
+          "partId": "RbRD",
+          "name": "ISO corner 1"
+        },
+        {
+          "partId": "RfRD",
+          "name": "ISO corner 2"
+        },
+        {
+          "partId": "RjRD",
+          "name": "ISO corner 3"
+        },
+        {
+          "partId": "RnRD",
+          "name": "ISO corner 4"
+        },
+        {
+          "partId": "RrRD",
+          "name": "ISO corner 5"
+        },
+        {
+          "partId": "RvRD",
+          "name": "ISO corner 6"
+        },
+        {
+          "partId": "RzRD",
+          "name": "ISO corner 7"
+        },
+        {
+          "partId": "R3RD",
+          "name": "Hatch column"
+        },
+        {
+          "partId": "R7RD",
+          "name": "Pod console"
+        },
+        {
+          "partId": "R/RD",
+          "name": "Solar disc"
+        },
+        {
+          "partId": "RDSD",
+          "name": "Solar rim"
+        },
+        {
+          "partId": "RISD",
+          "name": "Bridge deck"
+        },
+        {
+          "partId": "RMSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RQSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RUSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RYSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RcSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RgSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RkSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RoSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RsSD",
+          "name": "Bridge post"
+        },
+        {
+          "partId": "RwSD",
+          "name": "Bridge post"
+        }
+      ],
+      "url": "https://cad.onshape.com/documents/9bcd829f1f72743f32bfd57a/w/0c6203fde64647d61c5e4433/e/d3b1791fc270e2396c5ba9f6",
+      "versionUrl": "https://cad.onshape.com/documents/9bcd829f1f72743f32bfd57a/v/9d7c1a935787cd8b8efbdd72/e/d3b1791fc270e2396c5ba9f6"
     }
   },
   "folders": {

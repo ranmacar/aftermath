@@ -1,36 +1,636 @@
 {
   "lockfileVersion": 1,
   "assets": {
+    "agrokruh_bed": {
+      "stage": "game",
+      "source": {
+        "did": "dcb61d81583424344ec798b4",
+        "wvm": "v",
+        "wvmid": "67c256b7d633662f789ebda7",
+        "elementType": "partstudio",
+        "elementId": "9a5fd1c75e8827866088f556",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "67c256b7d633662f789ebda7",
+        "microversion": "7bdf4de55c57dd6153f14abe",
+        "createdAt": "2026-10-05T14:22:07.156+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/dcb61d81583424344ec798b4/v/67c256b7d633662f789ebda7/e/9a5fd1c75e8827866088f556",
+      "exportedAt": "2026-10-05T14:24:56.123Z",
+      "rawSha256": "0893f649b3fafe6561883fda779d870e7b9025fea5537f7c364a65bd16eb72f1",
+      "rawBytes": 62656,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/agrokruh_bed.glb",
+          "ratio": 1,
+          "bytes": 19128,
+          "sha256": "91d355a737b117ab1501fab86d9f32ffae4fc383e056a07dc0b9fc516b32663c",
+          "triangles": 1776,
+          "size": [
+            22,
+            1.68,
+            22.08
+          ]
+        },
+        {
+          "file": "site/agrokruh_bed_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 15136,
+          "sha256": "b01071f2b0a127b21b92c07eaf1be9a10a811230a8cb28da9875dcdd8c619b36",
+          "triangles": 900,
+          "size": [
+            21.9816,
+            1.68,
+            22.0795
+          ]
+        },
+        {
+          "file": "site/agrokruh_bed_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 12512,
+          "sha256": "33bea6f38b48d6d087a3d56a830b2a22fbb4f7ce24622ec765a94fcc549ce6a8",
+          "triangles": 390,
+          "size": [
+            21.9741,
+            1.68,
+            22.0549
+          ]
+        }
+      ]
+    },
+    "agrokruh_kit": {
+      "stage": "game",
+      "source": {
+        "did": "b8245862d6582aab008775f6",
+        "wvm": "v",
+        "wvmid": "9851a65245d44e9e55515c04",
+        "elementType": "partstudio",
+        "elementId": "ba3a3668e065034cb8c2a914",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "9851a65245d44e9e55515c04",
+        "microversion": "e93aa1c9fb30a5a4a91639a0",
+        "createdAt": "2026-10-06T08:11:03.558+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/b8245862d6582aab008775f6/v/9851a65245d44e9e55515c04/e/ba3a3668e065034cb8c2a914",
+      "exportedAt": "2026-10-06T08:42:55.866Z",
+      "rawSha256": "6dd19e6b072b18e9859244e6ffe9d97416ae12cd096d20bd9e59ef9655e2666c",
+      "rawBytes": 40628,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/agrokruh_kit.glb",
+          "ratio": 1,
+          "bytes": 16424,
+          "sha256": "c59b87dab57b4306c9436e76010b8f0657791d2a39f6febc271ed77751ead1a1",
+          "triangles": 1112,
+          "size": [
+            72.355,
+            2.5,
+            21.9758
+          ]
+        },
+        {
+          "file": "site/agrokruh_kit_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 17404,
+          "sha256": "284e895a74f61ec9710b75bfc31f6e735eca5512c845400364469bf665e27768",
+          "triangles": 880,
+          "size": [
+            72.3547,
+            2.5,
+            21.9751
+          ]
+        },
+        {
+          "file": "site/agrokruh_kit_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 15644,
+          "sha256": "7f63586bddcdbfd6a8c94c38f2343fe3648c0d84036fecf61454c0a2d5c5bed9",
+          "triangles": 634,
+          "size": [
+            72.1561,
+            2.5,
+            21.9751
+          ]
+        }
+      ]
+    },
+    "crowd_kit": {
+      "stage": "game",
+      "source": {
+        "did": "02af19007a9bade1919eaf5a",
+        "wvm": "v",
+        "wvmid": "bec8fb93f9694929769df1e0",
+        "elementType": "partstudio",
+        "elementId": "1f4c16c8419488b8d027058b",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "bec8fb93f9694929769df1e0",
+        "microversion": "d982d2be5011616f22b22376",
+        "createdAt": "2026-10-06T08:09:04.756+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/02af19007a9bade1919eaf5a/v/bec8fb93f9694929769df1e0/e/1f4c16c8419488b8d027058b",
+      "exportedAt": "2026-10-06T08:42:57.766Z",
+      "rawSha256": "65e9343cc9922aa599f1082b904a3dbb03c027e784ac48746d29a015ce784f31",
+      "rawBytes": 27516,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/crowd_kit.glb",
+          "ratio": 1,
+          "bytes": 12960,
+          "sha256": "7f7492c8b79e1f2dedf11cdf67aeaaf4d4a65727d9317738bb1cca9cd9b31c7c",
+          "triangles": 756,
+          "size": [
+            3.3765,
+            0.42,
+            0.32
+          ]
+        },
+        {
+          "file": "site/crowd_kit_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 13508,
+          "sha256": "c5d79693c3996f9f04de1d06eb23134ac1bc7808beae1e82361a9bfcd00c3231",
+          "triangles": 716,
+          "size": [
+            3.3765,
+            0.42,
+            0.32
+          ]
+        },
+        {
+          "file": "site/crowd_kit_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 12044,
+          "sha256": "d26383d70093c761520118b42daa29804ba09c875d7f780530820e0025db92b3",
+          "triangles": 532,
+          "size": [
+            3.3765,
+            0.42,
+            0.32
+          ]
+        }
+      ]
+    },
+    "elevator_shaft": {
+      "stage": "game",
+      "source": {
+        "did": "f81c45e434cdafd5d00a6fe8",
+        "wvm": "v",
+        "wvmid": "1378232e0cdcbcd0bc514941",
+        "elementType": "partstudio",
+        "elementId": "cdeeb622fd3d912e4b0135af",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "1378232e0cdcbcd0bc514941",
+        "microversion": "d8df9186a7b6678c4321ce6d",
+        "createdAt": "2026-10-05T14:21:51.768+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/f81c45e434cdafd5d00a6fe8/v/1378232e0cdcbcd0bc514941/e/cdeeb622fd3d912e4b0135af",
+      "exportedAt": "2026-10-05T14:24:51.442Z",
+      "rawSha256": "723928a096b02679b3e7979fda73465a08b997e8be9d148e7d7ec5df015f8cf3",
+      "rawBytes": 56364,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/elevator_shaft.glb",
+          "ratio": 1,
+          "bytes": 22984,
+          "sha256": "12c33d981d56b93e53bb5f0f69796deba0917a573eb903898ea8485921e3ea08",
+          "triangles": 1260,
+          "size": [
+            3.1974,
+            6.6,
+            3.2399
+          ]
+        },
+        {
+          "file": "site/elevator_shaft_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 19552,
+          "sha256": "a09277ed15f0a5f5ae88b7cc9ec93c1ec672470fa7ce2dcebcba797130215173",
+          "triangles": 688,
+          "size": [
+            3.1955,
+            6.6,
+            3.24
+          ]
+        },
+        {
+          "file": "site/elevator_shaft_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 17296,
+          "sha256": "f81fa020adf4a54f13e2c94c9f08e3716c4ace4e1b19347ebf205c26146a5630",
+          "triangles": 388,
+          "size": [
+            3.1955,
+            6.6,
+            3.24
+          ]
+        }
+      ]
+    },
+    "exterior_stair": {
+      "stage": "game",
+      "source": {
+        "did": "8fafeac33febda08bc5b310b",
+        "wvm": "v",
+        "wvmid": "afcb88724d25eb1e61f72f60",
+        "elementType": "partstudio",
+        "elementId": "830f844342b6687bc5aaad1a",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "afcb88724d25eb1e61f72f60",
+        "microversion": "9ad8120d581c06b9c9ebc06b",
+        "createdAt": "2026-10-05T14:22:23.567+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/8fafeac33febda08bc5b310b/v/afcb88724d25eb1e61f72f60/e/830f844342b6687bc5aaad1a",
+      "exportedAt": "2026-10-05T14:24:54.572Z",
+      "rawSha256": "13c4c34c76070967c816bb89343cbf34a4b5e0ce27042d71d5667ee6bc4f0652",
+      "rawBytes": 206092,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/exterior_stair.glb",
+          "ratio": 1,
+          "bytes": 111936,
+          "sha256": "de1c2c8f4fc2fbacb9e5d22c046660bc1850d9ded46decd9a0114581e39e59c2",
+          "triangles": 1488,
+          "size": [
+            5.3348,
+            4.625,
+            3.0825
+          ]
+        },
+        {
+          "file": "site/exterior_stair_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 111936,
+          "sha256": "de1c2c8f4fc2fbacb9e5d22c046660bc1850d9ded46decd9a0114581e39e59c2",
+          "triangles": 1488,
+          "size": [
+            5.3348,
+            4.625,
+            3.0825
+          ]
+        },
+        {
+          "file": "site/exterior_stair_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 111936,
+          "sha256": "de1c2c8f4fc2fbacb9e5d22c046660bc1850d9ded46decd9a0114581e39e59c2",
+          "triangles": 1488,
+          "size": [
+            5.3348,
+            4.625,
+            3.0825
+          ]
+        }
+      ]
+    },
+    "floor_slab": {
+      "stage": "game",
+      "source": {
+        "did": "28d1b39640ff0c0614205b09",
+        "wvm": "v",
+        "wvmid": "9b4b5559bf2fc3c5e7a5f188",
+        "elementType": "partstudio",
+        "elementId": "d29c917fcb8a721947a6707f",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "9b4b5559bf2fc3c5e7a5f188",
+        "microversion": "3b8b17f83a1cfeaab2cee821",
+        "createdAt": "2026-10-05T14:21:30.511+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/28d1b39640ff0c0614205b09/v/9b4b5559bf2fc3c5e7a5f188/e/d29c917fcb8a721947a6707f",
+      "exportedAt": "2026-10-05T14:24:49.763Z",
+      "rawSha256": "45046b19ea950b71679dd991f15f35dd4453a0f9b3facf6bcb841e8d06866468",
+      "rawBytes": 31632,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/floor_slab.glb",
+          "ratio": 1,
+          "bytes": 9368,
+          "sha256": "2ca696917e8b7931ab835fd5f3598c000f660c01b5c71fae46ce2c6d93b158aa",
+          "triangles": 908,
+          "size": [
+            19.9998,
+            1.3199,
+            19.9973
+          ]
+        },
+        {
+          "file": "site/floor_slab_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 6988,
+          "sha256": "10254741c96a669668a8b4a1e98131d454eb1f8f0f8db74c729550eb405d0213",
+          "triangles": 466,
+          "size": [
+            19.9869,
+            1.3198,
+            19.9942
+          ]
+        },
+        {
+          "file": "site/floor_slab_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 5236,
+          "sha256": "187a0a03a071e35b6b3c124f58a1b47ed34c2e7e14eba03d1dcf221cf9b1ff90",
+          "triangles": 200,
+          "size": [
+            19.9866,
+            1.3198,
+            19.9671
+          ]
+        }
+      ]
+    },
+    "floor_walls": {
+      "stage": "game",
+      "source": {
+        "did": "5587d67c2f328e28266bc78c",
+        "wvm": "v",
+        "wvmid": "e336b4cb8b43450145b99204",
+        "elementType": "partstudio",
+        "elementId": "96934459c6686f62cf18cfcd",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "e336b4cb8b43450145b99204",
+        "microversion": "341b81dec077b9a71a76991c",
+        "createdAt": "2026-10-05T14:22:50.662+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/5587d67c2f328e28266bc78c/v/e336b4cb8b43450145b99204/e/96934459c6686f62cf18cfcd",
+      "exportedAt": "2026-10-05T14:24:52.911Z",
+      "rawSha256": "1dddad37365ad077fc8a30f8729870cfb305c18606900afcdad675b91073f3f7",
+      "rawBytes": 91880,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/floor_walls.glb",
+          "ratio": 1,
+          "bytes": 33584,
+          "sha256": "d6c1c67c09b86761e07308f99616a4cca1fd8cbc4176f2dc73fb7a3c9c437d0a",
+          "triangles": 2342,
+          "size": [
+            15.14,
+            3.2806,
+            15.14
+          ]
+        },
+        {
+          "file": "site/floor_walls_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 27088,
+          "sha256": "f70c9e1672046a086b3a2abd03cfb7e7a96a936d6ac58838e520c4561acd246e",
+          "triangles": 1242,
+          "size": [
+            15.1377,
+            3.2804,
+            15.1395
+          ]
+        },
+        {
+          "file": "site/floor_walls_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 23460,
+          "sha256": "2042b00ed7039d7dd350808ecbc1b9ad911a40dac316bc2bfb87b1d022d1c980",
+          "triangles": 750,
+          "size": [
+            15.1377,
+            3.2804,
+            15.1395
+          ]
+        }
+      ]
+    },
+    "gantry_kit": {
+      "stage": "game",
+      "source": {
+        "did": "595de8bdf045859e4e2eb159",
+        "wvm": "v",
+        "wvmid": "6785a53934fe658bcf35010b",
+        "elementType": "partstudio",
+        "elementId": "28346a766bef5ee7f8b060f9",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "6785a53934fe658bcf35010b",
+        "microversion": "cc68790edb277c3f16226eef",
+        "createdAt": "2026-10-06T08:10:25.104+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/595de8bdf045859e4e2eb159/v/6785a53934fe658bcf35010b/e/28346a766bef5ee7f8b060f9",
+      "exportedAt": "2026-10-06T08:43:00.453Z",
+      "rawSha256": "af3ea7d84e7e8cfe44b8cb5d170923b2f75bf5512d93992234d8f0baa9178312",
+      "rawBytes": 323136,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/gantry_kit.glb",
+          "ratio": 1,
+          "bytes": 127920,
+          "sha256": "3594c1ba739934cb112067c54e9995466ef615c7d02924840ad7e391234d7d4d",
+          "triangles": 15228,
+          "size": [
+            310.5005,
+            25.308,
+            29.3903
+          ]
+        },
+        {
+          "file": "site/gantry_kit_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 78344,
+          "sha256": "7835d4f90bf6ba1d5eaa945348d5d147c7bec3e32dc64b32b588ab6481c5fb35",
+          "triangles": 7720,
+          "size": [
+            310.4835,
+            25.308,
+            29.3903
+          ]
+        },
+        {
+          "file": "site/gantry_kit_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 48924,
+          "sha256": "a443f0f2b60fabf0849ceddcfcc394fe449667aa432d1add4a39d32f8b6b85cc",
+          "triangles": 3254,
+          "size": [
+            310.4835,
+            25.308,
+            29.3513
+          ]
+        }
+      ]
+    },
+    "live_pod_kit": {
+      "stage": "game",
+      "source": {
+        "did": "abda7a8c9a63521f381436eb",
+        "wvm": "v",
+        "wvmid": "f5241514049587b385bbf815",
+        "elementType": "partstudio",
+        "elementId": "713a091c1bfd9f5cffe5f540",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "f5241514049587b385bbf815",
+        "microversion": "024f0afb8fdade27a79db7bb",
+        "createdAt": "2026-10-06T08:10:04.042+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/abda7a8c9a63521f381436eb/v/f5241514049587b385bbf815/e/713a091c1bfd9f5cffe5f540",
+      "exportedAt": "2026-10-06T08:43:02.151Z",
+      "rawSha256": "821d7f948d90b99b63a41db5bc23e02470aea55c22bec90337447a4b41d13016",
+      "rawBytes": 66748,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/live_pod_kit.glb",
+          "ratio": 1,
+          "bytes": 28060,
+          "sha256": "361bef405f08f650ca7f1ecd833f1cf41733fddcaf8e9712960b6507c5fd6f4b",
+          "triangles": 3108,
+          "size": [
+            27.68,
+            17.0556,
+            27.6902
+          ]
+        },
+        {
+          "file": "site/live_pod_kit_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 17892,
+          "sha256": "cc7f328765d7ecd6a6776b6c700b39985ec82aa79767f5ff3855f7ba45c344c9",
+          "triangles": 1572,
+          "size": [
+            27.6426,
+            17.0563,
+            27.6527
+          ]
+        },
+        {
+          "file": "site/live_pod_kit_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 11876,
+          "sha256": "37396a349d833fd0f42d23749386bc9c8585fbda3e94c489fb0c4fcf4c079eba",
+          "triangles": 678,
+          "size": [
+            27.6426,
+            17.0563,
+            27.6527
+          ]
+        }
+      ]
+    },
+    "pod_assembly": {
+      "stage": "game",
+      "source": {
+        "did": "ae1c9c22113c0bbaac56e6ac",
+        "wvm": "v",
+        "wvmid": "700100a94abcbdf78f022bbb",
+        "elementType": "partstudio",
+        "elementId": "7e7c261ccf5ec24f0b0faf52",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "700100a94abcbdf78f022bbb",
+        "microversion": "46bc3372c6aaa053725c55d6",
+        "createdAt": "2026-10-05T14:23:43.923+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/ae1c9c22113c0bbaac56e6ac/v/700100a94abcbdf78f022bbb/e/7e7c261ccf5ec24f0b0faf52",
+      "exportedAt": "2026-10-05T14:24:58.696Z",
+      "rawSha256": "0febbd2c09bd605267af775c2141ad9432ae2b00a43b935dc1a50347cd42a3a0",
+      "rawBytes": 235064,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/pod_assembly.glb",
+          "ratio": 1,
+          "bytes": 84944,
+          "sha256": "8159d43bd968a0dc4a624cfe78fbf3aa536232b2d4dd8527fd4eb8abba8e1553",
+          "triangles": 11552,
+          "size": [
+            20,
+            22.7889,
+            16.4501
+          ]
+        },
+        {
+          "file": "site/pod_assembly_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 46720,
+          "sha256": "77dd825f0fa6b933ddc977ff7158e20d4814a1ad93a0e6e7c8310ad35f4b103b",
+          "triangles": 5836,
+          "size": [
+            19.9921,
+            22.7885,
+            16.4485
+          ]
+        },
+        {
+          "file": "site/pod_assembly_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 24900,
+          "sha256": "7cc5934b2f08e7473484246b6a2d42955ad0f19464cf59fcba33875555df19f1",
+          "triangles": 2404,
+          "size": [
+            19.9921,
+            22.7859,
+            16.4363
+          ]
+        }
+      ]
+    },
     "pod_container_40hc": {
       "stage": "game",
       "source": {
         "did": "76933b56f909b455c52143fb",
         "wvm": "v",
-        "wvmid": "73ecab33055dedcc64e6ca77",
+        "wvmid": "5b42442c7eb3c99d1e36b2f1",
         "elementType": "partstudio",
         "elementId": "afe63fb84b52f94636f4657c",
         "partId": null,
         "configuration": null,
-        "versionName": "game-v0.1",
-        "versionId": "73ecab33055dedcc64e6ca77",
-        "microversion": "408efd3a3468f2b77532c678",
-        "createdAt": "2026-09-30T19:06:48.507+00:00"
+        "versionName": "game-v0.2",
+        "versionId": "5b42442c7eb3c99d1e36b2f1",
+        "microversion": "64d5090e39d9201ed7d210ed",
+        "createdAt": "2026-10-05T14:20:51.494+00:00"
       },
-      "onshapeUrl": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/v/73ecab33055dedcc64e6ca77/e/afe63fb84b52f94636f4657c",
-      "exportedAt": "2026-09-30T19:08:51.892Z",
-      "rawSha256": "20d93f8b1b23dcb521b34f2262930f8e78b19391f551d4111a5d963b6ef87492",
-      "rawBytes": 2288,
+      "onshapeUrl": "https://cad.onshape.com/documents/76933b56f909b455c52143fb/v/5b42442c7eb3c99d1e36b2f1/e/afe63fb84b52f94636f4657c",
+      "exportedAt": "2026-10-05T14:24:46.328Z",
+      "rawSha256": "f092e153ca5008b906023f27191b5ab24436c2774cea3cdd288c6437c154feb1",
+      "rawBytes": 15264,
       "units": "m",
       "namedParts": [],
       "outputs": [
         {
           "file": "site/pod_container_40hc.glb",
           "ratio": 1,
-          "bytes": 2224,
-          "sha256": "a87d388aa698487844488ea462812d638184c42225a3804179fb7536c1fb4574",
-          "triangles": 12,
+          "bytes": 5120,
+          "sha256": "001a447dcefb292a997392e9b0c57d8964138bee2f451d63e6866a4abaf1ab57",
+          "triangles": 108,
           "size": [
-            2.4379,
+            2.438,
             12.192,
             2.8963
           ]
@@ -38,11 +638,11 @@
         {
           "file": "site/pod_container_40hc_lod1.glb",
           "ratio": 0.5,
-          "bytes": 2224,
-          "sha256": "a87d388aa698487844488ea462812d638184c42225a3804179fb7536c1fb4574",
-          "triangles": 12,
+          "bytes": 5120,
+          "sha256": "001a447dcefb292a997392e9b0c57d8964138bee2f451d63e6866a4abaf1ab57",
+          "triangles": 108,
           "size": [
-            2.4379,
+            2.438,
             12.192,
             2.8963
           ]
@@ -50,11 +650,11 @@
         {
           "file": "site/pod_container_40hc_lod2.glb",
           "ratio": 0.2,
-          "bytes": 2224,
-          "sha256": "a87d388aa698487844488ea462812d638184c42225a3804179fb7536c1fb4574",
-          "triangles": 12,
+          "bytes": 5120,
+          "sha256": "001a447dcefb292a997392e9b0c57d8964138bee2f451d63e6866a4abaf1ab57",
+          "triangles": 108,
           "size": [
-            2.4379,
+            2.438,
             12.192,
             2.8963
           ]
@@ -66,17 +666,17 @@
       "source": {
         "did": "9987a7131af48a3bf70fde13",
         "wvm": "v",
-        "wvmid": "3ccfb18adac8814a873a48a6",
+        "wvmid": "f27ce30af9e14e5c38a10a8b",
         "elementType": "partstudio",
         "elementId": "e790d01deabd9e671b738ac7",
         "partId": null,
         "configuration": null,
-        "versionName": "game-v0.1",
-        "versionId": "3ccfb18adac8814a873a48a6",
-        "microversion": "a88c7fc8b81f12f0a16bd20f",
-        "createdAt": "2026-09-30T19:08:16.706+00:00"
+        "versionName": "game-v0.2",
+        "versionId": "f27ce30af9e14e5c38a10a8b",
+        "microversion": "515eb0f8285b6a2180329178",
+        "createdAt": "2026-10-05T14:21:12.036+00:00"
       },
-      "onshapeUrl": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/v/3ccfb18adac8814a873a48a6/e/e790d01deabd9e671b738ac7",
+      "onshapeUrl": "https://cad.onshape.com/documents/9987a7131af48a3bf70fde13/v/f27ce30af9e14e5c38a10a8b/e/e790d01deabd9e671b738ac7",
       "exportedAt": "2026-09-30T19:08:53.517Z",
       "rawSha256": "14ce01555e4c4871055f936af79e657d6f1282fc0f88be570bd805007d5b4f9b",
       "rawBytes": 215076,
@@ -117,6 +717,486 @@
             19.9921,
             1.2298,
             19.9335
+          ]
+        }
+      ]
+    },
+    "stage_excavate": {
+      "stage": "game",
+      "source": {
+        "did": "ca2282c03d5f1a90bc704a50",
+        "wvm": "v",
+        "wvmid": "85cd3b475bbaf3e0811517f4",
+        "elementType": "partstudio",
+        "elementId": "27bb47f07803c206c64531b7",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "85cd3b475bbaf3e0811517f4",
+        "microversion": "b5afe19ce505cea31c544f0d",
+        "createdAt": "2026-10-06T08:09:44.947+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/ca2282c03d5f1a90bc704a50/v/85cd3b475bbaf3e0811517f4/e/27bb47f07803c206c64531b7",
+      "exportedAt": "2026-10-06T08:14:16.554Z",
+      "rawSha256": "d2c9ac85ef605554b10f6cc0aea942f051c95f1a07ecea7dd3838ee38e233f32",
+      "rawBytes": 949288,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/stage_excavate.glb",
+          "ratio": 1,
+          "bytes": 310792,
+          "sha256": "e60e2ed339681903acdc10b7ad5bf4b902b6935bc30689128f5b0f5cdc3aa9e4",
+          "triangles": 50312,
+          "size": [
+            27.5995,
+            23.7969,
+            27.5995
+          ]
+        },
+        {
+          "file": "site/stage_excavate_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 162884,
+          "sha256": "a9a566c108f61e6f97340a09fa52f2cf37f24fa033c4e4c92d560fc496c80adb",
+          "triangles": 25282,
+          "size": [
+            27.5961,
+            23.7964,
+            27.5995
+          ]
+        },
+        {
+          "file": "site/stage_excavate_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 78720,
+          "sha256": "aa788dc4ce1cd3760b6bbf6e13121a0f2011f68712321c419b0872b620bfd293",
+          "triangles": 10260,
+          "size": [
+            27.5961,
+            23.7969,
+            27.5995
+          ]
+        }
+      ]
+    },
+    "tower": {
+      "stage": "game",
+      "source": {
+        "did": "8a00d7751c8227a1d88412f2",
+        "wvm": "v",
+        "wvmid": "b52e156b0242a1d2b85a74a7",
+        "elementType": "partstudio",
+        "elementId": "30d652b812a9a93c8c5e91f9",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "b52e156b0242a1d2b85a74a7",
+        "microversion": "d6756d9bfc067fd16adc7c52",
+        "createdAt": "2026-10-05T14:24:22.162+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/8a00d7751c8227a1d88412f2/v/b52e156b0242a1d2b85a74a7/e/30d652b812a9a93c8c5e91f9",
+      "exportedAt": "2026-10-05T14:25:02.420Z",
+      "rawSha256": "f6abeff5fbccd90e9116ca2080ca697fdb1dda79f1c71df4926fcf6d5a1f401c",
+      "rawBytes": 564084,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower.glb",
+          "ratio": 1,
+          "bytes": 204120,
+          "sha256": "3685d9f152dd5b73396cfadf48716ac5028a0f65ab364d1e5b37424c47c34736",
+          "triangles": 19444,
+          "size": [
+            20,
+            30.7969,
+            22.7999
+          ]
+        },
+        {
+          "file": "site/tower_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 144804,
+          "sha256": "1bf93bb1e404a47674021801ded8165592ab3aa7112edf7eced2cbe5025d7ef0",
+          "triangles": 10132,
+          "size": [
+            19.9983,
+            30.7964,
+            22.7986
+          ]
+        },
+        {
+          "file": "site/tower_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 110008,
+          "sha256": "ac9defe37bc63cdb6ee4f1965b7d10390fb97514f04a4a65235bdcbcc88882b2",
+          "triangles": 4898,
+          "size": [
+            19.998,
+            30.7965,
+            22.79
+          ]
+        }
+      ]
+    },
+    "tower_crown_1": {
+      "stage": "game",
+      "source": {
+        "did": "d01cd1029d4a09876e0334c3",
+        "wvm": "v",
+        "wvmid": "d0a4ecd87dc65342389d9414",
+        "elementType": "partstudio",
+        "elementId": "cc7421a4d45c407b53b04ecc",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "d0a4ecd87dc65342389d9414",
+        "microversion": "88c712bb56e1395776fad9ec",
+        "createdAt": "2026-10-06T08:12:32.874+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/d01cd1029d4a09876e0334c3/v/d0a4ecd87dc65342389d9414/e/cc7421a4d45c407b53b04ecc",
+      "exportedAt": "2026-10-06T08:13:56.687Z",
+      "rawSha256": "bf8415ba33dcf7af91153ec47e9024a6568d06411071971a7e04061bb051933e",
+      "rawBytes": 731860,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_crown_1.glb",
+          "ratio": 1,
+          "bytes": 285788,
+          "sha256": "8c8bb30c347cdb7197f49de75b6907c6f474159f90dd6ac4fb482bbf82658c53",
+          "triangles": 20076,
+          "size": [
+            20,
+            27.2969,
+            22.7982
+          ]
+        },
+        {
+          "file": "site/tower_crown_1_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 228116,
+          "sha256": "1bdbcc2aca494a0485c303d6db5eb5259f4bd92e47be003a4916c400da68b5a0",
+          "triangles": 11164,
+          "size": [
+            19.9946,
+            27.2967,
+            22.7986
+          ]
+        },
+        {
+          "file": "site/tower_crown_1_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 194588,
+          "sha256": "760c6f4ecda2825054745b55e7ac24bc45bb9f29e4f5f1bfeeec06bd314c1d2e",
+          "triangles": 6004,
+          "size": [
+            19.9945,
+            27.2967,
+            22.7798
+          ]
+        }
+      ]
+    },
+    "tower_crown_3": {
+      "stage": "game",
+      "source": {
+        "did": "28765a01141733f968ad29d5",
+        "wvm": "v",
+        "wvmid": "802152eafa5bf19d5b74851b",
+        "elementType": "partstudio",
+        "elementId": "47812d4937b518a75ca89b31",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "802152eafa5bf19d5b74851b",
+        "microversion": "422bda39220002372a50a710",
+        "createdAt": "2026-10-06T08:12:51.413+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/28765a01141733f968ad29d5/v/802152eafa5bf19d5b74851b/e/47812d4937b518a75ca89b31",
+      "exportedAt": "2026-10-06T08:14:06.610Z",
+      "rawSha256": "9f46891f56d71cd08b9a85055c3bcb7e7c300f2723577a84a08d09ea9082c112",
+      "rawBytes": 804148,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_crown_3.glb",
+          "ratio": 1,
+          "bytes": 327116,
+          "sha256": "2ff94fe7afd968698e5d27216b6c200420661749901073c674a126b70cd1ab77",
+          "triangles": 19758,
+          "size": [
+            20.0978,
+            34.2969,
+            22.8728
+          ]
+        },
+        {
+          "file": "site/tower_crown_3_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 272504,
+          "sha256": "8834c9d05c8575d7ae5bd3dd870e95bba709946b8934d35c4126d077c01af623",
+          "triangles": 11388,
+          "size": [
+            20.0978,
+            34.2964,
+            22.8728
+          ]
+        },
+        {
+          "file": "site/tower_crown_3_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 241004,
+          "sha256": "558982fb2eb946636b47e51e6775814404a66e6cade873ac3d08eef02a8ca0d1",
+          "triangles": 6560,
+          "size": [
+            20.0978,
+            34.2961,
+            22.8728
+          ]
+        }
+      ]
+    },
+    "tower_crown_7": {
+      "stage": "game",
+      "source": {
+        "did": "9bcd829f1f72743f32bfd57a",
+        "wvm": "v",
+        "wvmid": "9d7c1a935787cd8b8efbdd72",
+        "elementType": "partstudio",
+        "elementId": "d3b1791fc270e2396c5ba9f6",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "9d7c1a935787cd8b8efbdd72",
+        "microversion": "c2b33a8e8fc7c78b4413eb7c",
+        "createdAt": "2026-10-06T08:13:12.101+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/9bcd829f1f72743f32bfd57a/v/9d7c1a935787cd8b8efbdd72/e/d3b1791fc270e2396c5ba9f6",
+      "exportedAt": "2026-10-06T08:14:08.970Z",
+      "rawSha256": "8c4cd7b5ad1251afa41922b7c1f17784875d666a9373bc65115546434e498509",
+      "rawBytes": 801100,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_crown_7.glb",
+          "ratio": 1,
+          "bytes": 325592,
+          "sha256": "485f1c7cf9aa577df9a6f05cdc508a2feaf7c40a863f3c66753fa80078ee8ee3",
+          "triangles": 19650,
+          "size": [
+            20.0978,
+            48.2969,
+            22.8728
+          ]
+        },
+        {
+          "file": "site/tower_crown_7_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 271316,
+          "sha256": "3450a808a1f452bc2e8682850fbb0406f8c78f5d5769ca6f7ac1c1c9e611125a",
+          "triangles": 11334,
+          "size": [
+            20.0978,
+            48.2964,
+            22.8728
+          ]
+        },
+        {
+          "file": "site/tower_crown_7_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 239428,
+          "sha256": "7cdbd0798b5e8da241ef94d9504956ee0135025e49be98a1397ceb9a17c2aa6c",
+          "triangles": 6458,
+          "size": [
+            20.0978,
+            48.2971,
+            22.8728
+          ]
+        }
+      ]
+    },
+    "tower_floor": {
+      "stage": "game",
+      "source": {
+        "did": "6c462f8ccaf658e3bbe82bd4",
+        "wvm": "v",
+        "wvmid": "f66623068ac133378fde6f37",
+        "elementType": "partstudio",
+        "elementId": "18dce8726cd2c34e0b58b9aa",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.3",
+        "versionId": "f66623068ac133378fde6f37",
+        "microversion": "ad095dd639e8c2b88b8f625e",
+        "createdAt": "2026-10-06T08:11:51.244+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/6c462f8ccaf658e3bbe82bd4/v/f66623068ac133378fde6f37/e/18dce8726cd2c34e0b58b9aa",
+      "exportedAt": "2026-10-06T08:13:51.585Z",
+      "rawSha256": "33fa1ca766e6cc23fde25e27ebbecf5f1607f0556724c7da48475d44ae031991",
+      "rawBytes": 601428,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_floor.glb",
+          "ratio": 1,
+          "bytes": 287688,
+          "sha256": "2308fc8208d66264f71bd76fe7cbfbda9bd4b3cabd82280612d14710e13b18ed",
+          "triangles": 7144,
+          "size": [
+            19.9998,
+            4.8449,
+            19.9973
+          ]
+        },
+        {
+          "file": "site/tower_floor_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 276940,
+          "sha256": "0d1f1455b549ad05a25df5cfaa9addb516f9ad1068699e962f7f207fa80dd4c8",
+          "triangles": 5316,
+          "size": [
+            19.9869,
+            4.8448,
+            19.9942
+          ]
+        },
+        {
+          "file": "site/tower_floor_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 270436,
+          "sha256": "1a310c02858e10261b7c5c5c876547cb1a55c606d50d649a4d371a5f5224dd25",
+          "triangles": 4412,
+          "size": [
+            19.9866,
+            4.8448,
+            19.9671
+          ]
+        }
+      ]
+    },
+    "tower_floor_mid": {
+      "stage": "game",
+      "source": {
+        "did": "4eac607f3dff665adbd9dac9",
+        "wvm": "v",
+        "wvmid": "9de9075b667f2edd9aaf684f",
+        "elementType": "partstudio",
+        "elementId": "5b6f56d3c5f0c7bee6acfbe6",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "9de9075b667f2edd9aaf684f",
+        "microversion": "a647407d5004be5c18c847aa",
+        "createdAt": "2026-10-06T08:12:14.143+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/4eac607f3dff665adbd9dac9/v/9de9075b667f2edd9aaf684f/e/5b6f56d3c5f0c7bee6acfbe6",
+      "exportedAt": "2026-10-06T08:13:54.167Z",
+      "rawSha256": "69321c5a80d239a4ae7286a5d5637dba145c1b3728ec512418e0ce94543eff48",
+      "rawBytes": 707436,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_floor_mid.glb",
+          "ratio": 1,
+          "bytes": 336704,
+          "sha256": "14cbab7e10dbfda118e0a38c798860cdd97ac69c55fe432362ceec43141a7839",
+          "triangles": 7912,
+          "size": [
+            20.1456,
+            4.8449,
+            20.1456
+          ]
+        },
+        {
+          "file": "site/tower_floor_mid_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 326068,
+          "sha256": "a9c06a8f2ab0f99bc828585acee9d544660469bc24555ec3d11835e296777c93",
+          "triangles": 6084,
+          "size": [
+            20.1456,
+            4.8449,
+            20.1456
+          ]
+        },
+        {
+          "file": "site/tower_floor_mid_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 319348,
+          "sha256": "2e112df55f5f3a57a159c0841de57bbcaf04aa36786d1cd6cde85b54ce693fb1",
+          "triangles": 5172,
+          "size": [
+            20.1456,
+            4.8448,
+            20.1456
+          ]
+        }
+      ]
+    },
+    "tower_lod": {
+      "stage": "game",
+      "source": {
+        "did": "76913cc36c688987ef7cc3dd",
+        "wvm": "v",
+        "wvmid": "0504ef48a68460a5d324f15c",
+        "elementType": "partstudio",
+        "elementId": "f45eb2376ed9c431ca15a607",
+        "partId": null,
+        "configuration": null,
+        "versionName": "game-v0.2",
+        "versionId": "0504ef48a68460a5d324f15c",
+        "microversion": "1752b4c0b0ee874da2877dcd",
+        "createdAt": "2026-10-06T08:09:27.081+00:00"
+      },
+      "onshapeUrl": "https://cad.onshape.com/documents/76913cc36c688987ef7cc3dd/v/0504ef48a68460a5d324f15c/e/f45eb2376ed9c431ca15a607",
+      "exportedAt": "2026-10-06T08:14:13.127Z",
+      "rawSha256": "4adbbe7a369a7ebadca6e38ca2b60d38f9580e1745792d2e2a92320727c22bf3",
+      "rawBytes": 395428,
+      "units": "m",
+      "namedParts": [],
+      "outputs": [
+        {
+          "file": "site/tower_lod.glb",
+          "ratio": 1,
+          "bytes": 89456,
+          "sha256": "388c2c416c8a316f6b0b833f569b65de7178623aa5144dd67544d488431e6a19",
+          "triangles": 17008,
+          "size": [
+            20,
+            35.4969,
+            19.9951
+          ]
+        },
+        {
+          "file": "site/tower_lod_lod1.glb",
+          "ratio": 0.5,
+          "bytes": 62212,
+          "sha256": "b9047cf045713c7a2094f83557b5a8e0d30f60ce24fd0f071842a30ba9b4b1c6",
+          "triangles": 8504,
+          "size": [
+            20,
+            35.4964,
+            19.996
+          ]
+        },
+        {
+          "file": "site/tower_lod_lod2.glb",
+          "ratio": 0.2,
+          "bytes": 34028,
+          "sha256": "240d7d64e77d75b72888be5e109334de9fb55336e65b31a9ee8f56c8af40ab7c",
+          "triangles": 3396,
+          "size": [
+            19.9927,
+            35.4971,
+            19.9962
           ]
         }
       ]
