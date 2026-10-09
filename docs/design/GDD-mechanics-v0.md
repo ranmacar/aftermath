@@ -139,6 +139,20 @@ Two early rewards tied to pod deploy stages. Both are locked by Martin.
 - **Loop:** dog fetches scrap → CNC makes parts → parts feed pod stage gates, the farm and the dog.
 - **Open:** whether later pod gates ask for **crafted parts** instead of raw scrap, the job queue and timing, and power draw.
 
+### Realism rules for unlocks (Martin, Oct 2026)
+- **Onshape rule:** every game asset gets at least a rudimentary Onshape design before it goes in the game.
+- **Container rule:** only what was buried in the container survived the storm. Every unlock must **fit in the pod container and unpack as it deploys**. Later tiers can be **fabricated on the CNC** from what's in the container (brackets, mounts).
+- **Baseline pod:** one 40 ft HC container, near its 26.5 t limit. It carries the solar array, gantry, jib crane, hybrid NH3 absorption/compression heat pump (with wastewater ammonia recovery and a small starting charge), the reduced tower kit, the CNC tier and the dogs. Packing detail is in `arbolis-marketing/unlocks-cad-packing-v1.md` (Bucky). Specs and research are in `arbolis-marketing/unlocks-robotdog-cnc-v1.md` (Sophia).
+- **Tier ladder (Sophia, suggested, not locked):** wood router → plasma table → scout dog (Go2-class, ~15 kg) → laser mounts for the dog → B2-class work dog (~60 kg, needs its own crate slot). After that, weeding and probe attachments as low-success research, and swarms and herding as labelled fiction. Full-sheet cutting needs flat floor once unpacked.
+
+### Deploy pace (Martin via Bucky, Oct 2026)
+- The tower deploys over **a couple of months of game time**, not instantly. Sequence: dig out pod → solar up → excavate pit → floors rise at about **5–7 days per floor** (real-world precedent: Taisei T-UP).
+- The survival/forage phase therefore has real duration, and the dog and CNC carry the player through it.
+
+### Upgraded starter pods (Martin via Bucky, Oct 2026)
+- Paid add-ons give **upgraded starter pods with more resources**, for example a full ammonia charge, a pre-cut mould set, the B2 work dog, or a second container.
+- **Design note (Sid):** frame these as a **head start** (time saved, an earlier tier) rather than a higher ceiling, so a base pod can still reach everything through play. Open for Martin.
+
 
 ## 6. Energy
 
