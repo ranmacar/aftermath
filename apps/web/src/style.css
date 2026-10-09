@@ -22,6 +22,7 @@ body,
 html,
 body {
   overflow: hidden;
+  overscroll-behavior: none; /* no pull-to-refresh while dragging a view */
   background: var(--bg);
   color: var(--fg);
   font-family: ui-sans-serif, system-ui, sans-serif;
@@ -30,6 +31,34 @@ body {
 #map {
   position: fixed;
   inset: 0;
+}
+
+/* Game UI: taps on buttons / HUD / joystick / canvases must not select text,
+   pop the iOS callout, or flash a tap highlight. Inputs stay selectable. */
+button,
+canvas,
+.chrome,
+.view3d,
+.walk,
+.digout,
+.walk-touch,
+.walk-stick,
+.walk-stick-knob {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  touch-action: manipulation; /* no double-tap zoom */
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }
 
 .chrome {
@@ -152,6 +181,7 @@ body {
 .view3d-canvas {
   position: absolute;
   inset: 0;
+  touch-action: none;
 }
 
 .view3d-close,

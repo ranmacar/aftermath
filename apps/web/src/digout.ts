@@ -1,4 +1,5 @@
 import { primeGeolocation } from "./locate";
+import { attachTouchLook } from "./touch-look";
 
 const FLAG = "arbolis:beat1-done";
 
@@ -278,6 +279,8 @@ export function attachDigout(handlers: {
 
     const cam = new UniversalCamera("cam", new Vector3(0, 1.5, 0.5), sc);
     cam.attachControl(canvas, true);
+    // Touch: 1:1 drag-to-look (yaw + pitch); mouse look unchanged.
+    const detachTouchLook = attachTouchLook(canvas, cam);
     cam.speed = 0;
     cam.angularSensibility = 4000;
     cam.checkCollisions = true;
@@ -326,6 +329,7 @@ export function attachDigout(handlers: {
     window.addEventListener("resize", onResize);
 
     sceneDispose = () => {
+      detachTouchLook();
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("blur", onBlurKeys);
@@ -401,6 +405,15 @@ export function attachDigout(handlers: {
     e.preventDefault();
     fwdHeld = true;
   });
+  // Hold-to-dig: no long-press callout / text selection / double-tap zoom.
+  fwd.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.cancelable) e.preventDefault();
+    },
+    { passive: false },
+  );
+  fwd.addEventListener("contextmenu", (e) => e.preventDefault());
   const releaseFwd = (): void => {
     fwdHeld = false;
   };

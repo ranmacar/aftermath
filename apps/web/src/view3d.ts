@@ -34,6 +34,13 @@ type CesiumViewer = {
     primitives: { add: (primitive: unknown) => unknown };
     requestRender: () => void;
     globe: { show: boolean };
+    screenSpaceCameraController: {
+      enableInputs: boolean;
+      enableRotate: boolean;
+      enableZoom: boolean;
+      enableTilt: boolean;
+      enableLook: boolean;
+    };
     sampleHeight?: (pos: Cartographic) => number | undefined;
     sampleHeightMostDetailed?: (positions: Cartographic[]) => Promise<Cartographic[]>;
   };
@@ -450,6 +457,12 @@ export function attachView3d(handlers: {
       pitch: 68,
       bearing: 18,
       maxPitch: 85,
+      // Touch: 1 finger pans, 2 fingers pinch-zoom + twist-rotate, 2-finger
+      // vertical drag tilts. Defaults, but spelled out so Look always orbits.
+      dragPan: true,
+      dragRotate: true,
+      touchZoomRotate: true,
+      touchPitch: true,
       attributionControl: { compact: true },
     });
     mlMap.addControl(
@@ -480,6 +493,13 @@ export function attachView3d(handlers: {
         creditContainer: document.getElementById("view3d-credits") ?? undefined,
       });
       viewer.scene.globe.show = false;
+      // Touch orbit: 1 finger rotates, pinch zooms/twists, 2-finger drag tilts.
+      const ssc = viewer.scene.screenSpaceCameraController;
+      ssc.enableInputs = true;
+      ssc.enableRotate = true;
+      ssc.enableZoom = true;
+      ssc.enableTilt = true;
+      ssc.enableLook = true;
     }
     return cesium;
   }

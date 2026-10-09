@@ -123,7 +123,7 @@ async function load(name: string): Promise<void> {
     camera.radius = radius;
     const ms = Math.round(performance.now() - t0);
     const sizeLabel = Number.isFinite(kb) && kb > 0 ? `${kb.toFixed(1)} kB` : "size n/a";
-    hudEl.textContent = `${name}\n${url}\n${tris | 0} tris · ${sizeLabel} · ${ms} ms\nsize ${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m\norbit: drag · zoom: wheel`;
+    hudEl.textContent = `${name}\n${url}\n${tris | 0} tris · ${sizeLabel} · ${ms} ms\nsize ${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m\norbit: drag · zoom: wheel / pinch`;
     const next = new URL(location.href);
     next.searchParams.set("asset", name);
     history.replaceState(null, "", next.toString());

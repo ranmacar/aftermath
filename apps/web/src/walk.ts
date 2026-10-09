@@ -18,6 +18,7 @@ import {
   type WalkLayout,
 } from "./stages";
 import { cadPart, preloadCadAssets, useCadGlbs } from "./cad-assets";
+import { attachTouchLook } from "./touch-look";
 import { carveTerrainPit } from "./carve";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 
@@ -266,6 +267,19 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   };
   stick.addEventListener("pointerup", endStick);
   stick.addEventListener("pointercancel", endStick);
+
+  // Hold controls: no long-press callout, text selection or double-tap zoom.
+  // They run on pointer events, so cancelling the touch defaults is safe.
+  for (const el of [stick, jump, act]) {
+    el.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.cancelable) e.preventDefault();
+      },
+      { passive: false },
+    );
+    el.addEventListener("contextmenu", (e) => e.preventDefault());
+  }
 
   jump.addEventListener("pointerdown", (e) => {
     e.preventDefault();
@@ -654,13 +668,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     // Mouse look only — we own WASD ourselves (Babylon keyboard fight KeyD).
     camera.attachControl(canvas, true);
     camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
-    // Touch: Babylon's touch input only yaws (vertical drag would dolly at speed 0),
-    // and rotates by distance-from-start every frame. Own it: 1:1 drag-to-look.
-    camera.inputs.removeByType("FreeCameraTouchInput");
-    const mouseInput = camera.inputs.attached["mouse"] as
-      | { touchEnabled?: boolean }
-      | undefined;
-    if (mouseInput) mouseInput.touchEnabled = false;
     camera.fov = 0.9; // ~52° vFOV, closer to human; wide FOV shrinks scale
     camera.speed = 0;
     camera.inertia = 0.5;
@@ -690,44 +697,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       { passive: true, signal: canvasEvents.signal },
     );
     // Touch drag-to-look (mouse look stays on Babylon's mouse input).
-    const TOUCH_LOOK = 0.0055; // rad per CSS px
-    let lookPointer: number | null = null;
-    let lookX = 0;
-    let lookY = 0;
-    canvas.addEventListener(
-      "pointerdown",
-      (e) => {
-        if (e.pointerType === "mouse" || lookPointer !== null) return;
-        lookPointer = e.pointerId;
-        lookX = e.clientX;
-        lookY = e.clientY;
-      },
-      { signal: canvasEvents.signal },
-    );
-    canvas.addEventListener(
-      "pointermove",
-      (e) => {
-        if (e.pointerId !== lookPointer) return;
-        e.preventDefault();
-        const dx = e.clientX - lookX;
-        const dy = e.clientY - lookY;
-        lookX = e.clientX;
-        lookY = e.clientY;
-        camera.rotation.y += dx * TOUCH_LOOK;
-        camera.rotation.x = Math.max(
-          -1.45,
-          Math.min(1.45, camera.rotation.x + dy * TOUCH_LOOK),
-        );
-      },
-      { signal: canvasEvents.signal },
-    );
-    const endLook = (e: PointerEvent): void => {
-      if (e.pointerId === lookPointer) lookPointer = null;
-    };
-    canvas.addEventListener("pointerup", endLook, { signal: canvasEvents.signal });
-    canvas.addEventListener("pointercancel", endLook, {
-      signal: canvasEvents.signal,
-    });
+    const detachTouchLook = attachTouchLook(canvas, camera);
 
     const pose = readCam(cell, layout);
     if (pose) applyCam(camera, pose);
@@ -1030,6 +1000,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       if (activeWalk?.cell === cell) activeWalk = null;
       window.removeEventListener("resize", onResize);
       canvasEvents.abort();
+      detachTouchLook();
       scene.onKeyboardObservable.remove(kbObs);
       window.removeEventListener("blur", onWindowBlur);
       document.removeEventListener("visibilitychange", onVisibility);
