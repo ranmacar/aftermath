@@ -391,6 +391,19 @@ body {
   background: #2a3322;
 }
 
+/* Phones: the Farm/Build/Map pills fill the top row, so the cell label drops below. */
+@media (max-width: 600px) {
+  .view3d-label {
+    top: calc(3.9rem + env(safe-area-inset-top, 0px));
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .view3d-error {
+    top: calc(6.4rem + env(safe-area-inset-top, 0px));
+    max-width: calc(100vw - 1.5rem);
+  }
+}
+
 @media (pointer: coarse), (max-width: 820px) {
   .walk-help {
     display: none;
@@ -482,6 +495,8 @@ body {
   background: #3d4a2e;
 }
 .digout-skip {
+  min-width: 44px;
+  min-height: 44px;
   position: absolute;
   top: max(0.75rem, env(safe-area-inset-top));
   right: max(0.75rem, env(safe-area-inset-right));

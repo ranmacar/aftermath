@@ -109,6 +109,8 @@ function saveLast(coord: LngLat): void {
 }
 
 async function termuxLocation(): Promise<LngLat | null> {
+  // /api/location is a Vite dev-server middleware; static hosts (Pages) 404 it.
+  if (!import.meta.env.DEV) return null;
   try {
     const res = await fetch("/api/location");
     if (!res.ok) return null;

@@ -165,6 +165,18 @@ if (import.meta.hot) {
 }
 
 
+/**
+ * Phones report DPR 3 (iPhone) / 2.6 (Pixel): rendering the CAD scene at that
+ * size costs ~2-4x the fill rate for little visible gain. Cap touch devices
+ * at 1.5x; desktop (mouse) keeps native DPR.
+ */
+function capMobilePixelRatio(eng: { setHardwareScalingLevel: (level: number) => void }): void {
+  const coarse =
+    typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
+  const dpr = typeof devicePixelRatio === "number" ? devicePixelRatio : 1;
+  if (coarse && dpr > 1.5) eng.setHardwareScalingLevel(1 / 1.5);
+}
+
 export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void } = {}): WalkHandle {
   const overlayNode = document.getElementById("walk");
   const canvasNode = document.getElementById("walk-canvas");
@@ -359,6 +371,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       stencil: true,
       adaptToDeviceRatio: true,
     });
+    capMobilePixelRatio(eng);
     engine = eng;
     const scene = new Scene(eng);
     scene.gravity = new Vector3(0, -0.9, 0);
@@ -641,6 +654,13 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     // Mouse look only — we own WASD ourselves (Babylon keyboard fight KeyD).
     camera.attachControl(canvas, true);
     camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
+    // Touch: Babylon's touch input only yaws (vertical drag would dolly at speed 0),
+    // and rotates by distance-from-start every frame. Own it: 1:1 drag-to-look.
+    camera.inputs.removeByType("FreeCameraTouchInput");
+    const mouseInput = camera.inputs.attached["mouse"] as
+      | { touchEnabled?: boolean }
+      | undefined;
+    if (mouseInput) mouseInput.touchEnabled = false;
     camera.fov = 0.9; // ~52° vFOV, closer to human; wide FOV shrinks scale
     camera.speed = 0;
     camera.inertia = 0.5;
@@ -657,6 +677,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     camera.checkCollisions = false;
     camera.applyGravity = false;
     camera.minZ = 0.08;
+    const canvasEvents = new AbortController();
     canvas.addEventListener(
       "pointerdown",
       () => {
@@ -666,8 +687,47 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
           canvas.focus();
         }
       },
-      { passive: true },
+      { passive: true, signal: canvasEvents.signal },
     );
+    // Touch drag-to-look (mouse look stays on Babylon's mouse input).
+    const TOUCH_LOOK = 0.0055; // rad per CSS px
+    let lookPointer: number | null = null;
+    let lookX = 0;
+    let lookY = 0;
+    canvas.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (e.pointerType === "mouse" || lookPointer !== null) return;
+        lookPointer = e.pointerId;
+        lookX = e.clientX;
+        lookY = e.clientY;
+      },
+      { signal: canvasEvents.signal },
+    );
+    canvas.addEventListener(
+      "pointermove",
+      (e) => {
+        if (e.pointerId !== lookPointer) return;
+        e.preventDefault();
+        const dx = e.clientX - lookX;
+        const dy = e.clientY - lookY;
+        lookX = e.clientX;
+        lookY = e.clientY;
+        camera.rotation.y += dx * TOUCH_LOOK;
+        camera.rotation.x = Math.max(
+          -1.45,
+          Math.min(1.45, camera.rotation.x + dy * TOUCH_LOOK),
+        );
+      },
+      { signal: canvasEvents.signal },
+    );
+    const endLook = (e: PointerEvent): void => {
+      if (e.pointerId === lookPointer) lookPointer = null;
+    };
+    canvas.addEventListener("pointerup", endLook, { signal: canvasEvents.signal });
+    canvas.addEventListener("pointercancel", endLook, {
+      signal: canvasEvents.signal,
+    });
 
     const pose = readCam(cell, layout);
     if (pose) applyCam(camera, pose);
@@ -969,6 +1029,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
       writeCam(cell, layout, camera);
       if (activeWalk?.cell === cell) activeWalk = null;
       window.removeEventListener("resize", onResize);
+      canvasEvents.abort();
       scene.onKeyboardObservable.remove(kbObs);
       window.removeEventListener("blur", onWindowBlur);
       document.removeEventListener("visibilitychange", onVisibility);
