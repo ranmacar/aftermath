@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Aftermath CAD preview</title>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: #1a1f18; color: #e8efe0; font: 14px/1.4 system-ui, sans-serif; }
+      #ui { position: fixed; top: 12px; left: 12px; z-index: 2; background: rgba(18,22,15,.85); padding: 10px 12px; border-radius: 8px; max-width: 420px; }
+      #ui select, #ui button { margin: 4px 4px 0 0; }
+      #hud { opacity: .85; margin-top: 8px; white-space: pre-wrap; }
+      canvas { width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+      a { color: #9fd18a; }
+    </style>
+    <script type="module" crossorigin src="/aftermath/assets/cadPreview-Co_zVK8v.js"></script>
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/ExtrasAsMetadata-CLQn5wqa.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/animationGroup.pure-CFQC2e3M.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/brdfTextureTools--WjrDOby.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphCachedOperationBlock-Dc7onhSi.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphBinaryOperationBlock-D3o7t7YT.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphUnaryOperationBlock-DvXBV7Xh.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphTernaryOperationBlock-CaMdAlcX.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphVectorMathBlocks.pure-Dk5o6FRF.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/easing-BQ0QOoS-.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/fogFragment-BiuBXjoi.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/gaussianSplattingFragmentDeclaration-S6XNnGJA.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/meshUboDeclaration-DvdB80kk.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/defaultUboDeclaration-CcVbNhl9.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/helperFunctions-CphlRbAO.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/logDepthVertex-6pX6VtlR.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/logDepthDeclaration-bievYw1Z.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/default.vertex-Z8J2rfKa.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/fogFragment-BXlldRDA.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/gaussianSplattingFragmentDeclaration-Dhkab-SW.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/sceneUboDeclaration-CA8CIhDZ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/defaultUboDeclaration-oYn_dExG.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/helperFunctions-DEK8aGEf.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/logDepthVertex-D9j2rGVN.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/logDepthDeclaration-Cy4oSoZm.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/default.vertex-DqF_QypD.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphConsoleLogBlock.pure-DzRNi4Cz.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphBranchBlock.pure-BzH1ytob.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphDoNBlock.pure-Cb9f2uoz.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphForLoopBlock.pure-DKLn7aN5.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphThrottleBlock.pure-zg4jze99.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphMultiGateBlock.pure-CtmSGxK9.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSwitchBlock.pure-23E_4uKV.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphWaitAllBlock.pure-Y4HljAld.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphCounterBlock.pure-DEnim-1g.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphWhileLoopBlock.pure-y2loXYU0.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphDebounceBlock.pure-WX1unxNl.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphFlipFlopBlock.pure-BvlzzO9C.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSequenceBlock.pure-Cm5Il6K3.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetDelayBlock.pure-Bu8usGDg.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphCancelDelayBlock.pure-6YPkzgL5.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPlayAnimationBlock.pure-CESjoHy7.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphStopAnimationBlock.pure-B_fqNsfQ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPauseAnimationBlock.pure-6ZYuTPY3.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphInterpolationBlock.pure-DQfleEnj.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphEasingBlock.pure-Bb3ACcrk.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphBezierCurveEasingBlock.pure-Dcx_BBOP.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphApplyForceBlock.pure-BVO-uOKS.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphApplyImpulseBlock.pure-Bldfw5cw.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetLinearVelocityBlock.pure-r_vvHUgE.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetAngularVelocityBlock.pure-Bm3AL1iY.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetPhysicsMotionTypeBlock.pure-CeTYcxxT.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPlaySoundBlock.pure-BB7klK7b.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphStopSoundBlock.pure-DuK2Q8Ep.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPauseSoundBlock.pure-BgjcupNt.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetSoundVolumeBlock.pure-CA9QyfOG.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphConditionalDataBlock.pure-CasUePG5.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetVariableBlock.pure-Dra-boSN.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetVariableBlock.pure-Bi-Na3ZF.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphTransformCoordinatesSystemBlock.pure-RqZoC5vc.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetPropertyBlock.pure-BAxdkFV_.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSetPropertyBlock.pure-DOLVZOaw.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphConstantBlock.pure-DZSm9ssc.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetAssetBlock.pure-BOxtmFf8.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphDataSwitchBlock.pure-BC-M-lM8.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphIsKeyPressedBlock.pure-nRIX9ypX.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphMathBlocks.pure-B9Drf2OY.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphMathCombineExtractBlocks.pure-CxMV0HCJ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphMatrixMathBlocks.pure-D2qAGBHo.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphJsonPointerParserBlock.pure-COGxzV9Y.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphTypeToTypeBlocks.pure-CI1n22TQ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphContextBlock.pure-Dmm4Jkrk.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphArrayIndexBlock.pure-BOyoMI_o.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphIndexOfBlock.pure-BmFVeaRh.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphFunctionReferenceBlock.pure-Dpo-pb4e.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetLinearVelocityBlock.pure-ZWCQv2cg.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetAngularVelocityBlock.pure-DRDry-Vj.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetPhysicsMassPropertiesBlock.pure-ByxTlP-s.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphGetSoundVolumeBlock.pure-BNSihtjK.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphIsSoundPlayingBlock.pure-Df51ObIu.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphMeshPickEventBlock.pure-BMWQx4I9.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSceneReadyEventBlock.pure-CP_OrixV.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphReceiveCustomEventBlock.pure-e8ARczcX.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphStopEventPropagationBlock.pure-DLGpBJmB.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSendCustomEventBlock.pure-D62F24TJ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSceneTickEventBlock.pure-D8AC1CkO.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPointerOutEventBlock.pure-evPOpwpB.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPointerOverEventBlock.pure-Db-KpaKH.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphPhysicsCollisionEventBlock.pure-C2T3-Meg.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphSoundEndedEventBlock.pure-Bi_-OyjE.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphKeyboardEventBlock-6uvrfQmn.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphKeyDownEventBlock.pure-DRMhLml0.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/flowGraphKeyUpEventBlock.pure-DRmUa6pg.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/pbrMaterial.pure-Czci9Wk5.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/openpbrMaterial.pure-D6R3JRtI.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/proceduralTexture.pure-Bmofe5cU.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/default.fragment-tFUdQv1H.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/default.fragment-BQfXQjWA.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/cubemapToSphericalPolynomial-B0Qh7tTI.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/baseTexture.polynomial.pure-BxBFefyR.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/hdr-D1Yqjqhs.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/exrTextureLoader-NzNnXgw0.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/gaussianSplattingUboDeclaration-CP2knyMZ.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/gaussianSplatting-J5RUewlS.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/basis.pure-BfNycZrw.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/dumpTools.pure-D6VCG-nd.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/tga-CTkB97bp.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/iblVoxelOpacityAtomicMax-BKJIgLF3.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/nativeXRFrame-DBHf08hy.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/postprocess.vertex-iaRrzlb5.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/postprocess.vertex-BhVcrLsU.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/lodCube.fragment-BJ2NaOy6.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/lod.fragment-CFMPf813.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/lodCube.fragment-CAnzkx5B.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/lod.fragment-DoYN9SWD.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/rgbdDecode.fragment-BczAcUDx.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/rgbdEncode.fragment-kIexwbEB.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/rgbdDecode.fragment-C_zuAPWN.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/rgbdEncode.fragment-MwywuCcG.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/pass.fragment-nW5nKbr_.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/passCube.fragment-BV-DlRGG.js">
+    <link rel="modulepreload" crossorigin href="/aftermath/assets/passCube.fragment-BSg3A0AZ.js">
+  </head>
+  <body>
+    <div id="ui">
+      <div><strong>CAD preview</strong> · does not change Walk</div>
+      <label>Asset
+        <select id="asset"></select>
+      </label>
+      <button type="button" id="reload">Reload</button>
+      <div id="hud">Loading…</div>
+      <div><a href="./">← back to game</a></div>
+    </div>
+    <canvas id="c"></canvas>
+  </body>
+</html>
