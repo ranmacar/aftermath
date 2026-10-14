@@ -62,4 +62,4 @@ Alongside it: publish the CAD as open designs once they're tested enough to be u
 - Is the politics pitched right (principles, no labels)?
 - Target platforms: browser only, or mobile/desktop later?
 - Single-player first, with multiplayer only at Layer 2?
-- Who else is credited (Better Games, the agent team, contributors)?
+- Who else is credited (the agent team, contributors)?

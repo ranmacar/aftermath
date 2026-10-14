@@ -84,8 +84,8 @@ Everything here is open, under three licences that fit what each part is:
 
 - **Code** (`apps/`, `packages/`, `scripts/`): [MIT](LICENSE). Use it for anything; keep the notice.
 - **Hardware designs** (`cad/`, the Onshape FeatureScript for the tower, pod and Agrokruh): [CERN-OHL-S-2.0](LICENSES/CERN-OHL-S-2.0.txt). Build and modify them freely; if you share modified designs or products made from them, share the modified source under the same licence.
-- **Story, art and docs** (`docs/`, text, non-CAD art): [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt). Credit Aftermath / Better Games and share alike.
+- **Story, art and docs** (`docs/`, text, non-CAD art): [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt). Credit "Aftermath (Arbolis) by Martin Vavrovič" and share alike.
 
 Contributions are accepted under the licence of the part they touch.
 
-Made by Better Games.
+Made by Martin Vavrovič.

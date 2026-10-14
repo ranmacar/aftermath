@@ -1,6 +1,6 @@
 # Arbolis — Main Game Mechanics (Draft v0)
 
-**Studio:** Better Games  
+**Author:** Martin Vavrovič  
 **Status:** Design draft for review (Martin / Sid). Incorporates Bob demo reality, Bucky site constraints, Sophia canon pass.  
 **Not:** full GDD, balance numbers, or UI spec.
 
