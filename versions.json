@@ -2,10 +2,10 @@
   "latest": {
     "version": "latest",
     "ref": "main",
-    "sha": "4582f40d5562ef170bdd9d031ff73774f25722ac",
+    "sha": "74c131420d0d303d420c738b755672e64eb6342a",
     "packageVersion": "1.0.0-dev.0",
     "path": "/aftermath/",
-    "builtAt": "2026-10-14T17:45:21.626Z"
+    "builtAt": "2026-10-14T17:47:08.802Z"
   },
   "versions": [
     {
