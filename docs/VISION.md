@@ -1,6 +1,6 @@
 # Aftermath: vision
 
-Draft for Martin. Anything marked TODO is a guess to confirm or cut.
+Aftermath is a game in the **Arbolis** IP. Arbolis is the story world and also its main city, founded around the Consortium base. The game is set in the fourth Arbolis book and shares canon with the novels.
 
 ## The project in one paragraph
 
@@ -38,8 +38,7 @@ Short pages in [themes/](themes/): stewardship, sanctuary not conquest, tree-lik
 
 A cyclic solar flare scars Utah and drives a global geomagnetic storm. In its last months, the Consortium buries tens of thousands of shipping containers upright inside Faraday shells. Each is a seed pod: it excavates, casts a geopolymer caisson around a central column, and raises a silo-like tower, one family per floor. In the game the Consortium stays unnamed until late. At mid-season the main base launches its satellites, and the map lights up with every pod that made it.
 
-The same world is told in the Mu Mak novels. Links will follow when their pages are ready.
-> TODO Martin: confirm the novels and the game share canon.
+The same world is told in the Arbolis novels; Aftermath is set in the fourth book and shares their canon. The city of Arbolis grows around the Consortium's main base, the one that launches the satellites. Links to the novels will follow when their pages are ready.
 
 ## Roadmap
 
@@ -60,9 +59,7 @@ Alongside it: publish the CAD as open designs once they're tested enough to be u
 
 ## Open questions for Martin
 
-- Game name vs world name (Aftermath / Arbolis).
 - Is the politics pitched right (principles, no labels)?
-- Do the novels and game share canon?
 - Target platforms: browser only, or mobile/desktop later?
 - Single-player first, with multiplayer only at Layer 2?
 - Who else is credited (Better Games, the agent team, contributors)?

@@ -6,7 +6,7 @@ A solar storm has burned out most of the world's electrical infrastructure. Befo
 
 There's no wave defense and no gacha. The game is about stewardship: one tower, one hex of living land, then a network.
 
-> TODO Martin: confirm the public name. The repo is "Aftermath", but the design doc is titled "Arbolis — Main Game Mechanics". Is Aftermath the game and Arbolis the world, or the other way round?
+Aftermath is part of **Arbolis**, a story world told in novels and games. Arbolis is also the name of the main city, founded around the Consortium base. The game is set in the time of the fourth Arbolis book and shares its canon. Links to the novels will follow when their pages are ready.
 
 ## Status
 
