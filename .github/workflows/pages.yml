@@ -1,9 +1,10 @@
 name: GitHub Pages (versioned)
 
 # Deploys to the gh-pages branch (Settings → Pages → "Deploy from a branch" → gh-pages / root):
-#   push to main          → /aftermath/            (latest; the v*/ subfolders are preserved)
+#   push to main          → /aftermath/play/       (latest demo) + landing site (site/) at /aftermath/
+#                                                  (v*/ subfolders and play/ are preserved by each other)
 #   push of a tag v*      → /aftermath/<tag>/      e.g. /aftermath/v0.1.0/
-#   workflow_dispatch     → rebuild any ref. A ref "v*" goes to /aftermath/<ref>/, "main" goes to the root.
+#   workflow_dispatch     → rebuild any ref. A ref "v*" goes to /aftermath/<ref>/, "main" goes to play/ plus the landing at the root.
 # Tags created before this workflow existed (e.g. v0.1.0) are built by running it manually:
 #   Actions → "GitHub Pages (versioned)" → Run workflow → ref = v0.1.0
 # The workflow file always comes from the default branch. Only the checked-out app source comes from `ref`.
@@ -45,7 +46,7 @@ jobs:
         run: |
           if [ "$EVENT" = "workflow_dispatch" ]; then ref="$INPUT_REF"; else ref="$GH_REF_NAME"; fi
           case "$ref" in
-            main) target="" ;;
+            main) target="play" ;;
             v[0-9]*)
               if ! printf '%s' "$ref" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$'; then
                 echo "::error::tag $ref is not a semver tag"; exit 1
@@ -63,6 +64,7 @@ jobs:
         with:
           ref: ${{ steps.t.outputs.ref }}
           path: src
+          fetch-depth: 0 # full history for the landing devlog
 
       - uses: actions/setup-node@v4
         with:
@@ -101,16 +103,8 @@ jobs:
         env:
           TARGET: ${{ steps.t.outputs.target }}
         run: |
-          if [ -z "$TARGET" ]; then
-            # latest at the root: replace everything except the version folders and the index files
-            rsync -a --checksum --delete \
-              --exclude '/v[0-9]*/' --exclude '/versions.json' --exclude '/versions.html' \
-              --exclude '/.nojekyll' --exclude '/.git' \
-              src/apps/web/dist/ site/
-          else
-            mkdir -p "site/$TARGET"
-            rsync -a --checksum --delete src/apps/web/dist/ "site/$TARGET/"
-          fi
+          mkdir -p "site/$TARGET"
+          rsync -a --checksum --delete src/apps/web/dist/ "site/$TARGET/"
           touch site/.nojekyll
 
       - name: Update versions.json and versions.html
@@ -125,7 +119,7 @@ jobs:
           const data = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : { latest: null, versions: [] };
           const entry = { version: process.env.TARGET || 'latest', ref: process.env.REF, sha: process.env.sha,
             packageVersion: process.env.pkgver, path: process.env.BASE, builtAt: new Date().toISOString() };
-          if (!process.env.TARGET) data.latest = entry;
+          if (process.env.TARGET === 'play') { entry.version = 'latest'; data.latest = entry; }
           else data.versions = [entry, ...data.versions.filter((v) => v.version !== entry.version)];
           const key = (v) => v.version.replace(/^v/, '').split(/[.-]/).map((x) => (/^\d+$/.test(x) ? x.padStart(6, '0') : x)).join('.');
           data.versions.sort((a, b) => key(b).localeCompare(key(a)));
@@ -133,14 +127,24 @@ jobs:
           const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
           const row = (v, label) => `<li><a href="${esc(v.path)}">${esc(label)}</a> <small>${esc(v.packageVersion)} · ${esc(v.ref)} @ ${esc((v.sha || '').slice(0, 7))} · ${esc(v.builtAt.slice(0, 10))}</small></li>`;
           const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>Aftermath versions</title>
+          <title>Aftermath versions</title><link rel="icon" href="data:,">
           <style>body{font:16px/1.5 system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;background:#12160f;color:#dfe8cf}a{color:#c6e27a}small{color:#8a9579}</style>
           <h1>Aftermath: deployed versions</h1><ul>
           ${data.latest ? row(data.latest, 'latest (main)') : ''}
           ${data.versions.map((v) => row(v, v.version)).join('\n')}
-          </ul><p><a href="versions.json">versions.json</a></p>`;
+          </ul><p><a href="./">Aftermath home</a> · <a href="versions.json">versions.json</a></p>`;
           fs.writeFileSync('site/versions.html', html.replace(/^ {10}/gm, ''));
           JS
+
+      - name: Build landing site into the root (main only)
+        if: steps.t.outputs.target == 'play'
+        run: |
+          node src/site/build.mjs --base "$REPO_BASE" --play "${REPO_BASE}play/" --versions site/versions.json
+          # replace root files except the demo, version folders and index files
+          rsync -a --checksum --delete \
+            --exclude '/play/' --exclude '/v[0-9]*/' --exclude '/versions.json' --exclude '/versions.html' \
+            --exclude '/.nojekyll' --exclude '/.git' \
+            src/site/dist/ site/
 
       - name: Commit and push gh-pages
         env:
