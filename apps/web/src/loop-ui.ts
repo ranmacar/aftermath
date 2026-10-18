@@ -1,11 +1,11 @@
 /**
- * Demo loop v1 UI for the Build view: status strip, pod panel (bottom sheet on phones, side panel on
+ * Demo loop UI for the Build view: status strip, pod panel (bottom sheet on phones, side panel on
  * desktop), trip planner, event toasts and reward cards. Logic lives in @aftermath/sim/loop.
  */
 import { gridDisk } from "h3-js";
 import {
   type Card, type Hex, type HexType, type Res, type Run,
-  PROPOSED_V1_1, RESOURCES, STAGE_LABEL, TUNING, advance, applyTuning, atHome, canHelp, canWorkShelter, dayYield,
+  DEFAULT_TUNING, RESOURCES, STAGE_LABEL, TUNING, advance, atHome, chooseStorm, stormOutlook, tuningName, useTuning, canHelp, canWorkShelter, dayYield,
   deliver, dismissCard, fmtDay, forecast, generateHexes, helpUnfold, hexById, newRun, owed, queueDeliver, recap, rest,
   shelterOwed, startTrip, stormAt, travelDays, tripPreview, turnBack, weightOf, workShelter,
 } from "@aftermath/sim/loop";
@@ -39,15 +39,16 @@ export function loopToSettlement(run: Run, base: Settlement): Settlement {
 export type LoopUi = { dispose: () => void; run: () => Run };
 
 export function mountLoop(root: HTMLElement, cell: string, opts: { onChange: (run: Run) => void; onFarm: () => void }): LoopUi {
-  const tuning = new URLSearchParams(location.search).get("tuning");
-  applyTuning(tuning === "proposed" ? PROPOSED_V1_1 : null);
-  const storeKey = KEY + (tuning === "proposed" ? "p:" : "") + cell;
+  // ?tuning=v1 | v1.1 | v1.2 (default). Each tuning keeps its own save; v1 and v1.1 keep their old keys.
+  const tuning = tuningName(new URLSearchParams(location.search).get("tuning"));
+  useTuning(tuning);
+  const storeKey = KEY + ({ "v1": "", "v1.1": "p:", "v1.2": "v12:" } as const)[tuning] + cell;
   let run: Run = load() ?? newRun(seedOf(cell), loopHexes(cell));
   let sel: { hex: string | null; days: number; keep: Res } = { hex: null, days: 2, keep: "scrap" };
   let open = window.matchMedia("(min-width: 760px)").matches;
 
   const el = document.createElement("div");
-  el.className = "loop"; el.innerHTML = `<div class="loop-strip" role="status"></div><div class="loop-toasts" aria-live="polite"></div>
+  el.className = "loop"; el.innerHTML = `<div class="loop-top"><div class="loop-strip" role="status"></div><div class="loop-toasts" aria-live="polite"></div></div>
 <section class="loop-panel" aria-label="Pod"></section><div class="loop-card" hidden></div>`;
   root.appendChild(el);
   const strip = el.querySelector<HTMLElement>(".loop-strip")!, panel = el.querySelector<HTMLElement>(".loop-panel")!;
@@ -95,7 +96,7 @@ export function mountLoop(root: HTMLElement, cell: string, opts: { onChange: (ru
   function renderPanel() {
     if (run.status !== "playing") { panel.innerHTML = `<header class="loop-head"><h2>Pod</h2></header><p class="act">${run.status === "moved-in" ? "The tower is built." : "The pod finished without you."}</p><p><button type="button" class="btn ghost" data-act="reset">Start over</button></p>`; panel.classList.toggle("is-open", open); return; }
     const home = atHome(run), a = run.activity;
-    const stages = run.stages.map((s) => `<li class="stage is-${s.status}"><span class="st-name">${STAGE_LABEL[s.id]}</span><span class="st-cost">${s.status === "done" ? "built" : s.status === "building" ? `building · day ${fmtDay(s.doneAt!)}` : s.status === "open" ? costLine(s.paid, s.cost) + (s.id === "solar" && !run.solarHelped ? " · needs unfolding" : "") : "locked"}</span></li>`).join("");
+    const stages = run.stages.map((s, i) => `<li class="stage is-${s.status}"><span class="st-name">${STAGE_LABEL[s.id]}</span><span class="st-cost">${s.status === "done" ? "built" : s.status === "building" ? `building · day ${fmtDay(s.doneAt!)}` : s.status === "open" ? costLine(s.paid, s.cost) + (s.id === "solar" && !run.solarHelped ? " · needs unfolding" : "") + (i > 0 && run.stages[i - 1]!.status !== "done" ? " · pay ahead" : "") : "locked"}</span></li>`).join("");
     const shelterRow = run.shelter.done ? `<li class="stage is-done"><span class="st-name">Shelter</span><span class="st-cost">built</span></li>`
       : `<li class="stage ${run.stages[0]!.status === "done" ? "is-open" : "is-locked"}"><span class="st-name">Shelter</span><span class="st-cost">${run.stages[0]!.status === "done" ? costLine(run.shelter.paid, { food: 0, wood: TUNING.shelter.wood, stone: TUNING.shelter.stone, scrap: 0 }) + ` · ${TUNING.shelter.workDays}d work` : "after G1"}</span></li>`;
     const gateNeed = run.stages.some((s) => s.status === "open" && RESOURCES.some((r) => owed(s)[r] > 0 && run.stock[r] > 0));
@@ -122,7 +123,7 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
     panel.innerHTML = `<header class="loop-head"><button type="button" class="sheet-toggle" data-act="toggle" aria-expanded="${open}">${open ? "Hide" : "Pod"}</button><p class="act">${esc(activityText())}</p></header>
 <button type="button" class="btn next" data-act="next">Next event ▶</button>
 <div class="loop-body"><h3>Pod</h3><ul class="stages">${stages}${shelterRow}</ul>${homeActs}${awayActs}${planner}
-<h3>Log</h3><ol class="log">${log}</ol><p class="small">${tuning === "proposed" ? "Tuning: proposed v1.1 · " : ""}<button type="button" class="link" data-act="reset">Start over</button></p></div>`;
+<h3>Log</h3><ol class="log">${log}</ol><p class="small">${tuning !== DEFAULT_TUNING ? `Tuning: ${tuning} · ` : ""}<button type="button" class="link" data-act="reset">Start over</button></p></div>`;
     panel.classList.toggle("is-open", open);
   }
 
@@ -137,6 +138,18 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
     return `<h2>${title}</h2><p>${lead}</p><ul class="recap"><li><strong>${fmtDay(c.days)}</strong> days <span>(par about ${c.par})</span></li><li><strong>${c.collapses}</strong> collapse${c.collapses === 1 ? "" : "s"}</li><li><strong>${c.storms}</strong> storm${c.storms === 1 ? "" : "s"} survived</li><li><strong>${c.scrap}</strong> scrap hauled</li><li><strong>${c.floors}</strong>/4 floors</li></ul>`;
   }
   function renderCard() {
+    const sp = run.stormPrompt;
+    if (sp && run.status === "playing") {
+      const len = sp.end - sp.start, after = Math.max(0, Math.round(stormOutlook(run, sp)));
+      const tb = chooseStorm(run, "back").activity; const home = fmtDay(tb.kind === "trip" ? tb.phaseEnd : run.day);
+      card.hidden = false;
+      card.innerHTML = `<div class="card-box is-storm" role="alertdialog" aria-modal="true" aria-labelledby="storm-h"><h2 id="storm-h">Storm tomorrow</h2>
+<p>The pod warns: a storm hits on day ${fmtDay(sp.start)} and lasts ${len} day${len > 1 ? "s" : ""}. Out here, foraging stops while it blows.</p>
+<ul class="storm-opts"><li><strong>Wait it out:</strong> ${String(TUNING.condition.stormOutdoorsPerDay).replace("-", "−")} Condition a day, then keep foraging. You'd be at about ♥ ${after}/10.</li>
+<li><strong>Turn back:</strong> keep what's in the bag, home on day ${home}.</li></ul>
+<p class="card-acts"><button type="button" class="btn ghost" data-act="storm-back">Turn back</button><button type="button" class="btn go" data-act="storm-wait">Wait it out</button></p></div>`;
+      return;
+    }
     const c = run.cards[0];
     if (!c) { card.hidden = true; card.innerHTML = ""; return; }
     card.hidden = false;
@@ -158,6 +171,7 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
     if (act === "rest") return set(rest(run, 1));
     if (act === "turnback") return set(turnBack(run));
     if (act === "go" && sel.hex) { const order = [sel.keep, ...(["scrap", "stone", "wood", "food"] as Res[]).filter((r) => r !== sel.keep)]; set(startTrip(run, sel.hex, sel.days, order)); sel.hex = null; return; }
+    if (act === "storm-wait" || act === "storm-back") { const r = chooseStorm(run, act === "storm-wait" ? "wait" : "back"); return set(r, [{ text: act === "storm-wait" ? "You'll sit the storm out." : "Turned back for home.", kind: "info" }]); }
     if (act === "card") return set(dismissCard(run, t.dataset.card as Card));
     if (act === "farm") { set(dismissCard(run, "move-in")); opts.onFarm(); return; }
     if (act === "reset") { if (confirm("Start the pod over from day 0?")) set(newRun(seedOf(cell), loopHexes(cell))); return; }

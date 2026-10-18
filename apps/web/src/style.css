@@ -633,15 +633,16 @@ textarea {
 /* Demo loop v1 (loop-ui.ts): status strip, pod panel, toasts, cards */
 .loop { position: absolute; inset: 0; z-index: 5; pointer-events: none; font-size: 0.85rem; }
 .loop button, .loop select, .loop input { font: inherit; }
-.loop-strip { position: absolute; top: calc(3.4rem + env(safe-area-inset-top, 0px)); left: 0.75rem; right: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem; pointer-events: auto; }
+.loop-top { position: absolute; top: calc(3.4rem + env(safe-area-inset-top, 0px)); left: 0.75rem; right: 0.75rem; display: grid; gap: 0.45rem; justify-items: start; pointer-events: none; }
+.loop-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; pointer-events: auto; }
 .loop-strip > span { padding: 0.3rem 0.6rem; border-radius: 999px; background: var(--panel); color: var(--fg); white-space: nowrap; }
 .loop-strip .day { font-weight: 600; color: var(--ok); }
 .loop-strip .cond.is-low { color: var(--err); font-weight: 600; }
 .loop-strip .chip.is-warn { background: #5a3b12; color: #ffd79a; }
 .loop-strip .chip.is-storm { background: #7a2a1a; color: #ffe0d0; font-weight: 600; }
-.loop-toasts { position: absolute; top: calc(6rem + env(safe-area-inset-top, 0px)); left: 0.75rem; display: grid; gap: 0.35rem; max-width: min(24rem, calc(100vw - 1.5rem)); }
+.loop-toasts { display: grid; gap: 0.35rem; max-width: min(24rem, calc(100vw - 1.5rem)); }
 .loop-toast { margin: 0; padding: 0.5rem 0.75rem; border-radius: 0.6rem; background: var(--panel); color: var(--fg); animation: loop-in 0.25s ease; }
-.loop-toast.is-storm-warning, .loop-toast.is-storm-start, .loop-toast.is-collapse, .loop-toast.is-condition-low, .loop-toast.is-food-out, .loop-toast.is-hazard { color: #ffd79a; }
+.loop-toast.is-storm-warning, .loop-toast.is-storm-choice, .loop-toast.is-storm-start, .loop-toast.is-collapse, .loop-toast.is-condition-low, .loop-toast.is-food-out, .loop-toast.is-hazard { color: #ffd79a; }
 .loop-toast.is-gate-built, .loop-toast.is-floor-built, .loop-toast.is-work-done { color: var(--ok); }
 @keyframes loop-in { from { opacity: 0; transform: translateY(-4px); } }
 .loop-panel { position: absolute; pointer-events: auto; background: rgba(18, 22, 15, 0.92); color: var(--fg); border-radius: 0.9rem; padding: 0.6rem 0.75rem; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35); touch-action: pan-y; overscroll-behavior: contain;
@@ -688,9 +689,13 @@ textarea {
 .card-box { width: min(24rem, 100%); padding: 1.1rem 1.2rem; border-radius: 1rem; background: #18201b; color: var(--fg); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); border: 1px solid rgba(233, 169, 75, 0.4); }
 .card-box h2 { margin: 0 0 0.5rem; font-size: 1.25rem; color: #e9a94b; }
 .card-box p { line-height: 1.5; }
+.card-box.is-storm { border-color: rgba(255, 140, 100, 0.55); }
+.card-box.is-storm h2 { color: #ffb08a; }
+.storm-opts { list-style: none; padding: 0; margin: 0 0 0.9rem; display: grid; gap: 0.5rem; line-height: 1.45; }
+.storm-opts li { padding: 0.5rem 0.65rem; border-radius: 0.5rem; background: rgba(255, 255, 255, 0.05); }
 .card-acts { display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; }
 .recap { list-style: none; padding: 0; display: grid; gap: 0.3rem; } .recap strong { color: #e9a94b; font-size: 1.1rem; } .recap span { color: var(--muted); }
 @media (min-width: 760px) and (pointer: fine), (min-width: 1024px) {
   .loop-panel, .loop-panel.is-open { left: auto; right: 0.75rem; transform: none; top: calc(3.6rem + env(safe-area-inset-top, 0px)); bottom: auto; width: 23rem; max-height: calc(100vh - 4.5rem); overflow-y: auto; border-radius: 0.9rem; }
-  .loop-strip { right: 24.5rem; }
+  .loop-top { right: 24.5rem; }
 }
