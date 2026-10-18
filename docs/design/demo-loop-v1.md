@@ -102,3 +102,45 @@ The pod pauses at each gate until the delivery is complete, then builds over the
 - **Survivors:** not in v1. First hook for v2: a city-edge event, "a survivor needs 3 food to follow you home", who then adds +4 carry on trips.
 - **Real-world hex typing:** OSM landuse → hex type mapping. Bob's call on the data source; fall back to a seed.
 - **Using `crops.ts`:** not in this loop. It becomes useful at Move in / Farm.
+
+---
+
+## Changelog
+
+The text above is Sid's original v1 sheet, left as written. Live numbers are in `packages/sim/src/loop/tuning.ts`. In the app, `?tuning=v1`, `?tuning=v1.1` and `?tuning=v1.2` pick a set; the default is v1.2.
+
+### v1.1 (Bob's proposal, blessed by Sid as the base)
+- Food upkeep 1 → **0.5** per day.
+- Depletion 15% → **10%** per forage day; regrowth 3% → **6%** per day (floor stays 30%).
+- City edge scrap 6 → **8** (food 1). Ruin scrap 2 → **3** (stone 4).
+- Why: with v1 numbers the greedy bot moved in on only 12/30 seeds before day 120 (best 87).
+
+### v1.2 (Sid, 18 Oct 2026; the default)
+- **Pay one gate ahead everywhere.** A gate opens for payment as soon as the one before it starts building: G2 Dig while G1 Solar builds, Floor 1 while G2 builds, Floor n+1 while Floor n builds. Builds still run one at a time; a paid gate starts the moment the one before finishes.
+- **Par 55 days** on the recap.
+- **City edge scrap 8 → 9.** This was Sid's fallback for when the bot median stayed above 62 with pay-ahead alone, which it did. It made no measurable difference (see results).
+- **Storms are survivable outdoors, and it's your call.** If the 1-day warning reaches you mid-trip (walking out or foraging), the clock stops and you choose:
+  - **Wait it out:** foraging pauses on storm days at −3 Condition per day; walking still moves. After the storm the trip carries on as planned.
+  - **Turn back:** head home now with what's in the bag.
+  - If the warning comes while you're already walking home, there's no prompt. The UI shows the Condition you'd end at and the day you'd be home. An unanswered prompt (Next event) counts as waiting.
+- **Bot rule:** turn back if waiting would leave Condition at **3 or less** when the storm ends (counting hunger if food runs out). This is `bot.stormTurnBackAt` in the tuning.
+- **City edge stays at ring 3** (`cityRing`). Future rule, not wired yet because it needs OSM land use: the city edge is the nearest built-up hex, clamped to rings 2–4.
+
+### Interpretations accepted by Sid (now rules)
+- **Wake ration (`collapse.wakeFood` = 3):** on waking from a collapse the pod gives 3 food. Without it, an empty larder chains collapses forever.
+- **Stockpile first:** daily food comes from the stockpile (packed when you leave), then from the bag. Below one ration you lose 2 Condition a day.
+- **Deliver on return:** "queueing" a delivery while away means the haul goes into the pod when you get home (a checkbox on the trip).
+- **Seeded hex types:** until OSM land use is wired, hex types come from the cell seed. Ring 1 always has at least one forest, field and ruin.
+
+### Greedy bot results, 30 seeds (`loop.test.ts`)
+- v1: 12/30 moved in. Days: best 87, median 120 (soft end), worst 120.
+- v1.1: 30/30. Days: best 61.5, median 68, worst 81.
+- v1.1 + pay-ahead only: 30/30. Days: best 59.5, median 67, worst 84.
+- v1.1 + pay-ahead + city scrap 9: 30/30. Days: best 59.5, median 69, worst 82.
+- **v1.2 (all of the above + storm choice):** 30/30. Days: best **59.5**, median **70**, worst **88.5**. No collapses on any seed (v1.1 had 11).
+- **Sid's targets were median ≤ 62 and best ≤ 52; the bot misses both.** Per Sid's instruction, there's no further tuning past city scrap 9.
+- What the traces show (seeds 3 and 15):
+  - The bot is slow to open the game. It starts G1 only around day 11–12, ferrying ring-1 ruin loads (3 scrap + 4 stone) rather than one city run for 12 scrap.
+  - It then spends about 12 days on G2's 20 wood.
+  - Turning back from storms cuts collapses to zero but costs time, about +3 days on the median.
+  - So the gap looks like bot play as much as the economy. A sharper bot, or a cheaper G2 (wood), are the likely levers. That's for Sid to decide.
