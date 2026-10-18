@@ -63,9 +63,9 @@ const ALT = {
   'theme-tree-habitats-agroforestry': 'Cross-section of the tower as a tree: caisson root, core trunk, solar canopy and beds at ground level.',
   'theme-resilience-seed-pods': 'A buried upright container in its shell among soil layers, with a warm seam of light as it wakes.',
   'theme-long-game': 'Night map of hexes with green lit pods spreading out from a centre.',
-  'theme-open-design': 'Blueprint of the farm ring with 18 round beds and dimension lines.',
+  'theme-open-design': 'Blueprint of the farm ring with 18 round beds, 6 inner and 12 outer, and dimension lines.',
 };
-const art = (slot, {eager=false, decorative=false}={}) => `<figure class="art" data-art-slot="${slot}"><img src="${BASE}art/${slot}.png" alt="${decorative ? '' : esc(ALT[slot])}" width="1600" height="900" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'}></figure>`;
+const art = (slot, {eager=false, decorative=false}={}) => `<figure class="art" data-art-slot="${slot}"><picture><source type="image/webp" srcset="${BASE}art/${slot}.webp"><img src="${BASE}art/${slot}.png" alt="${decorative ? '' : esc(ALT[slot])}" width="1600" height="900" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'}></picture></figure>`;
 const write = (rel, html) => { const f = path.join(out, rel); fs.mkdirSync(path.dirname(f), {recursive:true}); fs.writeFileSync(f, html); };
 
 // --- data
@@ -156,7 +156,7 @@ const bad = [];
 const walk = d => fs.readdirSync(d,{withFileTypes:true}).flatMap(e => e.isDirectory() ? walk(path.join(d,e.name)) : [path.join(d,e.name)]);
 for (const f of walk(out).filter(f => /\.(html|css)$/.test(f))) {
   const txt = fs.readFileSync(f,'utf8');
-  for (const [, u] of txt.matchAll(/(?:href|src)="([^"#?]+)|url\(["']?([^"')#?]+)/g).map(m => [m[0], m[1] ?? m[2]])) {
+  for (const [, u] of [...txt.matchAll(/(?:href|src|srcset)="([^"#? ]+)|url\(["']?([^"')#?]+)/g)].map(m => [m[0], m[1] ?? m[2]])) {
     if (/^(https?:|data:|mailto:)/.test(u)) continue;
     const abs = u.startsWith('/') ? u : path.posix.join('/' + path.relative(out, path.dirname(f)).split(path.sep).join('/'), u).replace(/^\/+/, '/');
     const absB = u.startsWith('/') ? abs : BASE + abs.slice(1);
