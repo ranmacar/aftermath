@@ -3,10 +3,11 @@
  * Each time it is home: deliver everything, do any home work, rest if worn out or a storm is due,
  * otherwise go where the best yield for the most urgent need is (food first if the larder is short),
  * staying until the bag is about full. It only knows what the player knows (the 1-day storm warning).
+ * Storm warning mid-trip (v1.2): turn back if waiting it out would leave Condition at or below bot.stormTurnBackAt.
  */
 import { TUNING as T } from "./tuning.ts";
 import {
-  RESOURCES, type Hex, type Res, type Run, type Stock, advance, canHelp, canWorkShelter, dayYield, deliver, forecast,
+  RESOURCES, type Hex, type Res, type Run, type Stock, advance, canHelp, chooseStorm, stormOutlook, canWorkShelter, dayYield, deliver, forecast,
   generateHexes, helpUnfold, isDone, newRun, owed, rest, shelterOwed, startTrip, stormAt, travelDays, weightOf, workShelter,
 } from "./loop.ts";
 
@@ -45,8 +46,9 @@ function bestTrip(run: Run, value: (got: Stock) => number, keep: Res[]): { hex: 
 
 export function greedyStep(run: Run): Run { return advance(greedyDecide(run)).run; }
 
-/** Pick the next action when home (no time passes). */
+/** Pick the next action (no time passes): answer a storm prompt, or plan when home. */
 export function greedyDecide(run: Run): Run {
+  if (run.stormPrompt) return chooseStorm(run, stormOutlook(run, run.stormPrompt) <= T.bot.stormTurnBackAt ? "back" : "wait");
   if (run.activity.kind !== "home") return run;
   let r = deliver(run, "gate");
   r = deliver(r, "shelter");

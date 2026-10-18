@@ -1,5 +1,5 @@
 /**
- * Demo loop v1: forage → haul → feed the pod gates, event to event. Pure functions over plain data;
+ * Demo loop (v1, tuned v1.2 by default): forage → haul → feed the pod gates, event to event. Pure functions over plain data;
  * every number comes from tuning.ts. Spec: docs/design/demo-loop-v1.md.
  */
 import { TUNING as T } from "./tuning.ts";
@@ -21,7 +21,8 @@ export type Activity =
   | { kind: "trip"; hexId: string; phase: "out" | "forage" | "back"; phaseEnd: number; forageDays: number; forageDone: number; load: Stock; keep: Res[] };
 export type EventKind =
   | "trip-returned" | "bag-full" | "gate-built" | "floor-built" | "storm-warning" | "storm-start" | "storm-end"
-  | "condition-low" | "food-out" | "collapse" | "work-done" | "rested" | "hazard" | "moved-in" | "soft-end" | "info";
+  | "condition-low" | "food-out" | "collapse" | "work-done" | "rested" | "hazard" | "moved-in" | "soft-end" | "info"
+  | "storm-choice";
 export type LoopEvent = { day: number; kind: EventKind; text: string; stops: boolean };
 export type Card = "dog-charging" | "cnc-soon" | "move-in" | "soft-end";
 export type Run = {
@@ -40,6 +41,8 @@ export type Run = {
   scrapBoostUntil: number;
   foodPenaltyUntil: number;
   queuedDeliver: "gate" | "shelter" | null;
+  /** Set when a storm warning reaches you mid-trip (rules.stormChoice): wait it out or turn back. */
+  stormPrompt?: Storm | null;
   cards: Card[];
   stats: { collapses: number; stormsSurvived: number; scrapHauled: number; tripCount: number };
   status: "playing" | "moved-in" | "soft-end";
@@ -121,7 +124,7 @@ export function newRun(seed: number, hexes: Hex[]): Run {
     stock: stock({ food: T.start.food, wood: T.start.wood, stone: T.start.stone, scrap: T.start.scrap }),
     condition: T.start.condition, hexes: clone(hexes), stages: makeStages(), solarHelped: false,
     shelter: { paid: zero(), done: false }, activity: { kind: "home" }, storms: stormSchedule(seed),
-    scrapBoostUntil: -1, foodPenaltyUntil: -1, queuedDeliver: null, cards: [],
+    scrapBoostUntil: -1, foodPenaltyUntil: -1, queuedDeliver: null, stormPrompt: null, cards: [],
     stats: { collapses: 0, stormsSurvived: 0, scrapHauled: 0, tripCount: 0 }, status: "playing", log: [],
   };
 }
@@ -181,7 +184,7 @@ export function turnBack(prev: Run): Run {
   const hex = hexById(run, a.hexId)!;
   const outLeft = a.phase === "out" ? a.phaseEnd - run.day : 0;
   a.phaseEnd = run.day + (a.phase === "out" ? travelDays(hex) - outLeft : travelDays(hex));
-  a.phase = "back"; push(run, "info", "Turned back for home.", false); return run;
+  a.phase = "back"; run.stormPrompt = null; push(run, "info", "Turned back for home.", false); return run;
 }
 function payInto(run: Run, paid: Stock, need: Stock): Stock {
   const moved = zero();
@@ -200,6 +203,21 @@ export function deliver(prev: Run, target: "gate" | "shelter"): Run {
   if (weightOf(moved) > 0) push(run, "info", `Delivered ${fmt(moved)} to the ${target === "gate" ? "pod" : "shelter"}.`, false);
   tryStartBuilds(run);
   return run;
+}
+/** Answer the mid-trip storm warning: keep going and sit the storm out where you are, or head home now. */
+export function chooseStorm(prev: Run, choice: "wait" | "back"): Run {
+  if (!prev.stormPrompt) return prev;
+  let run = clone(prev); run.stormPrompt = null;
+  if (choice === "back" && run.activity.kind === "trip" && run.activity.phase !== "back") run = turnBack(run);
+  else push(run, "info", "You'll wait the storm out.", false);
+  return run;
+}
+/** Condition you'd have when the coming storm ends if you wait it out (storm cost, plus hunger if food runs short). */
+export function stormOutlook(run: Run, s: Storm): number {
+  const a = run.activity; const C = T.condition;
+  const food = run.stock.food + (a.kind === "trip" ? a.load.food : 0);
+  const days = s.end - run.day; const hungryDays = Math.max(0, Math.ceil(days - food / C.eatPerDay));
+  return run.condition + C.stormOutdoorsPerDay * (s.end - s.start) + C.hungryPerDay * hungryDays;
 }
 export function queueDeliver(prev: Run, target: "gate" | "shelter" | null): Run { const run = clone(prev); run.queuedDeliver = target; return run; }
 export function canHelp(run: Run) { return atHome(run) && !run.solarHelped && run.stages[0]!.status === "open"; }
@@ -227,7 +245,8 @@ function tryStartBuilds(run: Run): void {
     s.status = "building"; s.doneAt = run.day + s.buildDays;
     push(run, "info", `${STAGE_LABEL[s.id]}: building, ready on day ${fmtDay(s.doneAt)}.`, false);
     const next = run.stages[i + 1];
-    if (next && next.status === "locked" && next.id.startsWith("floor") && s.id.startsWith("floor")) next.status = "open"; // pay one floor ahead
+    // pay one ahead: v1 floors only; v1.2 every gate (G2 while G1 builds, Floor 1 while G2 builds, ...)
+    if (next && next.status === "locked" && (T.rules.payAheadAll || (next.id.startsWith("floor") && s.id.startsWith("floor")))) next.status = "open";
   }
 }
 export const fmtDay = (d: number) => (Number.isInteger(d) ? String(d) : d.toFixed(1));
@@ -247,6 +266,7 @@ function arriveHome(run: Run, load: Stock): void {
 
 function collapse(run: Run, events: LoopEvent[]): void {
   const a = run.activity; run.stats.collapses++;
+  run.stormPrompt = null;
   if (a.kind === "trip") { const kept = zero(); for (const r of RESOURCES) kept[r] = Math.floor(a.load[r] * T.collapse.loadKept); arriveHome(run, kept); }
   run.activity = { kind: "out-cold", until: run.day + T.collapse.daysLost };
   run.condition = T.collapse.wakeCondition;
@@ -321,7 +341,13 @@ export function tick(run: Run): LoopEvent[] {
   tryStartBuilds(run);
   // storms
   for (const s of run.storms) {
-    if (t0 < s.start - T.storms.warningDays - EPS && t1 + EPS >= s.start - T.storms.warningDays) ev.push(push(run, "storm-warning", `The pod warns: storm in ${T.storms.warningDays} day, lasting ${s.end - s.start}.`));
+    if (t0 < s.start - T.storms.warningDays - EPS && t1 + EPS >= s.start - T.storms.warningDays) {
+      const a2 = run.activity; const len = s.end - s.start;
+      if (T.rules.stormChoice && a2.kind === "trip" && a2.phase !== "back") {
+        run.stormPrompt = { ...s };
+        ev.push(push(run, "storm-choice", `The pod warns: storm in ${T.storms.warningDays} day, lasting ${len}. Wait it out (${String(T.condition.stormOutdoorsPerDay).replace("-", "−")} Condition a day) or turn back?`));
+      } else ev.push(push(run, "storm-warning", `The pod warns: storm in ${T.storms.warningDays} day, lasting ${len}.`));
+    }
     if (t0 < s.start - EPS && t1 + EPS >= s.start) ev.push(push(run, "storm-start", "Storm. Outdoor foraging stops."));
     if (t0 < s.end - EPS && t1 + EPS >= s.end) {
       run.stats.stormsSurvived++; run.scrapBoostUntil = s.end + T.afterStorm.scrapDays; run.foodPenaltyUntil = s.end + T.afterStorm.foodDays;
@@ -342,6 +368,8 @@ export function tick(run: Run): LoopEvent[] {
 export function advance(prev: Run, maxDays = 30): { run: Run; events: LoopEvent[] } {
   const run = clone(prev); const events: LoopEvent[] = []; const limit = run.day + maxDays;
   if (run.status !== "playing") return { run: prev, events };
+  // An unanswered storm prompt defaults to waiting it out (the UI always asks first).
+  if (run.stormPrompt) { run.stormPrompt = null; push(run, "info", "You'll wait the storm out.", false); }
   while (run.day < limit - EPS && run.status === "playing") {
     const ev = tick(run); events.push(...ev);
     if (ev.some((e) => e.stops)) break;
