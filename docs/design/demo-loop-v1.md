@@ -107,7 +107,7 @@ The pod pauses at each gate until the delivery is complete, then builds over the
 
 ## Changelog
 
-The text above is Sid's original v1 sheet, left as written. Live numbers are in `packages/sim/src/loop/tuning.ts`. In the app, `?tuning=v1`, `?tuning=v1.1` and `?tuning=v1.2` pick a set; the default is v1.2.
+The text above is Sid's original v1 sheet, left as written. Live numbers are in `packages/sim/src/loop/tuning.ts`. In the app, `?tuning=v1`, `?tuning=v1.1`, `?tuning=v1.2` and `?tuning=v1.3` pick a set; the default is v1.3.
 
 ### v1.1 (Bob's proposal, blessed by Sid as the base)
 - Food upkeep 1 → **0.5** per day.
@@ -115,7 +115,7 @@ The text above is Sid's original v1 sheet, left as written. Live numbers are in 
 - City edge scrap 6 → **8** (food 1). Ruin scrap 2 → **3** (stone 4).
 - Why: with v1 numbers the greedy bot moved in on only 12/30 seeds before day 120 (best 87).
 
-### v1.2 (Sid, 18 Oct 2026; the default)
+### v1.2 (Sid, 18 Oct 2026)
 - **Pay one gate ahead everywhere.** A gate opens for payment as soon as the one before it starts building: G2 Dig while G1 Solar builds, Floor 1 while G2 builds, Floor n+1 while Floor n builds. Builds still run one at a time; a paid gate starts the moment the one before finishes.
 - **Par 55 days** on the recap.
 - **City edge scrap 8 → 9.** This was Sid's fallback for when the bot median stayed above 62 with pay-ahead alone, which it did. It made no measurable difference (see results).
@@ -144,3 +144,20 @@ The text above is Sid's original v1 sheet, left as written. Live numbers are in 
   - It then spends about 12 days on G2's 20 wood.
   - Turning back from storms cuts collapses to zero but costs time, about +3 days on the median.
   - So the gap looks like bot play as much as the economy. A sharper bot, or a cheaper G2 (wood), are the likely levers. That's for Sid to decide.
+
+### v1.3 (Sid's final pass, 18 Oct 2026; the default)
+- **G2 Dig wood 20 → 12.** Everything else as v1.2 (pay one gate ahead, storm choice, city scrap 9, wake ration).
+- **Par 60 days** on the recap.
+- **Turn-back rule kept** for both bots: turn back on a mid-trip storm warning if waiting would leave Condition at 3 or less.
+- **Planner bot** (`planner.ts`), added alongside the greedy bot; greedy stays as the floor:
+  - opens with a city run for G1's scrap;
+  - makes a food run first whenever the larder is under 4 food;
+  - always gathers for the next unpaid gate in build order, even while the pod is still building the one before it;
+  - checks the storm warning before setting out: it only takes trips that are home before a forecast storm, otherwise it rests through it.
+
+### Bot results on v1.3, 30 seeds (`loop.test.ts`)
+- **Planner:** 30/30 moved in. Days: best **50**, median **59**, worst **70**. No collapses.
+- **Greedy:** 30/30 moved in. Days: best **58**, median **66**, worst **80**. No collapses.
+- Sid's targets: planner median ≤ 60 ✔, greedy 30/30 ✔ (median ~66 accepted). Tuning stops here.
+- For comparison on v1.2: planner 30/30, best 51, median 65, worst 83; greedy 30/30, best 59.5, median 70, worst 88.5.
+- Before it got the food-run rule, the planner starved into 16 collapses on v1.3 (median 58, worst 81). It's a bot fix, not tuning.
