@@ -13,7 +13,8 @@
     "noUnusedParameters": true,
     "types": ["vite/client"],
     "paths": {
-      "@aftermath/sim": ["../../packages/sim/src/index.ts"]
+      "@aftermath/sim": ["../../packages/sim/src/index.ts"],
+      "@aftermath/sim/loop": ["../../packages/sim/src/loop/index.ts"]
     }
   },
   "include": ["src"]
