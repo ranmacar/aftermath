@@ -39,10 +39,10 @@ export function loopToSettlement(run: Run, base: Settlement): Settlement {
 export type LoopUi = { dispose: () => void; run: () => Run };
 
 export function mountLoop(root: HTMLElement, cell: string, opts: { onChange: (run: Run) => void; onFarm: () => void }): LoopUi {
-  // ?tuning=v1 | v1.1 | v1.2 (default). Each tuning keeps its own save; v1 and v1.1 keep their old keys.
+  // ?tuning=v1 | v1.1 | v1.2 | v1.3 (default). Each tuning keeps its own save; v1 and v1.1 keep their old keys.
   const tuning = tuningName(new URLSearchParams(location.search).get("tuning"));
   useTuning(tuning);
-  const storeKey = KEY + ({ "v1": "", "v1.1": "p:", "v1.2": "v12:" } as const)[tuning] + cell;
+  const storeKey = KEY + ({ "v1": "", "v1.1": "p:", "v1.2": "v12:", "v1.3": "v13:" } as const)[tuning] + cell;
   let run: Run = load() ?? newRun(seedOf(cell), loopHexes(cell));
   let sel: { hex: string | null; days: number; keep: Res } = { hex: null, days: 2, keep: "scrap" };
   let open = window.matchMedia("(min-width: 760px)").matches;

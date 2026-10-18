@@ -1,7 +1,7 @@
 /**
  * Demo loop tuning (docs/design/demo-loop-v1.md). Every number and rule switch the loop uses lives here.
  * Plain data so it can be swapped for JSON later without touching code.
- * SPEC_V1 is Sid's original sheet; V1_1 and V1_2 are patches on top of it. The live default is v1.2.
+ * SPEC_V1 is Sid's original sheet; V1_1, V1_2 and V1_3 are patches on top of it. The live default is v1.3.
  */
 export const SPEC_V1 = {
   /** Time is simulated in steps of this many days. All durations below must be multiples of it. */
@@ -95,16 +95,22 @@ export const V1_2: TuningPatch = merge(structuredClone(V1_1) as Record<string, u
   rules: { payAheadAll: true, stormChoice: true },
 }) as TuningPatch;
 
-export const TUNINGS = { "v1": null, "v1.1": V1_1, "v1.2": V1_2 } as const satisfies Record<string, TuningPatch | null>;
+/** v1.3 (Sid's final pass, 2026-10-18): v1.2 with G2 Dig wood 20 → 12 and par 60. */
+export const V1_3: TuningPatch = merge(structuredClone(V1_2) as Record<string, unknown>, {
+  gates: { dig: { wood: 12 } },
+  end: { parDays: 60 },
+}) as TuningPatch;
+
+export const TUNINGS = { "v1": null, "v1.1": V1_1, "v1.2": V1_2, "v1.3": V1_3 } as const satisfies Record<string, TuningPatch | null>;
 export type TuningName = keyof typeof TUNINGS;
-export const DEFAULT_TUNING: TuningName = "v1.2";
-/** ?tuning= values: v1, v1.1, v1.2 (and the old "proposed" for v1.1). Unknown or missing → default. */
+export const DEFAULT_TUNING: TuningName = "v1.3";
+/** ?tuning= values: v1, v1.1, v1.2, v1.3 (and the old "proposed" for v1.1). Unknown or missing → default. */
 export function tuningName(param: string | null | undefined): TuningName {
   if (param === "proposed") return "v1.1";
   return param && param in TUNINGS ? (param as TuningName) : DEFAULT_TUNING;
 }
 
-/** Live tuning the loop reads. Starts at the default (v1.2); swap with useTuning()/applyTuning(). */
+/** Live tuning the loop reads. Starts at the default (v1.3); swap with useTuning()/applyTuning(). */
 export const TUNING: Tuning = build(TUNINGS[DEFAULT_TUNING]);
 
 /** Replace the live tuning with spec v1 plus `patch` (null = plain spec v1). */

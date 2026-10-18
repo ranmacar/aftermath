@@ -6,6 +6,7 @@ import {
   turnBack, weightOf, workShelter, dayYield, hexById, floorsDone, chooseStorm, stormOutlook,
 } from "./loop.ts";
 import { demoHexes, greedyDecide, playGreedy } from "./greedy.ts";
+import { plannerDecide, playPlanner } from "./planner.ts";
 
 // Most rule tests pin spec v1 numbers; the v1.2 tests below switch tuning explicitly.
 const fresh = (seed = 7, tuning: TuningName = "v1"): Run => { useTuning(tuning); return newRun(seed, demoHexes(seed)); };
@@ -135,16 +136,34 @@ test("soft end at day 120", () => {
   assert.equal(r.status, "soft-end"); assert.ok(r.cards.includes("soft-end")); assert.equal(r.day, 120);
 });
 
-test("tuning names: default is v1.2, v1 and v1.1 stay selectable", () => {
-  assert.equal(DEFAULT_TUNING, "v1.2");
-  assert.equal(tuningName(null), "v1.2"); assert.equal(tuningName("v1"), "v1"); assert.equal(tuningName("v1.1"), "v1.1");
-  assert.equal(tuningName("proposed"), "v1.1"); assert.equal(tuningName("nope"), "v1.2");
+test("tuning names: default is v1.3, v1 to v1.2 stay selectable", () => {
+  assert.equal(DEFAULT_TUNING, "v1.3");
+  assert.equal(tuningName(null), "v1.3"); assert.equal(tuningName("v1"), "v1"); assert.equal(tuningName("v1.1"), "v1.1");
+  assert.equal(tuningName("v1.2"), "v1.2"); assert.equal(tuningName("proposed"), "v1.1"); assert.equal(tuningName("nope"), "v1.3");
   useTuning("v1"); assert.equal(T.end.parDays, 50); assert.equal(T.rules.payAheadAll, false); assert.equal(T.yields.city.scrap, 6);
   useTuning("v1.1"); assert.equal(T.end.parDays, 50); assert.equal(T.rules.stormChoice, false); assert.equal(T.yields.city.scrap, 8);
   useTuning("v1.2"); assert.equal(T.end.parDays, 55); assert.equal(T.rules.payAheadAll, true); assert.equal(T.rules.stormChoice, true);
   assert.equal(T.yields.city.scrap, 9); assert.equal(T.condition.eatPerDay, 0.5); assert.equal(T.cityRing, 3);
-  assert.equal(recap(fresh(7, "v1.2")).par, 55);
+  assert.equal(recap(fresh(7, "v1.2")).par, 55); assert.equal(T.gates.dig.wood, 20);
+  useTuning("v1.3"); assert.equal(T.gates.dig.wood, 12); assert.equal(T.end.parDays, 60);
+  assert.equal(T.rules.payAheadAll, true); assert.equal(T.rules.stormChoice, true); assert.equal(T.yields.city.scrap, 9);
+  assert.equal(fresh(7, "v1.3").stages[1]!.cost.wood, 12); assert.equal(recap(fresh(7, "v1.3")).par, 60);
 });
+
+test("planner bot: city run first, keeps the storm turn-back rule, skips trips that run into a forecast storm", () => {
+  const r = noStorms(fresh(7, "v1.3"));
+  const first = advance(plannerDecide(r)).run; // unfold
+  const trip = plannerDecide(first);
+  assert.equal(trip.activity.kind, "trip"); assert.equal(hexById(trip, (trip.activity as { hexId: string }).hexId)!.type, "city");
+  const low = stormTrip(9).run; assert.equal((plannerDecide(low).activity as { phase: string }).phase, "back");
+  const ok = stormTrip(10).run; assert.equal((plannerDecide(ok).activity as { phase: string }).phase, "forage");
+  // storm forecast for tomorrow: anything it starts is home before it, or it rests
+  const h = fresh(7, "v1.3"); h.storms = [{ start: 1, end: 3 }]; h.solarHelped = true; h.stock.scrap = 12; h.stock.food = 20;
+  const d = plannerDecide(h);
+  if (d.activity.kind === "trip") { const hx = hexById(d, d.activity.hexId)!; assert.ok(h.day + travelDaysOf(hx.ring) * 2 + d.activity.forageDays <= 1); }
+  else assert.equal(d.activity.kind, "rest");
+});
+const travelDaysOf = (ring: number) => ring * T.travelPerRing;
 
 test("v1.2 pays one gate ahead everywhere: G2 while G1 builds, Floor 1 while G2 builds", () => {
   let r = noStorms(fresh(7, "v1.2")); r.stock = { food: 200, wood: 100, stone: 100, scrap: 100 };
@@ -203,14 +222,26 @@ test("headless greedy playthrough", () => {
   const summarize = (name: TuningName) => { useTuning(name); const d: number[] = []; let fin = 0;
     for (let s = 1; s <= 30; s++) { const c = recap(playGreedy(s)); d.push(c.days); if (c.status === "moved-in") fin++; }
     d.sort((a, b) => a - b); return { fin, best: d[0]!, median: d[15]!, worst: d.at(-1)! }; };
-  const out = Object.fromEntries((["v1", "v1.1", "v1.2"] as const).map((n) => [n, summarize(n)]));
+  const out = Object.fromEntries((["v1", "v1.1", "v1.2", "v1.3"] as const).map((n) => [n, summarize(n)]));
   for (const [n, x] of Object.entries(out)) console.log(`greedy, ${n}: ${x.fin}/30 moved in, days best ${x.best} median ${x.median} worst ${x.worst}`);
-  const v12 = out["v1.2"]!, v11 = out["v1.1"]!;
-  assert.equal(v12.fin, 30); assert.equal(v11.fin, 30);
-  // Sid's v1.2 targets are median <= 62 and best <= 52; the greedy bot doesn't reach them yet (see changelog).
-  // These bounds only catch regressions.
-  assert.ok(v12.median <= 72, `v1.2 median ${v12.median}`); assert.ok(v12.best >= 40);
+  const v13 = out["v1.3"]!, v12 = out["v1.2"]!, v11 = out["v1.1"]!;
+  assert.equal(v13.fin, 30); assert.equal(v12.fin, 30); assert.equal(v11.fin, 30);
+  // Greedy is the floor (Sid: ~66 is fine on v1.3). These bounds only catch regressions.
+  assert.ok(v13.median <= 70, `v1.3 greedy median ${v13.median}`); assert.ok(v12.median <= 72, `v1.2 median ${v12.median}`);
+  assert.ok(v12.best >= 40);
   assert.ok(out["v1"]!.best >= 40); // spec v1 never beats par by luck
   assert.equal(recap(playGreedy(5)).days, recap(playGreedy(5)).days); // deterministic
+  useTuning(DEFAULT_TUNING);
+});
+
+test("headless planner playthrough (v1.3 target: median <= 60, all complete)", () => {
+  for (const n of ["v1.2", "v1.3"] as const) {
+    useTuning(n); const d: number[] = []; let fin = 0, col = 0;
+    for (let s = 1; s <= 30; s++) { const c = recap(playPlanner(s)); d.push(c.days); if (c.status === "moved-in") fin++; col += c.collapses; }
+    d.sort((a, b) => a - b);
+    console.log(`planner, ${n}: ${fin}/30 moved in, days best ${d[0]} median ${d[15]} worst ${d.at(-1)}, ${col} collapses`);
+    if (n === "v1.3") { assert.equal(fin, 30); assert.ok(d[15]! <= 60, `planner median ${d[15]}`); }
+  }
+  assert.equal(recap(playPlanner(5)).days, recap(playPlanner(5)).days);
   useTuning(DEFAULT_TUNING);
 });

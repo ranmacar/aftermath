@@ -23,7 +23,7 @@ function needs(run: Run): Stock[] {
 }
 
 /** Simulate `days` forage days on a hex keeping only `want`, return what fits in the bag. */
-function haul(run: Run, hex: Hex, days: number, keep: Res[]): Stock {
+export function haul(run: Run, hex: Hex, days: number, keep: Res[]): Stock {
   const got = z(); let mult = hex.mult;
   for (let k = 0; k < days; k++) {
     const y = dayYield(run, { ...hex, mult }); mult = Math.max(T.depletion.floor, mult - T.depletion.perForageDay);
