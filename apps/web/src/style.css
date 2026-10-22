@@ -439,10 +439,19 @@ textarea {
   }
 }
 
-@media (pointer: coarse), (max-width: 820px) {
+@media (pointer: fine) and (max-width: 820px) {
   .walk-help {
     display: none;
   }
+}
+
+@media (pointer: coarse) {
+  .walk-help {
+    max-width: calc(100vw - 15rem);
+  }
+}
+
+@media (pointer: coarse), (max-width: 820px) {
 
   .walk-touch {
     display: block;

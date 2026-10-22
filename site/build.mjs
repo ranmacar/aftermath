@@ -34,15 +34,15 @@ const title = src => src.match(/^#\s+(.*)/m)[1];
 const lede = src => src.split('\n\n').find(p => p.trim() && !p.startsWith('#'))?.trim() ?? '';
 const nav = cur => `<a class="skip" href="#main">Skip to content</a><nav class="nav"><a class="brand" href="${BASE}">Aftermath</a><div class="links">
 <a href="${BASE}#themes"${cur==='themes'?' aria-current="page"':''}>Themes</a><a href="${BASE}progress/"${cur==='progress'?' aria-current="page"':''}>Progress</a>
-<a class="play" href="${PLAY}">Play demo</a></div></nav>`;
+<a class="play" href="${PLAY}">Play the demo</a></div></nav>`;
 // Old demo links (/aftermath/?procedural=1, ?cad=, ?key=, #...) now land here: forward them to the demo,
 // keeping query and hash. The demo has no hash routes, so a hash alone stays on the landing (#themes etc.). See site/README.md.
 const redirect = `<script>(function(){var q=new URLSearchParams(location.search);
 var demo=["procedural","cad","key","asset"].some(function(k){return q.has(k)});
 if(demo)location.replace(${JSON.stringify(PLAY)}+location.search+location.hash);})();</script>`;
 const NOVELS = process.argv.includes('--novels'); // novels section is left out of the HTML entirely unless set
-const DESC = 'A slow browser game played on the real map: wake a buried seed pod after a solar storm, grow a tower, and turn one hex of land into a living farm.';
-const footer = home => `<footer><p>Found a bug or have an idea? <a href="${REPO}/issues">Open an issue on GitHub</a>.</p>
+const DESC = 'A slow browser game on the real map. Wake a buried seed pod, grow a tower, and tend one hex of land until it feeds people again.';
+const footer = home => `<footer><p>Early and built in the open. Found a bug or have an idea? <a href="${REPO}/issues">Open an issue on GitHub</a>.</p>
 <p>${home ? '' : `Code <a href="${REPO}/blob/main/LICENSE">MIT</a> · story, art and docs CC BY-SA 4.0 · hardware designs CERN-OHL-S-2.0 · `}<a href="${REPO}">Source on GitHub</a></p></footer>`;
 const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l12 7v14l-12 7-12-7V9z' fill='%2318201B'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23E9A94B'/%3E%3C/svg%3E";
 const page = (t, body, cur='', {before='', home=false, desc=DESC, url='', image='hero'}={}) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -81,22 +81,23 @@ const tags = {}; execSync('git tag --format="%(refname:short) %(objectname)"',{c
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const human = d => { const [y,m,dd] = String(d).slice(0,10).split('-'); return `${+dd} ${MONTHS[m-1]} ${y}`; };
-const playNext = `<p class="next"><a class="btn" href="${PLAY}">Play the demo</a></p>`;
-const lead = inline(sect('The project in one paragraph').replace('one real hex at a time', 'one real hex (a patch of about 1.5 ha) at a time'));
+const GH = `<a class="secondary" href="${REPO}">Follow on GitHub</a>`;
+const playNext = `<p class="next"><a class="btn" href="${PLAY}">Play the demo</a> ${GH}</p>`;
+const lead = inline(sect('The project in one paragraph').replace('one real hex at a time', 'one real hex (about 1.5 ha) at a time'));
 const about = md(sect("What we're trying to do").replace('the Agrokruh ring', 'the Agrokruh ring (a ring-shaped farm layout)'));
 const glossLede = s => s.replace('a geopolymer caisson', 'a caisson, a buried shell of geopolymer concrete');
 
 // --- landing. Order (Bucky 7): hero + CTA, demo, themes, not, roadmap, about, licences, (novels)
 const hero = `<div class="hero-band"><section class="hero">
-<div class="hero-text"><h1>Rebuild one real place after the grid goes dark.</h1>
-<p class="tagline">A browser game: wake a buried seed pod after a solar storm, grow a tower, and bring one real patch of land back to life.</p>
-<p class="cta"><a class="btn" href="${PLAY}">Play the demo</a> <span class="note">Free, in your browser. An early prototype: you can walk, dig, build and farm, but there's no survival loop yet.</span></p>
+<div class="hero-text"><h1>The grid is gone. Bring one real place back to life.</h1>
+<p class="tagline">A slow browser game on the real map. Wake a buried seed pod, grow a tower, and tend one hex of land until it feeds people again.</p>
+<p class="cta"><a class="btn" href="${PLAY}">Play the demo</a> ${GH} <span class="note">Free, in your browser, no install. Early and rough: dig out, forage, wait out storms and help the pod build its tower.</span></p>
 <p class="lead">${lead}</p></div>${art('hero',{eager:true})}</section></div>`;
 const latest = versions.latest;
 write('index.html', page('Aftermath', `
 <section id="demo"><h2>The current demo</h2>
-<p>In the demo you can:</p><ul><li>dig out of a basement</li><li>follow a signal to a buried pod and find it on the map</li><li>build: solar, dig, rise, and watch the tower go up</li><li>farm the ring of round beds around the tower</li></ul>
-<p>It runs on phones and desktops, in the browser, with no install. It's a prototype, so expect rough edges.</p>
+<p>In the demo you can:</p><ul><li>dig out of a basement</li><li>follow a signal to a buried pod and find it on the map</li><li>build: solar, dig, rise, and watch the tower go up</li><li>farm the ring of round beds around the tower</li><li>forage nearby hexes and get home before a storm hits</li></ul>
+<p>Runs in the browser on phones and desktops. It's a prototype: tell us what breaks.</p>
 <ul class="versions"><li><a href="${PLAY}"${latest ? ` title="main @ ${esc(latest.sha.slice(0,7))}"` : ''}>Latest build<span class="label">Prototype</span><small>${latest ? `updated ${human(latest.builtAt)}` : ''}</small></a></li>
 ${versions.versions.map(v=>`<li><a href="${vpath(v.path)}" title="${esc(v.ref)} @ ${esc((v.sha||'').slice(0,7))}">${esc(v.version)}<small>earlier build (procedural, no CAD models), ${human(v.builtAt)}</small></a></li>`).join('')}
 <li><a href="${BASE}versions.html">All versions</a></li></ul></section>
@@ -104,18 +105,18 @@ ${versions.versions.map(v=>`<li><a href="${vpath(v.path)}" title="${esc(v.ref)} 
 ${themes.map(t=>`<li class="card">${art('theme-'+t.id,{decorative:true})}<h3><a href="${BASE}themes/${t.id}/">${inline(t.card)}</a></h3><p>${inline(glossLede(t.lede))}</p></li>`).join('\n')}</ul></section>
 <section id="not"><h2>What this is not</h2><ul><li>Not a city builder. One tower per hex, by design.</li><li>Not a survival shooter.</li>
 <li>Not a building guide. Planning rules in most of Europe wouldn't allow a tower like this today; the game is partly an argument that they should.</li></ul>
-<p class="is">What it is: a slow game about tending one place until it comes back.</p></section>
+<p class="is">What it is: a slow game about tending one place until it comes back. Start with one hex.</p><p class="next"><a class="btn" href="${PLAY}">Play the demo</a></p></section>
 <section id="roadmap"><h2>Roadmap</h2><p>No dates, because we'd miss them. In order:</p><ol>
-<li><strong>Now: the demo.</strong> The playable demo (see above). Mostly there.</li>
-<li><strong>Next: your home hex.</strong> Survive outside, forage, find other survivors, move into the tower, plant the ring, get the radio working.</li>
+<li><strong>Now: the demo.</strong> Dig out, forage, wait out storms and help the pod build its tower. Playable, still rough.</li>
+<li><strong>Next: your home hex.</strong> Find other survivors, move into the tower, plant the ring, get the radio working.</li>
 <li><strong>Then: neighbours.</strong> Contact reveals other pods; you can seed a second tower next door that runs on the first one's power.</li>
 <li><strong>Later: airships.</strong> Trade between groups, multiplayer.</li></ol>
 <p>Alongside it: publish the CAD as open designs once they're tested enough to be useful.</p>
 <p><a class="more" href="${BASE}progress/">What's been built so far →</a></p></section>
 <section id="about"><h2>What we're trying to do</h2>${about}</section>
-${NOVELS ? `<section id="novels" class="night" data-slot="arbolis-novels"><h2>The novels</h2><p>The same world is told in novels.</p><ul class="novel-links"></ul></section>` : ''}
+${NOVELS ? `<section id="novels" class="night" data-slot="arbolis-novels"><h2>The novels</h2><p>Aftermath is set in the time of the fourth Arbolis novel by Mu Mak. Arbolis is both the story world and its main city, founded around the Consortium base.</p><ul class="novel-links"></ul></section>` : ''}
 <section id="licences"><h2>Open by default. Take it, build it, fix it.</h2>
-<p>You can play, copy and change the code (MIT), reuse the story and art with credit (CC BY-SA 4.0), and build or modify the hardware designs (CERN-OHL-S-2.0).</p></section>`, '', {before: hero, home: true}));
+<p>You can play, copy and change the code (MIT), reuse the story and art with credit (CC BY-SA 4.0), and build or modify the hardware designs (CERN-OHL-S-2.0).</p><p>${GH}</p></section>`, '', {before: hero, home: true}));
 
 // --- themes: H1 from the markdown, full-width art, all-themes list and a Play link at the end
 themes.forEach(t => {

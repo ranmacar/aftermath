@@ -587,7 +587,7 @@ export function attachView3d(handlers: {
       ensureMapLibre(cell);
       setError(
         err instanceof Error
-          ? `${err.message} — showing 3D terrain instead.`
+          ? `${err.message.replace(/\.+\s*$/, "")}. Showing 3D terrain instead.`
           : "Showing 3D terrain instead.",
       );
     }

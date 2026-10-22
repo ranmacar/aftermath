@@ -311,15 +311,15 @@ async function fallbackLocation(): Promise<void> {
   }
   const cached = readLast();
   if (cached) {
-    applyPosition(cached, "Using last location — tap the locate control to refresh");
+    applyPosition(cached, "Using last location. Tap the locate control to refresh");
     return;
   }
   const network = await networkLocation();
   if (network) {
-    applyPosition(network, "Approximate location — tap locate to use GPS");
+    applyPosition(network, "Approximate location. Tap locate to use GPS");
     return;
   }
-  setStatus("Location unavailable — pan the map or tap locate", "err");
+  setStatus("Location unavailable. Pan the map or tap locate", "err");
 }
 
 /** Fresh GPS after Beat 1 / cold start. Resizes map first (overlay was covering it). */
@@ -342,7 +342,7 @@ async function locateUser(reason: "start" | "after-digout"): Promise<void> {
       applyPosition(
         coord,
         reason === "after-digout"
-          ? "You're here — follow the pod signal, pick a hex"
+          ? "You're here. Follow the pod signal and pick a hex"
           : "You're here",
       );
       return;

@@ -4,7 +4,7 @@ Aftermath is a game in the **Arbolis** IP. Arbolis is the story world and also i
 
 ## The project in one paragraph
 
-Aftermath is a game set after a solar storm has taken out the grid. You wake a buried seed pod, it grows a tower, and you turn the land around it into a living farm. Then you connect with other towers. It's played on the real map, one real hex at a time, so the question it keeps asking is concrete: *what would this place look like if people lived here well?*
+Aftermath is a game set after a solar storm has taken out the grid. You wake a buried seed pod, it grows a tower, and you turn the land around it into a living farm, then connect with other towers. It's played on the real map, one real hex at a time, so the question it keeps asking is concrete: *what would this place look like if people lived here well?*
 
 ## What we're trying to do
 
@@ -25,7 +25,7 @@ Aftermath is a game set after a solar storm has taken out the grid. You wake a b
 
 - **Each tower owns its environment.** Inside its circle everything is simple and centred on the tower: water slopes toward it, waste is handled on site. Larger landscapes are shaped only by networks of towers.
 - **Living land, not pads.** Hexes stay soil, yard and canopy.
-- **Sanctuary, not conquest.** No wave defense, no combat loop. Territory is the graph of hexes your power reaches, not paint you claim.
+- **Sanctuary, not conquest.** No wave defence, no combat loop. Territory is the graph of hexes your power reaches, not paint you claim.
 - **Survivors are residents, not units.**
 - **Honest about what's fiction.** Label concepts as concepts and prototypes as untested.
 - **Open by default.** Code MIT, hardware designs CERN-OHL-S-2.0, story/art/docs CC BY-SA 4.0. See the README.

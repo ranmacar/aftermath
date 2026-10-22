@@ -2,7 +2,7 @@
  * Planner bot (Sid's v1.3 brief), alongside the greedy bot. Headless test player only, not used by the UI.
  * - Opens with a city run for G1's scrap.
  * - Always gathers for the next unpaid gate in build order, even while the pod is still building the one
- *   before it (pay ahead), with the shelter and later gates as a secondary goal.
+ *   before it (deliver early), with the shelter and later gates as a secondary goal.
  * - Larder under 4 food: a food run first.
  * - Checks the storm warning before setting out: it only takes trips that are home before a forecast
  *   storm, otherwise it rests through it.

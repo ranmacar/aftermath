@@ -2,7 +2,7 @@
 
 Most strategy games are about taking. This one is about keeping something alive.
 
-- There's no wave defense and no combat loop at the core.
+- There's no wave defence and no combat loop at the core.
 - Survivors you bring home are residents with lives, not units.
 - Your territory is the set of hexes your power and care actually reach (a connected graph), not colour painted on a map.
 - Other players and factions show up first as neighbours and traders.

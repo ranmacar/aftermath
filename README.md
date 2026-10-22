@@ -4,13 +4,13 @@ A slow game about rebuilding after the grid goes dark, played on the real map.
 
 A solar storm has burned out most of the world's electrical infrastructure. Before it hit, someone buried tens of thousands of shipping containers upright, each one a seed pod. You dig one out. It wakes, digs itself in, and grows a midrise tower. You survive beside it, bring people in from the failing cities, move in, and turn the land around it into a farm.
 
-There's no wave defense and no gacha. The game is about stewardship: one tower, one hex of living land, then a network.
+There's no wave defence and no gacha. The game is about stewardship: one tower, one hex of living land, then a network.
 
 Aftermath is part of **Arbolis**, a story world told in novels and games. Arbolis is also the name of the main city, founded around the Consortium base. The game is set in the time of the fourth Arbolis book and shares its canon. Links to the novels will follow when their pages are ready.
 
 ## Status
 
-Early prototype. It runs and you can walk around in it, but it isn't a game yet.
+Early and in progress. There is a first survival loop (forage, wait out storms, help the pod build its tower); everything else is still a prototype.
 
 What works today:
 - **Map**: pick a real hex (H3 resolution 10, about 1.5 ha) anywhere on Earth
@@ -18,9 +18,9 @@ What works today:
 - **Build**: first-person on the cell: solar, dig, rise
 - **Farm**: a finished tower with an Agrokruh ring of 18 beds (6 inner + 12 outer), a crop schedule, people walking around, fly mode
 
-What doesn't exist yet: the survival loop, resources, survivors, the satellite mesh, expansion to neighbouring hexes, balance. See [docs/design/GDD-mechanics-v0.md](docs/design/GDD-mechanics-v0.md).
+What doesn't exist yet: survivors, the satellite mesh, expansion to neighbouring hexes, balance. See [docs/design/GDD-mechanics-v0.md](docs/design/GDD-mechanics-v0.md).
 
-**Play the live demo:** https://ranmacar.github.io/aftermath/
+**Play the demo:** https://ranmacar.github.io/aftermath/play/ · **Follow on GitHub:** https://github.com/ranmacar/aftermath (watch or star the repo) · **Progress:** https://ranmacar.github.io/aftermath/progress/
 
 ## Why
 

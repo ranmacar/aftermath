@@ -4,15 +4,14 @@
  */
 import { gridDisk } from "h3-js";
 import {
-  type Card, type Hex, type HexType, type Res, type Run,
+  type Card, type Hex, type Res, type Run,
   DEFAULT_TUNING, RESOURCES, STAGE_LABEL, TUNING, advance, atHome, chooseStorm, stormOutlook, tuningName, useTuning, canHelp, canWorkShelter, dayYield,
   deliver, dismissCard, fmtDay, forecast, generateHexes, helpUnfold, hexById, newRun, owed, queueDeliver, recap, rest,
-  shelterOwed, startTrip, stormAt, travelDays, tripPreview, turnBack, weightOf, workShelter,
+  plural, TYPE_LABEL, shelterOwed, startTrip, stormAt, travelDays, tripPreview, turnBack, weightOf, workShelter,
 } from "@aftermath/sim/loop";
 import type { Settlement } from "@aftermath/sim";
 
 const KEY = "aftermath:loop:v1:";
-const TYPE_LABEL: Record<HexType, string> = { forest: "Forest", field: "Field", water: "Water edge", ruin: "Ruin", city: "City edge" };
 const RES_ICON: Record<Res, string> = { food: "🥕", wood: "🪵", stone: "🪨", scrap: "⚙️" };
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
@@ -75,7 +74,7 @@ export function mountLoop(root: HTMLElement, cell: string, opts: { onChange: (ru
     if (a.kind === "rest") return `Resting until day ${fmtDay(a.until)}.`;
     if (a.kind === "out-cold") return `Out cold until day ${fmtDay(a.until)}.`;
     if (a.kind === "work") return a.task === "help" ? `Unfolding the solar array (until day ${fmtDay(a.until)}).` : `Building the rough shelter (until day ${fmtDay(a.until)}).`;
-    const hex = hexById(run, a.hexId)!; const what = TYPE_LABEL[hex.type];
+    const hex = hexById(run, a.hexId)!; const what = TYPE_LABEL[hex.type].toLowerCase();
     if (a.phase === "out") return `Walking to the ${what}.`;
     if (a.phase === "back") return `Hauling home from the ${what}: ${weightOf(a.load)}/${TUNING.carry.capacity} load.`;
     return `Foraging the ${what}: day ${Math.min(a.forageDays, Math.floor(a.forageDone) + 1)} of ${a.forageDays}, ${weightOf(a.load)}/${TUNING.carry.capacity} load.`;
@@ -96,9 +95,9 @@ export function mountLoop(root: HTMLElement, cell: string, opts: { onChange: (ru
   function renderPanel() {
     if (run.status !== "playing") { panel.innerHTML = `<header class="loop-head"><h2>Pod</h2></header><p class="act">${run.status === "moved-in" ? "The tower is built." : "The pod finished without you."}</p><p><button type="button" class="btn ghost" data-act="reset">Start over</button></p>`; panel.classList.toggle("is-open", open); return; }
     const home = atHome(run), a = run.activity;
-    const stages = run.stages.map((s, i) => `<li class="stage is-${s.status}"><span class="st-name">${STAGE_LABEL[s.id]}</span><span class="st-cost">${s.status === "done" ? "built" : s.status === "building" ? `building · day ${fmtDay(s.doneAt!)}` : s.status === "open" ? costLine(s.paid, s.cost) + (s.id === "solar" && !run.solarHelped ? " · needs unfolding" : "") + (i > 0 && run.stages[i - 1]!.status !== "done" ? " · pay ahead" : "") : "locked"}</span></li>`).join("");
+    const stages = run.stages.map((s, i) => `<li class="stage is-${s.status}"><span class="st-name">${STAGE_LABEL[s.id]}</span><span class="st-cost">${s.status === "done" ? "built" : s.status === "building" ? `building · ready day ${fmtDay(s.doneAt!)}` : s.status === "open" ? costLine(s.paid, s.cost) + (s.id === "solar" && !run.solarHelped ? " · needs unfolding" : "") + (i > 0 && run.stages[i - 1]!.status !== "done" ? " · deliver early" : "") : "locked"}</span></li>`).join("");
     const shelterRow = run.shelter.done ? `<li class="stage is-done"><span class="st-name">Shelter</span><span class="st-cost">built</span></li>`
-      : `<li class="stage ${run.stages[0]!.status === "done" ? "is-open" : "is-locked"}"><span class="st-name">Shelter</span><span class="st-cost">${run.stages[0]!.status === "done" ? costLine(run.shelter.paid, { food: 0, wood: TUNING.shelter.wood, stone: TUNING.shelter.stone, scrap: 0 }) + ` · ${TUNING.shelter.workDays}d work` : "after G1"}</span></li>`;
+      : `<li class="stage ${run.stages[0]!.status === "done" ? "is-open" : "is-locked"}"><span class="st-name">Shelter</span><span class="st-cost">${run.stages[0]!.status === "done" ? costLine(run.shelter.paid, { food: 0, wood: TUNING.shelter.wood, stone: TUNING.shelter.stone, scrap: 0 }) + ` · ${TUNING.shelter.workDays}d work` : "after the solar array"}</span></li>`;
     const gateNeed = run.stages.some((s) => s.status === "open" && RESOURCES.some((r) => owed(s)[r] > 0 && run.stock[r] > 0));
     const shelterNeed = !run.shelter.done && run.stages[0]!.status === "done" && RESOURCES.some((r) => shelterOwed(run)[r] > 0 && run.stock[r] > 0);
     const homeActs = home ? `<div class="acts">
@@ -114,7 +113,7 @@ ${canWorkShelter(run) ? `<button type="button" class="btn" data-act="shelter">Bu
       const hexes = [...run.hexes].sort((x, y) => x.ring - y.ring);
       const pv = sel.hex ? tripPreview(run, sel.hex, sel.days) : null;
       planner = `<h3>Forage</h3><div class="hexes">${hexes.map(hexRow).join("")}</div>
-<div class="plan"><div class="days" role="group" aria-label="Days to stay"><button type="button" class="btn sq" data-act="days-" aria-label="Fewer days">−</button><span>${sel.days} day${sel.days > 1 ? "s" : ""}</span><button type="button" class="btn sq" data-act="days+" aria-label="More days">+</button></div>
+<div class="plan"><div class="days" role="group" aria-label="Days to stay"><button type="button" class="btn sq" data-act="days-" aria-label="Fewer days">−</button><span>${plural(sel.days, "day")}</span><button type="button" class="btn sq" data-act="days+" aria-label="More days">+</button></div>
 <label class="keep">Carry first <select data-act="keep">${(["scrap", "stone", "wood", "food"] as Res[]).map((r) => `<option value="${r}" ${sel.keep === r ? "selected" : ""}>${r}</option>`).join("")}</select></label></div>
 ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ceil(pv.totalDays * TUNING.condition.eatPerDay)} food${pv.stormOverlap ? ` · <strong class="warn">${pv.stormOverlap.start - run.day <= TUNING.storms.warningDays ? "storm forecast" : ""}</strong>` : ""}</p>` : `<p class="preview">Pick a hex.</p>`}
 <button type="button" class="btn go" data-act="go" ${sel.hex ? "" : "disabled"}>Set out</button>`;
@@ -131,11 +130,11 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
     "dog-charging": () => `<h2>Power on</h2><p>Solar is up. In the container a robot dog sits on its charger, its status light blinking amber: <em>charging…</em></p><p class="small">Coming after the demo: a helper that fetches, scouts and runs errands within its charge.</p>`,
     "cnc-soon": () => `<h2>A first underground floor</h2><p>With the shelter up, the container digs itself out. The space it leaves becomes the first underground floor, with a CNC mill and lathe still in their wrap.</p><p class="small">Coming soon: turn scrap into parts.</p>`,
     "move-in": () => recapHtml("Move in", "All four floors are built. The tower is ready for its first family."),
-    "soft-end": () => recapHtml("The pod finished without you", "Day 120. The pod built what it could on its own. Next time, feed it sooner."),
+    "soft-end": () => recapHtml("The pod finished without you", "Day 120. The pod built what it could on its own. Next time, bring it what it needs sooner."),
   };
   function recapHtml(title: string, lead: string) {
     const c = recap(run);
-    return `<h2>${title}</h2><p>${lead}</p><ul class="recap"><li><strong>${fmtDay(c.days)}</strong> days <span>(par about ${c.par})</span></li><li><strong>${c.collapses}</strong> collapse${c.collapses === 1 ? "" : "s"}</li><li><strong>${c.storms}</strong> storm${c.storms === 1 ? "" : "s"} survived</li><li><strong>${c.scrap}</strong> scrap hauled</li><li><strong>${c.floors}</strong>/4 floors</li></ul>`;
+    return `<h2>${title}</h2><p>${lead}</p><ul class="recap"><li><strong>${fmtDay(c.days)}</strong> ${c.days === 1 ? "day" : "days"} <span>(par about ${c.par})</span></li><li><strong>${c.collapses}</strong> ${c.collapses === 1 ? "collapse" : "collapses"}</li><li><strong>${c.storms}</strong> ${c.storms === 1 ? "storm" : "storms"} waited out</li><li><strong>${c.scrap}</strong> scrap hauled</li><li><strong>${c.floors}</strong>/4 floors</li></ul>`;
   }
   function renderCard() {
     const sp = run.stormPrompt;
@@ -144,7 +143,7 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
       const tb = chooseStorm(run, "back").activity; const home = fmtDay(tb.kind === "trip" ? tb.phaseEnd : run.day);
       card.hidden = false;
       card.innerHTML = `<div class="card-box is-storm" role="alertdialog" aria-modal="true" aria-labelledby="storm-h"><h2 id="storm-h">Storm tomorrow</h2>
-<p>The pod warns: a storm hits on day ${fmtDay(sp.start)} and lasts ${len} day${len > 1 ? "s" : ""}. Out here, foraging stops while it blows.</p>
+<p>The pod warns: a storm hits on day ${fmtDay(sp.start)} and lasts ${plural(len, "day")}. Out here, foraging stops while it blows.</p>
 <ul class="storm-opts"><li><strong>Wait it out:</strong> ${String(TUNING.condition.stormOutdoorsPerDay).replace("-", "−")} Condition a day, then keep foraging. You'd be at about ♥ ${after}/10.</li>
 <li><strong>Turn back:</strong> keep what's in the bag, home on day ${home}.</li></ul>
 <p class="card-acts"><button type="button" class="btn ghost" data-act="storm-back">Turn back</button><button type="button" class="btn go" data-act="storm-wait">Wait it out</button></p></div>`;
@@ -171,7 +170,7 @@ ${pv ? `<p class="preview">Back on day ${fmtDay(pv.returnDay)} · eats ${Math.ce
     if (act === "rest") return set(rest(run, 1));
     if (act === "turnback") return set(turnBack(run));
     if (act === "go" && sel.hex) { const order = [sel.keep, ...(["scrap", "stone", "wood", "food"] as Res[]).filter((r) => r !== sel.keep)]; set(startTrip(run, sel.hex, sel.days, order)); sel.hex = null; return; }
-    if (act === "storm-wait" || act === "storm-back") { const r = chooseStorm(run, act === "storm-wait" ? "wait" : "back"); return set(r, [{ text: act === "storm-wait" ? "You'll sit the storm out." : "Turned back for home.", kind: "info" }]); }
+    if (act === "storm-wait" || act === "storm-back") { const r = chooseStorm(run, act === "storm-wait" ? "wait" : "back"); return set(r, [{ text: act === "storm-wait" ? "You'll wait the storm out." : "Turned back for home.", kind: "info" }]); }
     if (act === "card") return set(dismissCard(run, t.dataset.card as Card));
     if (act === "farm") { set(dismissCard(run, "move-in")); opts.onFarm(); return; }
     if (act === "reset") { if (confirm("Start the pod over from day 0?")) set(newRun(seedOf(cell), loopHexes(cell))); return; }

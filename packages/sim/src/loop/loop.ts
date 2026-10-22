@@ -130,7 +130,7 @@ export function newRun(seed: number, hexes: Hex[]): Run {
 }
 
 // ---------- queries ----------
-export const STAGE_LABEL: Record<StageId, string> = { solar: "G1 Solar", dig: "G2 Dig", floor1: "Floor 1", floor2: "Floor 2", floor3: "Floor 3", floor4: "Floor 4" };
+export const STAGE_LABEL: Record<StageId, string> = { solar: "Solar array", dig: "Dig the pit", floor1: "Floor 1", floor2: "Floor 2", floor3: "Floor 3", floor4: "Floor 4" };
 export const stormAt = (run: Run, t: number): Storm | undefined => run.storms.find((s) => s.start <= t + EPS && t < s.end - EPS);
 export const nextStorm = (run: Run, t = run.day): Storm | undefined => run.storms.find((s) => s.start > t + EPS);
 export const forecast = (run: Run): Storm | undefined => { const s = nextStorm(run); return s && s.start - run.day <= T.storms.warningDays + EPS ? s : undefined; };
@@ -176,7 +176,7 @@ export function startTrip(prev: Run, hexId: string, days: number, keep: Res[] = 
   const run = clone(prev); const hex = hexById(run, hexId);
   if (!hex || !atHome(run) || run.status !== "playing" || stormAt(run, run.day) || days < 1) return prev;
   run.activity = { kind: "trip", hexId, phase: "out", phaseEnd: run.day + travelDays(hex), forageDays: Math.floor(days), forageDone: 0, load: zero(), keep };
-  run.stats.tripCount++; push(run, "info", `Set out for the ${hex.type} (${days} day${days > 1 ? "s" : ""}).`, false);
+  run.stats.tripCount++; push(run, "info", `Set out for the ${place(hex.type)} (${plural(days, "day")}).`, false);
   return run;
 }
 export function turnBack(prev: Run): Run {
@@ -250,6 +250,12 @@ function tryStartBuilds(run: Run): void {
   }
 }
 export const fmtDay = (d: number) => (Number.isInteger(d) ? String(d) : d.toFixed(1));
+/** "1 day", "2 days", "1.5 days": the noun follows the count. */
+export const plural = (n: number, one: string, many = one + "s") => `${fmtDay(n)} ${n === 1 ? one : many}`;
+/** Player-facing place names; lowercase them mid-sentence. */
+export const TYPE_LABEL: Record<HexType, string> = { forest: "Forest", field: "Field", water: "Water edge", ruin: "Ruin", city: "City edge" };
+const place = (t: HexType) => TYPE_LABEL[t].toLowerCase();
+const stormIn = () => (T.storms.warningDays === 1 ? "storm tomorrow" : `storm in ${plural(T.storms.warningDays, "day")}`);
 
 function addLoad(a: Extract<Activity, { kind: "trip" }>, y: Stock): boolean {
   let full = false;
@@ -271,7 +277,7 @@ function collapse(run: Run, events: LoopEvent[]): void {
   run.activity = { kind: "out-cold", until: run.day + T.collapse.daysLost };
   run.condition = T.collapse.wakeCondition;
   run.stock.food += T.collapse.wakeFood;
-  events.push(push(run, "collapse", `You collapsed. Lost ${T.collapse.daysLost} days and half the load; you wake at home.`));
+  events.push(push(run, "collapse", `You collapsed. Lost ${plural(T.collapse.daysLost, "day")} and half the load; you wake at home.`));
 }
 
 /** One tick of simulated time. Returns events raised in it. */
@@ -295,7 +301,7 @@ export function tick(run: Run): LoopEvent[] {
         if (Math.abs(a.forageDone - Math.round(a.forageDone)) < EPS) {
           const full = addLoad(a, dayYield(run, hex, t0));
           hex.mult = Math.max(T.depletion.floor, hex.mult - T.depletion.perForageDay); hex.foragedAt = t1;
-          if (hex.type === "city") { const [v, ns] = rand(run.rng); run.rng = ns; if (v < T.cityHazard.chancePerDay) { run.condition += T.cityHazard.condition; ev.push(push(run, "hazard", "Collapsed stairwell in the city edge. You climb out bruised.", false)); } }
+          if (hex.type === "city") { const [v, ns] = rand(run.rng); run.rng = ns; if (v < T.cityHazard.chancePerDay) { run.condition += T.cityHazard.condition; ev.push(push(run, "hazard", "Collapsed stairwell at the city edge. You climb out bruised.", false)); } }
           if (a.forageDone + EPS >= a.forageDays || full) {
             if (full && a.forageDone + EPS < a.forageDays) ev.push(push(run, "bag-full", "Bag full, heading home.", false));
             a.phase = "back"; a.phaseEnd = t1 + travelDays(hex);
@@ -345,8 +351,8 @@ export function tick(run: Run): LoopEvent[] {
       const a2 = run.activity; const len = s.end - s.start;
       if (T.rules.stormChoice && a2.kind === "trip" && a2.phase !== "back") {
         run.stormPrompt = { ...s };
-        ev.push(push(run, "storm-choice", `The pod warns: storm in ${T.storms.warningDays} day, lasting ${len}. Wait it out (${String(T.condition.stormOutdoorsPerDay).replace("-", "−")} Condition a day) or turn back?`));
-      } else ev.push(push(run, "storm-warning", `The pod warns: storm in ${T.storms.warningDays} day, lasting ${len}.`));
+        ev.push(push(run, "storm-choice", `The pod warns: ${stormIn()}, lasting ${plural(len, "day")}. Wait it out (${String(T.condition.stormOutdoorsPerDay).replace("-", "−")} Condition a day) or turn back?`));
+      } else ev.push(push(run, "storm-warning", `The pod warns: ${stormIn()}, lasting ${plural(len, "day")}.`));
     }
     if (t0 < s.start - EPS && t1 + EPS >= s.start) ev.push(push(run, "storm-start", "Storm. Outdoor foraging stops."));
     if (t0 < s.end - EPS && t1 + EPS >= s.end) {

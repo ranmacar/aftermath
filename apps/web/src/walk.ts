@@ -212,6 +212,11 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
   const stick: HTMLElement = stickNode;
   const knob: HTMLElement = knobNode;
   const jump: HTMLButtonElement = jumpNode;
+  // Touch: the Jump button is Space (tap jumps, hold flies), the stick moves, drag looks; no run.
+  const helpNode = document.getElementById("walk-help");
+  if (helpNode && typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches) {
+    helpNode.textContent = "Stick to move · Drag to look · Tap Jump to jump · Hold Jump to fly";
+  }
 
   const overlay: HTMLElement = overlayNode;
   const canvas: HTMLCanvasElement = canvasNode;

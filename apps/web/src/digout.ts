@@ -87,7 +87,7 @@ export function attachDigout(handlers: {
         "The storm lasted a week. You waited it out. Hold to dig toward the light.";
     } else if (phase === "tunnel") {
       title.textContent = "Digging out";
-      hint.textContent = "Rubble shifts. Something is pulsing — not thunder.";
+      hint.textContent = "Rubble shifts. Something is pulsing, and it isn't thunder.";
     } else {
       title.textContent = "Open air";
       hint.textContent = "A pod is signalling for help. Follow it on the map.";
