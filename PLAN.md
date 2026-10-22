@@ -5,7 +5,7 @@
 1. Dig out of the basement → hear the pod
 2. Find the pod on Map / Look (H3 hex)
 3. Build: solar → dig → rise on local terrain
-4. Farm: finished tower + Agrokruh (18 beds), crops/schedule sim, optional sealed Google tiles
+4. Farm: finished tower + Agrokruh (18 beds: 6 inner + 12 outer), crops/schedule sim, optional sealed Google tiles
 
 ## Done (current tree)
 

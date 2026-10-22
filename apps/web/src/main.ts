@@ -228,6 +228,7 @@ const walk = attachWalk({
     else goMap();
   },
   onMap: () => goMap(),
+  onFarm: (cell) => goHabitat(cell),
 });
 
 const view3d = attachView3d({

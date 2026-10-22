@@ -16,7 +16,7 @@ What works today:
 - **Map**: pick a real hex (H3 resolution 10, about 1.5 ha) anywhere on Earth
 - **Look**: see that place in 3D (free maps, or photorealistic tiles if unlocked)
 - **Build**: first-person on the cell: solar, dig, rise
-- **Farm**: a finished tower with an Agrokruh ring of 18 beds, a crop schedule, people walking around, fly mode
+- **Farm**: a finished tower with an Agrokruh ring of 18 beds (6 inner + 12 outer), a crop schedule, people walking around, fly mode
 
 What doesn't exist yet: the survival loop, resources, survivors, the satellite mesh, expansion to neighbouring hexes, balance. See [docs/design/GDD-mechanics-v0.md](docs/design/GDD-mechanics-v0.md).
 

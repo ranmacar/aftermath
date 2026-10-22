@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./loop": "./src/loop/index.ts"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --test src/index.test.ts"
+    "test": "node --experimental-strip-types --test src/index.test.ts src/loop/loop.test.ts"
   }
 }

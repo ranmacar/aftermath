@@ -20,6 +20,7 @@ import {
 import { cadPart, preloadCadAssets, useCadGlbs } from "./cad-assets";
 import { attachTouchLook } from "./touch-look";
 import { carveTerrainPit } from "./carve";
+import { type LoopUi, loopToSettlement, mountLoop } from "./loop-ui";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 type WalkHandle = {
@@ -178,7 +179,7 @@ function capMobilePixelRatio(eng: { setHardwareScalingLevel: (level: number) => 
   if (coarse && dpr > 1.5) eng.setHardwareScalingLevel(1 / 1.5);
 }
 
-export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void } = {}): WalkHandle {
+export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; onFarm?: (cell: string) => void } = {}): WalkHandle {
   const overlayNode = document.getElementById("walk");
   const canvasNode = document.getElementById("walk-canvas");
   const labelNode = document.getElementById("walk-label");
@@ -307,6 +308,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
   let actProgress = 0;
   let cellId: string | null = null;
   let settlement: Settlement | null = null;
+  let loopUi: LoopUi | null = null;
 
   function close(): void {
     if (!open) return;
@@ -316,6 +318,8 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     act.hidden = true;
     actHeld = false;
     actProgress = 0;
+    loopUi?.dispose();
+    loopUi = null;
     sceneDispose?.();
     sceneDispose = null;
     engine?.stopRenderLoop();
@@ -628,6 +632,23 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
 
     syncVisuals(settlement);
 
+    // Demo loop v1 drives Build: the pod advances by gates, not by the old hold-to-complete quests.
+    loopUi?.dispose();
+    loopUi = null;
+    if (layout === "stages") {
+      loopUi = mountLoop(overlay, cell, {
+        onChange: (run) => {
+          if (!settlement) return;
+          settlement = loopToSettlement(run, settlement);
+          syncVisuals(settlement);
+        },
+        onFarm: () => {
+          close();
+          handlers.onFarm?.(cell);
+        },
+      });
+    }
+
     const strip =
       layout === "habitat"
         ? buildHabitatStrip(scene, bab, groundAt, cell)
@@ -844,7 +865,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void }
     document.addEventListener("visibilitychange", onVisibility);
 
     function nearCurrent(): ReturnType<typeof currentQuest> {
-      if (!settlement) return null;
+      if (!settlement || loopUi) return null;
       const q = currentQuest(settlement);
       if (!q) return null;
       const spot = INTERACT[q.id];
