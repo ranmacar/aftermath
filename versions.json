@@ -2,10 +2,10 @@
   "latest": {
     "version": "latest",
     "ref": "main",
-    "sha": "721930cf66d4fbce79c7c1bb630e7b3420ca9c9c",
+    "sha": "58748cf2996f82f5afbb63667dc2e4db871dcd2f",
     "packageVersion": "1.0.0-dev.0",
     "path": "/aftermath/play/",
-    "builtAt": "2026-10-14T18:12:23.191Z"
+    "builtAt": "2026-10-22T14:35:15.065Z"
   },
   "versions": [
     {
