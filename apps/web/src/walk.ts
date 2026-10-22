@@ -385,7 +385,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
       VertexData,
       TransformNode,
       DynamicTexture,
-      KeyboardEventTypes,
     } = await import("@babylonjs/core");
 
     if (!open || cellId !== cell) return;
@@ -848,12 +847,23 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
       }
     };
 
-    const kbObs = scene.onKeyboardObservable.add((info) => {
+    // Keys on window, not the canvas: the Loop pod panel re-renders its buttons, which drops
+    // focus to <body>, and canvas-scoped keyboard input then went dead until the canvas was clicked.
+    const onKey = (e: KeyboardEvent): void => {
       if (!open) return;
-      const e = info.event;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
-      const down = info.type === KeyboardEventTypes.KEYDOWN;
-      noteKey(e.code || "", e.key || "", down);
+      const t = e.target;
+      if (
+        t instanceof HTMLInputElement ||
+        t instanceof HTMLSelectElement ||
+        t instanceof HTMLTextAreaElement ||
+        (t instanceof HTMLElement && t.isContentEditable)
+      ) {
+        return;
+      }
+      // A focused button keeps Space/Enter for itself.
+      if (t instanceof HTMLButtonElement && e.code === "Space") return;
+      noteKey(e.code || "", e.key || "", e.type === "keydown");
       // Prevent page scroll / browser bind for movement keys only
       if (
         e.code === "KeyW" ||
@@ -865,7 +875,9 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
       ) {
         e.preventDefault();
       }
-    });
+    };
+    window.addEventListener("keydown", onKey, { signal: canvasEvents.signal });
+    window.addEventListener("keyup", onKey, { signal: canvasEvents.signal });
 
     const onWindowBlur = (): void => clearMoveKeys();
     const onVisibility = (): void => {
@@ -944,7 +956,9 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
         ) {
           my -= 1;
         }
-        if (my !== 0) camera.position.y += my * speed;
+        // Climb/descend is its own input: don't scale it by the stick/WASD amount,
+        // or holding Jump/Space alone never rises.
+        if (my !== 0) camera.position.y += my * (running ? FLY_FAST : FLY_SPEED) * dt;
       } else {
         const speed = (running ? RUN_SPEED : WALK_SPEED) * dt * inputScale;
         if (mx !== 0 || mz !== 0) {
@@ -1032,7 +1046,6 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
       window.removeEventListener("resize", onResize);
       canvasEvents.abort();
       detachTouchLook();
-      scene.onKeyboardObservable.remove(kbObs);
       window.removeEventListener("blur", onWindowBlur);
       document.removeEventListener("visibilitychange", onVisibility);
       clearMoveKeys();
