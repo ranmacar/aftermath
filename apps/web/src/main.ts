@@ -8,7 +8,7 @@ import "./style.css";
 import { networkLocation, takeBrowserPosition, type LngLat } from "./locate";
 import { ensureTilesUnlock } from "./unlock";
 
-type Mode = "map" | "look" | "walk" | "habitat";
+type Mode = "map" | "look" | "walk" | "habitat" | "loop";
 
 const MODE_KEY = "aftermath:ui-mode";
 
@@ -33,7 +33,8 @@ function readUi(): SavedUi | null {
       mode !== "map" &&
       mode !== "look" &&
       mode !== "walk" &&
-      mode !== "habitat"
+      mode !== "habitat" &&
+      mode !== "loop"
     ) {
       return null;
     }
@@ -161,11 +162,13 @@ const modeMapNode = document.getElementById("mode-map");
 const modeLookNode = document.getElementById("mode-look");
 const modeWalkNode = document.getElementById("mode-walk");
 const modeHabitatNode = document.getElementById("mode-habitat");
+const modeLoopNode = document.getElementById("mode-loop");
 if (
   !(modeMapNode instanceof HTMLButtonElement) ||
   !(modeLookNode instanceof HTMLButtonElement) ||
   !(modeWalkNode instanceof HTMLButtonElement) ||
-  !(modeHabitatNode instanceof HTMLButtonElement)
+  !(modeHabitatNode instanceof HTMLButtonElement) ||
+  !(modeLoopNode instanceof HTMLButtonElement)
 ) {
   throw new Error("missing mode buttons");
 }
@@ -173,6 +176,7 @@ const modeMap: HTMLButtonElement = modeMapNode;
 const modeLook: HTMLButtonElement = modeLookNode;
 const modeWalk: HTMLButtonElement = modeWalkNode;
 const modeHabitat: HTMLButtonElement = modeHabitatNode;
+const modeLoop: HTMLButtonElement = modeLoopNode;
 
 let mode: Mode = "map";
 let selectedCell: string | null = null;
@@ -183,6 +187,7 @@ function setMode(next: Mode): void {
   modeLook.classList.toggle("is-on", next === "look");
   modeWalk.classList.toggle("is-on", next === "walk");
   modeHabitat.classList.toggle("is-on", next === "habitat");
+  modeLoop.classList.toggle("is-on", next === "loop");
   writeUi(next, selectedCell);
 }
 
@@ -197,6 +202,7 @@ function goLook(cell: string): void {
   modeLook.disabled = false;
   modeWalk.disabled = false;
   modeHabitat.disabled = false;
+  modeLoop.disabled = false;
   walk.close();
   setMode("look");
   view3d.open(cell);
@@ -207,6 +213,7 @@ function goWalk(cell: string): void {
   modeLook.disabled = false;
   modeWalk.disabled = false;
   modeHabitat.disabled = false;
+  modeLoop.disabled = false;
   view3d.close();
   setMode("walk");
   walk.open(cell, "stages");
@@ -217,9 +224,21 @@ function goHabitat(cell: string): void {
   modeLook.disabled = false;
   modeWalk.disabled = false;
   modeHabitat.disabled = false;
+  modeLoop.disabled = false;
   view3d.close();
   setMode("habitat");
   walk.open(cell, "habitat");
+}
+
+function goLoop(cell: string): void {
+  selectedCell = cell;
+  modeLook.disabled = false;
+  modeWalk.disabled = false;
+  modeHabitat.disabled = false;
+  modeLoop.disabled = false;
+  view3d.close();
+  setMode("loop");
+  walk.open(cell, "stages", { loop: true });
 }
 
 const walk = attachWalk({
@@ -234,6 +253,7 @@ const walk = attachWalk({
 const view3d = attachView3d({
   onWalk: (cell) => goWalk(cell),
   onHabitat: (cell) => goHabitat(cell),
+  onLoop: (cell) => goLoop(cell),
   onClose: () => setMode("map"),
 });
 
@@ -252,10 +272,13 @@ modeWalk.addEventListener("click", () => {
 modeHabitat.addEventListener("click", () => {
   if (selectedCell) goHabitat(selectedCell);
 });
+modeLoop.addEventListener("click", () => {
+  if (selectedCell) goLoop(selectedCell);
+});
 
 window.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  if (mode === "walk" || mode === "habitat") {
+  if (mode === "walk" || mode === "habitat" || mode === "loop") {
     if (selectedCell) goLook(selectedCell);
     else goMap();
     return;
@@ -353,6 +376,10 @@ map.on("load", () => {
     goHabitat(saved.cell);
     return;
   }
+  if (saved?.mode === "loop" && saved.cell) {
+    goLoop(saved.cell);
+    return;
+  }
   if (!digout.start()) {
     if (saved?.mode === "look" && saved.cell) {
       goLook(saved.cell);
@@ -387,6 +414,8 @@ if (import.meta.hot) {
       goWalk(saved.cell);
     } else if (saved?.mode === "habitat" && saved.cell) {
       goHabitat(saved.cell);
+    } else if (saved?.mode === "loop" && saved.cell) {
+      goLoop(saved.cell);
     } else if (saved?.mode === "look" && saved.cell) {
       goLook(saved.cell);
     }

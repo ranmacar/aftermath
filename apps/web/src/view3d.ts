@@ -207,6 +207,7 @@ function terrainStyle(): maplibregl.StyleSpecification {
 export function attachView3d(handlers: {
   onWalk?: (cell: string) => void;
   onHabitat?: (cell: string) => void;
+  onLoop?: (cell: string) => void;
   onClose?: () => void;
 } = {}): { open(cell: string): void; close(): void; cell(): string | null } {
   const overlayNode = document.getElementById("view3d");
@@ -597,6 +598,11 @@ export function attachView3d(handlers: {
     if (!currentCell) return;
     hide();
     handlers.onWalk?.(currentCell);
+  });
+  document.getElementById("view3d-loop")?.addEventListener("click", () => {
+    if (!currentCell) return;
+    hide();
+    handlers.onLoop?.(currentCell);
   });
   habitatBtn.addEventListener("click", () => {
     if (!currentCell) return;

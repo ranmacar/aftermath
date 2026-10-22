@@ -24,7 +24,8 @@ import { type LoopUi, loopToSettlement, mountLoop } from "./loop-ui";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 type WalkHandle = {
-  open(cell: string, layout?: WalkLayout): void;
+  /** loop: run the demo loop (pod panel) on the Build layout instead of the hold-to-complete quests. */
+  open(cell: string, layout?: WalkLayout, opts?: { loop?: boolean }): void;
   close(): void;
 };
 
@@ -309,6 +310,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
   let cellId: string | null = null;
   let settlement: Settlement | null = null;
   let loopUi: LoopUi | null = null;
+  let loopMode = false;
 
   function close(): void {
     if (!open) return;
@@ -330,8 +332,9 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
   async function openCell(
     cell: string,
     layout: WalkLayout = "stages",
+    withLoop = false,
   ): Promise<void> {
-    const modeLabel = layout === "habitat" ? "Farm" : "Build";
+    const modeLabel = layout === "habitat" ? "Farm" : withLoop ? "Loop" : "Build";
     // Same cell + same layout: rebuild strip in place (HMR / refresh).
     // Layout change (Walk ↔ Habitat) needs a full remount — terrain size differs.
     if (
@@ -340,6 +343,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
       activeWalk &&
       activeWalk.cell === cell &&
       activeWalk.layout === layout &&
+      loopMode === withLoop &&
       engine
     ) {
       activeWalk.agroYaw = layout === "habitat" ? h3AgroYaw(cell) : 0;
@@ -632,10 +636,11 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
 
     syncVisuals(settlement);
 
-    // Demo loop v1 drives Build: the pod advances by gates, not by the old hold-to-complete quests.
+    // Loop mode: demo loop v1 drives the Build layout: the pod advances by gates, not by the old hold-to-complete quests.
     loopUi?.dispose();
     loopUi = null;
-    if (layout === "stages") {
+    loopMode = withLoop;
+    if (layout === "stages" && withLoop) {
       loopUi = mountLoop(overlay, cell, {
         onChange: (run) => {
           if (!settlement) return;
@@ -1057,7 +1062,7 @@ export function attachWalk(handlers: { onLook?: () => void; onMap?: () => void; 
   });
 
   return {
-    open: (cell, layout = "stages") => void openCell(cell, layout),
+    open: (cell, layout = "stages", opts) => void openCell(cell, layout, opts?.loop ?? false),
     close,
   };
 }
