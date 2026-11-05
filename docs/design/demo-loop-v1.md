@@ -1,11 +1,13 @@
 # Aftermath: first playable loop, spec v1 (Sid, Oct 2026)
 
-Status: **GO** on Bob's proposed loop, with three additions:
+Status: **early draft, not the game's balance.** Sid marked the shape **GO** in Oct 2026, with three additions:
 - **food upkeep** and **Condition**, so foraging is a choice and not just a fetch;
 - **rough shelter** as a parallel build, the §5c trigger for the CNC floor;
 - **storms with a one-day warning**, so timing matters.
 
-All numbers are first-pass tuning. Keep them in one `tuning.ts` / JSON so we can change them without code.
+The numbers below are a first tuning pass so a loop could be played. They are not precise. This draft builds a fixed handful of floors and then stops. The game adds floors over time, and later floors need better tech-tree unlocks.
+
+All numbers are first-pass tuning. Keep them in one `tuning.ts` / JSON so we can change them without code. The live default is v1.3 (`packages/sim/src/loop/tuning.ts`).
 
 ## 1. The loop
 1. Pick a hex to forage, from the hexes around home.
@@ -50,7 +52,7 @@ The pod pauses at each gate until the delivery is complete, then builds over the
   - **Reward:** power on. Show a robot-dog "charging…" card as a teaser; the dog itself comes after the demo (§5c).
 - **G2 Dig:** 10 scrap and 20 wood (pit shoring). It builds in 8 days.
 - **G3 Rise:** per floor, 8 scrap and 4 stone. Each floor builds in 6 days (the §5c pace).
-  - The demo tower is 4 floors.
+  - This draft stops at 4 floors so the sketch has an ending. That count is not the tower. The game adds floors over time, and later floors need better tech-tree unlocks.
   - Deliver floor by floor. A floor's gate opens when the previous floor starts building, so you can pre-pay one floor ahead.
 
 ### Parallel build: rough shelter
@@ -107,7 +109,7 @@ The pod pauses at each gate until the delivery is complete, then builds over the
 
 ## Changelog
 
-The text above is Sid's original v1 sheet, left as written. Live numbers are in `packages/sim/src/loop/tuning.ts`. In the app, `?tuning=v1`, `?tuning=v1.1`, `?tuning=v1.2` and `?tuning=v1.3` pick a set; the default is v1.3.
+The text above is Sid's v1 sheet. The status note and the floor-count line were updated later: the sheet is an early draft, and its 4 floors are a placeholder. Live numbers are in `packages/sim/src/loop/tuning.ts`. In the app, `?tuning=v1`, `?tuning=v1.1`, `?tuning=v1.2` and `?tuning=v1.3` pick a set; the default is v1.3.
 
 ### v1.1 (Bob's proposal, blessed by Sid as the base)
 - Food upkeep 1 → **0.5** per day.

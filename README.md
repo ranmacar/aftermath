@@ -10,15 +10,18 @@ Aftermath is part of **Arbolis**, a story world told in novels and games. Arboli
 
 ## Status
 
-Early and in progress. There is a first survival loop (forage, wait out storms, help the pod build its tower); everything else is still a prototype.
+Early and in progress. The opening is a basement dig-out, then a real hex: look at it, build on it, and walk the farm. The Loop screen is an early draft of the survival economy (forage, storms, feeding the pod). Its numbers are not the game's balance.
 
 What works today:
 - **Map**: pick a real hex (H3 resolution 10, about 1.5 ha) anywhere on Earth
 - **Look**: see that place in 3D (free maps, or photorealistic tiles if unlocked)
 - **Build**: first-person on the cell: solar, dig, rise
-- **Farm**: a finished tower with an Agrokruh ring of 18 beds (6 inner + 12 outer), a crop schedule, people walking around, fly mode
+- **Farm**: a grown tower and an Agrokruh ring of 18 beds (6 inner + 12 outer), a crop schedule, people walking around, fly mode. The tower model in the repo is 7 floors.
+- **Loop**: that draft survival loop, on its own screen
 
-What doesn't exist yet: survivors, the satellite mesh, expansion to neighbouring hexes, balance. See [docs/design/GDD-mechanics-v0.md](docs/design/GDD-mechanics-v0.md).
+Floors are added over time. Later floors need better tech-tree unlocks. That tree is not in the demo, and the draft loop's floor count is only a placeholder.
+
+What doesn't exist yet: survivors, the tech tree, the satellite mesh, expansion to neighbouring hexes. See [docs/design/GDD-mechanics-v0.md](docs/design/GDD-mechanics-v0.md).
 
 **Play the demo:** https://ranmacar.github.io/aftermath/play/ · **Follow on GitHub:** https://github.com/ranmacar/aftermath (watch or star the repo) · **Progress:** https://ranmacar.github.io/aftermath/progress/
 
@@ -37,10 +40,13 @@ Open http://127.0.0.1:5173 (use localhost so geolocation works over HTTP).
 
 ### Modes
 
+The app opens on the basement dig-out, then:
+
 1. **Map**: MapLibre (OpenFreeMap), H3 res-10 cells
 2. **Look**: Google Photorealistic 3D Tiles if a key is unlocked, else free Esri + Terrarium
 3. **Build**: first-person Babylon on the cell (quests: solar → dig → rise)
-4. **Farm**: finished tower + Agrokruh beds, crowd patrols, fly mode (hold Space)
+4. **Farm**: grown tower + Agrokruh beds, crowd patrols, fly mode (hold Space)
+5. **Loop**: early draft of the survival economy. See [docs/design/demo-loop-v1.md](docs/design/demo-loop-v1.md). It is not precise.
 
 ### Photorealistic Look
 
@@ -65,7 +71,7 @@ The base path comes from `PAGES_BASE` (or `GITHUB_PAGES=1` → `/aftermath/`); t
 ## Layout
 
 - `apps/web`: Vite + MapLibre + Babylon UI
-- `packages/sim`: settlement quests, crop catalogue, Agrokruh bed schedule
+- `packages/sim`: settlement quests, the draft survival loop, crop catalogue, Agrokruh bed schedule
 - `scripts/`: tiles-key sealing, CAD sync, helpers
 - `cad/`: Onshape models synced to GLB (`npm run cad:sync`)
 - `docs/`: [vision](docs/VISION.md), [themes](docs/themes/), design, asset pipeline

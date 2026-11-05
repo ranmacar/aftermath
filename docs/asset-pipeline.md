@@ -1,7 +1,10 @@
 # Asset pipeline: Onshape → game → workshop
 
-Status: **draft spec** (Sep 2026). The scaffold (`scripts/cad-sync.mjs`, `cad/assets.json`,
-`.github/workflows/cad-sync.yml`) exists. The live Onshape export has not been run yet because there are no API keys.
+Status: **draft spec** (first written Sep 2026). The scaffold
+(`scripts/cad-sync.mjs`, `cad/assets.json`, `.github/workflows/cad-sync.yml`) is in use.
+`cad/assets.json` pins `game-v0.2`, `cad/assets.lock.json` records exports from 2026-10-05, and the
+GLBs are in `apps/web/public/models/site/`. Every locked asset is stage `game`. `prototype` and
+`buildable` are not done. Hardware designs are CERN-OHL-S-2.0 (see the README). §12 is still a proposal.
 
 ## 1. Vision
 
@@ -57,11 +60,12 @@ read these. Nothing is kept in a side spreadsheet.
 - Onshape document → in-game item: a link in the document description / version description
   (`aftermath://item/<name>` or the Pages URL with `?item=<name>`).
 
-## 6. License (decision pending)
+## 6. License
 
-The choice is between **CERN-OHL-S** (strongly reciprocal: improvements stay open) and **CERN-OHL-P / CC-BY**
-(permissive: easier for the SOIL store to buy and relicense as IP). Note: documents on the Onshape **free plan are
-public**, so assume everything modelled there is visible to everyone from day one.
+Hardware designs in `cad/` are **CERN-OHL-S-2.0**, project-wide, as in the README. Documents on the
+Onshape **free plan are public**, so assume everything modelled there is visible from day one.
+
+What SOIL buys, and how contributors are credited or paid, is still open (§13).
 
 ## 7. Contributions
 
@@ -78,7 +82,8 @@ cad/assets.json ──► npm run cad:sync ──► Onshape REST glTF export
                      gltf-transform: units (mm→m if needed), Z-up→Y-up, dedup, weld,
                      simplify per LOD (meshoptimizer), prune, meshopt compression
                                           │
-      apps/web/public/models/<name>[_lodN].glb  +  cad/assets.lock.json (source version, hashes, sizes)
+      apps/web/public/models/<output>[_lodN].glb  +  cad/assets.lock.json (source version, hashes, sizes)
+      (output is relative to that directory, e.g. site/tower_floor.glb)
                                           │
       .github/workflows/cad-sync.yml (workflow_dispatch + weekly cron) → PR with size/version diff
 ```
@@ -122,7 +127,7 @@ function (checks the shared secret, filters on the `game/` / `prototype/` prefix
   (collision proxy, hidden), `window_*`, `anchor_*` (attachment points). Code hooks behaviour onto these names.
   The optimizer never merges across names, so they survive.
 - **Collision and animation stay in code.** CAD provides geometry and names. The game provides behaviour.
-- The game loads GLBs with `@babylonjs/loaders` (glTF). It's not a dependency yet and gets added when the first asset ships.
+- The game loads GLBs with `@babylonjs/loaders` (glTF), a dependency of `apps/web`.
   Meshopt-compressed files need Babylon's meshopt decoder (loaded from the Babylon CDN by default), or set
   `compress: "none"` for an asset.
 
@@ -134,9 +139,10 @@ Requests are HMAC-signed by default. Basic auth is only for local debugging.
 
 ## 11. First proof
 
-Take **one** asset through `game` and `prototype`. The original idea was an **Agrokruh bed** or a **solar panel mount**.
-Under the revised proposal (§12.4), the **pod container layout** is settled first. The solar panel mount is still the
-first small fabricated part.
+`game` is exported. The pod container, tower parts, solar array, Agrokruh, and the other entries in
+`cad/assets.json` are pinned at `game-v0.2` and written to `apps/web/public/models/site/`. None of them
+is `prototype` yet (real materials, drawings, BOM). The solar panel mount is still the first small part
+meant to be fabricated, after the pod layout is checked.
 
 ## 12. Review proposals (Bucky): awaiting Martin's approval
 
@@ -192,7 +198,7 @@ supports an optional `params` block per asset via `GET /variables/d/{did}/{wv}/{
    and the **unpacking order** (what comes out first to start soil processing, core, gantry, canopy).
 2. **Solar panel mount.** Still a good small first fabricated part, but it comes after the pod layout is settled.
 
-Both are placeholders in `cad/assets.json` (the pod entry first).
+The pod entry in `cad/assets.json` is now a pinned `game` export. The packing check in this proposal is still open.
 
 ## 13. Open questions
 
@@ -201,11 +207,9 @@ Both are placeholders in `cad/assets.json` (the pod entry first).
   as the honest version?
 - Slabs: precast wedges or forms hung from the core (§12.3)?
 - Canopy during construction: does it climb with the gantry underneath, or stay fixed at the top (§12.3)?
-- License: CERN-OHL-S or CERN-OHL-P / CC-BY, per asset or project-wide?
-- What SOIL buys (product vs IP) and how contributors get credited or paid for pinned versions.
+- What SOIL buys (product vs IP) and how contributors get credited or paid for pinned versions. The hardware licence in this repo is CERN-OHL-S-2.0.
 - Nostr: which relays, event kind, and whether announcements are automated (signing key custody).
 - Tessellation: sync `chordTolerance`/`angleTolerance` versus async `meshParams`, and per-LOD re-export versus simplify.
-- Onshape glTF axis and units conventions: verify on the first live export (the scaffold assumes Z-up and metres,
-  and both are configurable).
+- Onshape glTF axis and units: live Part Studio exports are metres and Z-up (§8). `upAxis` and `units` in the manifest stay configurable.
 - Webhook relay: worth it, or is the weekly cron plus manual dispatch enough?
 - Free-plan limits (public docs, API rate limits, two API keys per user).

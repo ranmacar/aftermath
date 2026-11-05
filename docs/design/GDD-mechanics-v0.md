@@ -147,6 +147,7 @@ Two early rewards tied to pod deploy stages. Both are locked by Martin.
 
 ### Deploy pace (Martin via Bucky, Oct 2026)
 - The tower deploys over **a couple of months of game time**, not instantly. Sequence: dig out pod → solar up → excavate pit → floors rise at about **5–7 days per floor** (real-world precedent: Taisei T-UP).
+- Floors keep coming. The tower is not a fixed height. Later floors wait on better tech-tree unlocks (fabrication on the CNC, then whatever the tree opens). The draft loop's floor count is only a placeholder so that sketch has an ending.
 - The survival/forage phase therefore has real duration, and the dog and CNC carry the player through it.
 
 ### Upgraded starter pods (Martin via Bucky, Oct 2026)
@@ -260,6 +261,8 @@ Chronicle (live) ──rank──► invite Top N ──► Scenario server (≈
 ---
 
 ## 10. Demo vs full (for Bob)
+
+The playable Loop screen follows [demo-loop-v1.md](demo-loop-v1.md). That sheet is an early draft. Its costs, yields, and floor count are not precise. Floors in the game are added over time; later floors need better tech-tree unlocks.
 
 | Shippable demo focus | Later / scaffolding |
 |---|---|

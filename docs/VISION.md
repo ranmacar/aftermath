@@ -44,7 +44,7 @@ The same world is told in the Arbolis novels; Aftermath is set in the fourth boo
 
 No dates, because we'd miss them. In order:
 
-1. **Now: the demo.** Dig out of the basement, hear the pod, find it on the map, build (solar, dig, rise), farm the ring. Mostly there.
+1. **Now: the demo.** Dig out of the basement, hear the pod, find it on the map, build (solar, dig, rise), farm the ring. Mostly there. The Loop screen is an early draft and its numbers are not final. Floors are added over time; later floors need better tech-tree unlocks, which are not in the demo yet.
 2. **Layer 0, the home hex.** Survive outside, forage nearby, recover survivors, feed the pod's stage gates, move in, plant the ring, repair comms.
 3. **Layer 1, the mesh.** Uplink reveals other pods. Move the pod brain to an adjacent hex; the child tower runs on the parent's power.
 4. **Layer 2, airships.** Factions, trade, multiplayer as an economy.
